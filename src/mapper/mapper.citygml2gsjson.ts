@@ -42,7 +42,7 @@ export class CityGML2GSJSON implements Mapper {
       var shell=this.mapGeometry(feature);
       shell.push(200);
       this.geometry.push(shell);
-      entry.entities.push(this.geometry.length-1);
+      entry.entities.push([this.geometry.length-1,[],[]]);
       this.mapOpenings(feature, "bldg:Window");
       this.mapOpenings(feature, "bldg:Door");
     }
@@ -63,7 +63,7 @@ export class CityGML2GSJSON implements Mapper {
       var shell=this.mapGeometry(openings[i]);
       shell.push(200);
       this.geometry.push(shell);
-      entry.entities.push(this.geometry.length-1);
+      entry.entities.push([this.geometry.length-1,[],[]]);
     }
   }
 
