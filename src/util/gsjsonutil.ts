@@ -6,7 +6,6 @@ export class Util {
 	static createWiresFromFaces(faces:Array<any>) {
 		var edges=Util.createEdgesFromFaces(faces);
 		var wires=[];
-		alert(JSON.stringify(edges.values));
 		Util.createWires(edges, null, wires, null)
 
 		return wires;

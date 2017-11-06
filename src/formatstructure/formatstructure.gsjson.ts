@@ -4,13 +4,15 @@ export class GSJSON {
   metadata:Metadata;
   skins:Skins;
   geometry:Array<any>;
-  semantics:Semantics;
+  attributes:Array<Attribute>;
+  collections:Collections;
 
-  constructor(metadata:Metadata, skins:Skins, geometry:Array<any>, semantics:Semantics) {
+  constructor(metadata:Metadata, skins:Skins, geometry:Array<any>, attributes:Array<Attribute>, collections:Collections) {
     this.metadata=metadata;
     this.skins=skins;
     this.geometry=geometry;
-    this.semantics=semantics;
+    this.attributes=attributes;
+    this.collections=collections;
   }
 }
 
@@ -42,15 +44,15 @@ export class Skins {
   }
 }
 
-export class Semantics {
-    attributes:Array<Attribute>;
-    collections:Array<Collection>;
+// export class Semantics {
+//     attributes:Array<Attribute>;
+//     collections:Collections;
 
-    constructor(attributes:Array<Attribute>,collections:Array<Collection>) {
-      this.attributes=attributes;
-      this.collections=collections;
-    }
-}
+//     constructor(attributes:Array<Attribute>,collections:Collections) {
+//       this.attributes=attributes;
+//       this.collections=collections;
+//     }
+// }
 
 export class Attribute {
     uuid:string;
@@ -67,16 +69,30 @@ export class Attribute {
     }
 }
 
-export class Collection {
-    uuid:string;
-    name:string;
-    topology:string;
-    entities:Array<number>;
-    properties:any;
-    constructor(uuid:string,name:string,topology:string,properties:any) {
-      this.uuid=uuid;
-      this.name=name;
-      this.topology=topology;
-      this.properties=properties;
+export class Collections extends Array<CEntry> {
+
+  public getIndex = (name:string) : number => {
+      var ind=this.findIndex(function(entry, index, arr){
+        return Collections.areEqual(name, entry);
+      });
+      return ind;
+  }
+
+  private static areEqual = (name:string, cEntry) : boolean => {
+    if(name!=cEntry.name) {
+      return false;
     }
+    return true;
+  }
 }
+
+export class CEntry {
+  name:string;
+  entities:Array<any>;
+
+  constructor(name:string, entities:Array<any>) {
+    this.name=name;
+    this.entities=entities;
+  }
+}
+
