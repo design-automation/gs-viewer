@@ -10,11 +10,9 @@ import { ThreejsExporter } from '../exporter/exporter.component';
 })
 export class AppComponent {
   static exporter:Exporter;
-
   static selection:HTMLSelectElement;
   static input:HTMLElement;
   static translateBut:HTMLElement;
-
   static inputFile:File;
 
   static initForm(){

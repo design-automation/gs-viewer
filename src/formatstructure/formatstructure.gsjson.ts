@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 export class GSJSON {
   metadata:Metadata;
   skins:Skins;
-  geometry:Geometry;
+  geometry:Array<any>;
   semantics:Semantics;
 
-  constructor(metadata:Metadata, skins:Skins, geometry:Geometry, semantics:Semantics) {
+  constructor(metadata:Metadata, skins:Skins, geometry:Array<any>, semantics:Semantics) {
     this.metadata=metadata;
     this.skins=skins;
     this.geometry=geometry;
@@ -39,16 +39,6 @@ export class Skins {
     this.images=images;
     this.textures=textures;
     this.materials=materials;
-  }
-}
-
-export class Geometry {
-  counts:Array<number>;
-  entities: Array<Array<any>>;
-
-  constructor(counts:Array<number>,entities: Array<Array<any>>) {
-    this.counts=counts;
-    this.entities=entities;
   }
 }
 

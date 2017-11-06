@@ -38,6 +38,17 @@ export class AppArray<T> {
   		return ind;
   	}
 
+    public remove() {
+      var what, a = arguments, L = a.length, ax;
+      while (L && this.values.length) {
+          what = a[--L];
+          while ((ax = this.findIndex(what)) !== -1) {
+              this.values.splice(ax, 1);
+          }
+      }
+      return this;
+    }
+
   	private static areEqual = (array, input) : boolean => {
     	if(array.length!=input.length) {
      	   	return false;
@@ -46,7 +57,8 @@ export class AppArray<T> {
       	  	if(array[i]!=input[i]) {
       	   		return false;
      	  	}
-    	}
+    	  }
       	return true;
   	}
+
 }
