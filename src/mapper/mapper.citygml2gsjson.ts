@@ -1,25 +1,21 @@
 import { Component } from '@angular/core';
 import { AppArray } from '../app/app.array';
 import { Mapper } from './mapper.component';
-import { GSJSON } from '../formatstructure/formatstructure.gsjson';
-import { Metadata } from '../formatstructure/formatstructure.gsjson';
-import { Skins } from '../formatstructure/formatstructure.gsjson';
-import { Attribute } from '../formatstructure/formatstructure.gsjson';
-import { Collections } from '../formatstructure/formatstructure.gsjson';
-import { CEntry } from '../formatstructure/formatstructure.gsjson';
+import { GSJSON } from '../formatstructure/gsjson';
+import { Metadata } from '../formatstructure/gsjson';
+import { Skins } from '../formatstructure/gsjson';
+import { Attribute } from '../formatstructure/gsjson';
+import { Collections } from '../formatstructure/gsjson';
+import { DATA } from '../formatstructure/data';
+import { OBJTYPE } from '../formatstructure/data';
+import { CEntry } from '../formatstructure/gsjson';
 import { Util } from '../util/gsjsonutil';
 
 export class CityGML2GSJSON implements Mapper {
-  positions:AppArray<Array<number>>;
-  geometry:Array<any>;
-  collections:Collections;
-  points: Array<any>;
-  
+  posAppArray:AppArray<Array<number>>;
   constructor() {
-    this.positions=new AppArray([]);
-    this.collections=new Collections();
-    this.geometry=[];
-    this.points=[];
+    DATA.initDataset();
+    this.posAppArray=new AppArray(DATA.positions);
   }
 
 	map(citygml:any) {	
@@ -27,10 +23,7 @@ export class CityGML2GSJSON implements Mapper {
     this.mapBuildElement(citygml, "bldg:WallSurface");
     this.mapBuildElement(citygml, "bldg:InteriorWallSurface");
     this.mapBuildElement(citygml, "bldg:FloorSurface");
-    var attrArray=new Array<Attribute>();
-    attrArray.push(new Attribute("", "position", "points", this.points, this.positions.values));
-    var data=new GSJSON(new Metadata("",0.1,"","",""),new Skins([],[],[]),this.geometry,attrArray,this.collections);
-    return JSON.stringify(data);
+    return JSON.stringify(DATA.json);
   }
 
   mapBuildElement(citygml, type) {
@@ -38,11 +31,11 @@ export class CityGML2GSJSON implements Mapper {
     if(features.length==0) {
       return;
     }
-    var entry=this.collections.generateEntry(type);
+    var entry=DATA.json.collections.generateEntry(type);
     for (var i=0;i<features.length ;i++) {
       var feature=features[i];
-      this.geometry.push(this.mapGeometry(feature));
-      entry.entities.push([this.geometry.length-1]);
+      DATA.json.geometry.push(this.mapGeometry(feature));
+      entry.entities.push([DATA.json.geometry.length-1]);
       this.mapOpenings(feature, "bldg:Window");
       this.mapOpenings(feature, "bldg:Door");
     }
@@ -53,10 +46,10 @@ export class CityGML2GSJSON implements Mapper {
     if(subFeatures.length==0) {
       return;
     }
-    var entry=this.collections.generateEntry(type);
+    var entry=DATA.json.collections.generateEntry(type);
     for (var i=0;i<subFeatures.length ;i++) {
-      this.geometry.push(this.mapGeometry(subFeatures[i]));
-      entry.entities.push([this.geometry.length-1]);
+      DATA.json.geometry.push(this.mapGeometry(subFeatures[i]));
+      entry.entities.push([DATA.json.geometry.length-1]);
     }
   }
 
@@ -69,7 +62,7 @@ export class CityGML2GSJSON implements Mapper {
       faces.push(this.mapPolygon(surface[i]));
     }
     shell.push(faces);
-    shell.push(Util.createWiresFromFaces(faces));
+    shell.push(Util.createWiresFromFaces(faces, DATA.points));
     shell.push([200]);
     return shell;
   }
@@ -78,20 +71,33 @@ export class CityGML2GSJSON implements Mapper {
     var newpoints = surface.textContent.split(' ').map(function(item) {
       return parseFloat(item);
     });
-    var poly=[];
-    for (var j=0;j<newpoints.length-3 ;j=j+3) {
+    if(newpoints.length<3) {
+      return [];
+    }
+
+    var poly=[]
+    DATA.points.push(this.getPositionIndex([newpoints[0],newpoints[1],newpoints[2]]));
+    poly.push(DATA.points.length-1);
+    for (var j=3;j<newpoints.length-3 ;j=j+3) {
       var point = [newpoints[j],newpoints[j+1],newpoints[j+2]];
-      var ind=this.positions.findIndex(point);
-      if(ind<0) {
-        this.positions.push(point);
-        ind=this.positions.values.length-1;
+      var ind=this.getPositionIndex(point);
+      if(AppArray.areEqual(point,poly[0])) {
+        break;
+      } else {
+        DATA.points.push(ind);
+        poly.push(DATA.points.length-1);
       }
-      this.points.push(ind);
-      poly.push(ind);
     }
-    if(poly.length>0 && poly[0] != poly[poly.length-1]) {
-      poly.push(poly[0]);
-    }
+    poly.push(poly[0]);
     return poly;
+  }
+
+  getPositionIndex(point) {
+    var ind=this.posAppArray.findIndex(point, OBJTYPE.NUMARRAY);
+    if(ind<0) {
+      this.posAppArray.values.push(point);
+      ind=this.posAppArray.values.length-1;
+    }
+    return ind;
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppArray } from '../app/app.array';
 
 export class GSJSON {
   metadata:Metadata;
@@ -6,14 +7,6 @@ export class GSJSON {
   geometry:Array<any>;
   attributes:Array<Attribute>;
   collections:Collections;
-
-  constructor(metadata:Metadata, skins:Skins, geometry:Array<any>, attributes:Array<Attribute>, collections:Collections) {
-    this.metadata=metadata;
-    this.skins=skins;
-    this.geometry=geometry;
-    this.attributes=attributes;
-    this.collections=collections;
-  }
 }
 
 export class Metadata { 
@@ -43,16 +36,6 @@ export class Skins {
     this.materials=materials;
   }
 }
-
-// export class Semantics {
-//     attributes:Array<Attribute>;
-//     collections:Collections;
-
-//     constructor(attributes:Array<Attribute>,collections:Collections) {
-//       this.attributes=attributes;
-//       this.collections=collections;
-//     }
-// }
 
 export class Attribute {
     uuid:string;

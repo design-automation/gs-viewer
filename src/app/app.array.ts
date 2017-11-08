@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { DATA } from '../formatstructure/data';
+import { OBJTYPE } from '../formatstructure/data';
 
 export class AppArray<T> {
 	values:Array<T>;
@@ -23,42 +25,48 @@ export class AppArray<T> {
 		return this.values.pop();
 	}
 
-    public toString = () : string => {
+  public toString = () : string => {
 		return this.prefix+this.values.toString()+this.postfix;
+  }
+
+  public isEqual = (appArray:AppArray<T>) : boolean => {
+     return AppArray.areEqual(this.values, appArray.values);
+  }
+
+  public findIndex = (value:T,type:OBJTYPE) : number => {
+    var ind;
+    if(type==OBJTYPE.NUMARRAY) {
+      ind=this.values.findIndex(function(entry, index, arr){
+        return AppArray.areEqual(value, entry);
+      });
+    } else {
+      ind=this.values.findIndex(function(entry, index, arr){
+        return DATA.areEqualTypes(value,entry,type);
+      });
     }
+  	return ind;
+  }
 
-    public isEqual = (appArray:AppArray<T>) : boolean => {
-    	return AppArray.areEqual(this.values, appArray.values);
-  	}
-
-  	public findIndex = (value:T) : number => {
-  		var ind=this.values.findIndex(function(entry, index, arr){
-  			return AppArray.areEqual(value, entry);
-        });
-  		return ind;
-  	}
-
-    public remove() {
-      var what, a = arguments, L = a.length, ax;
-      while (L && this.values.length) {
-          what = a[--L];
-          while ((ax = this.findIndex(what)) !== -1) {
-              this.values.splice(ax, 1);
-          }
+  public remove() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.values.length) {
+      what = a[--L];
+      while ((ax = this.findIndex(what, OBJTYPE.NUMARRAY)) !== -1) {
+        this.values.splice(ax, 1);
       }
-      return this;
     }
+    return this;
+  }
 
-  	private static areEqual = (array, input) : boolean => {
-    	if(array.length!=input.length) {
-     	   	return false;
-      	}
-      	for(var i=0;i<array.length;i++) {
-      	  	if(array[i]!=input[i]) {
-      	   		return false;
-     	  	}
-    	  }
-      	return true;
-  	}
-
+	public static areEqual = (array, input) : boolean => {
+    if(array.length!=input.length) {
+     	return false;
+    }
+    for(var i=0;i<array.length;i++) {
+      if(array[i]!=input[i]) {
+      	return false;
+     	}
+    }
+   	return true;
+	}
 }
