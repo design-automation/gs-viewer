@@ -35,66 +35,63 @@ export class CityGML2GSJSON implements Mapper {
 
   mapBuildElement(citygml, type) {
     var features=citygml.getElementsByTagName(type);
-    var entry=new CEntry(type, []);
-    this.collections.push(entry);
+    if(features.length==0) {
+      return;
+    }
+    var entry=this.collections.generateEntry(type);
     for (var i=0;i<features.length ;i++) {
       var feature=features[i];
-      var shell=this.mapGeometry(feature);
-      shell.push(200);
-      this.geometry.push(shell);
-      entry.entities.push([this.geometry.length-1,[],[]]);
+      this.geometry.push(this.mapGeometry(feature));
+      entry.entities.push([this.geometry.length-1]);
       this.mapOpenings(feature, "bldg:Window");
       this.mapOpenings(feature, "bldg:Door");
     }
   }
 
   mapOpenings(feature, type) {
-    var openings=feature.getElementsByTagName(type);
-    var ind=this.collections.getIndex(type);
-    var entry;
-    if(ind<0) {
-      entry=new CEntry(type, []);
-      this.collections.push(entry);
-    } else {
-      entry=this.collections[ind];
+    var subFeatures=feature.getElementsByTagName(type);
+    if(subFeatures.length==0) {
+      return;
     }
-    
-    for (var i=0;i<openings.length ;i++) {
-      var shell=this.mapGeometry(openings[i]);
-      shell.push(200);
-      this.geometry.push(shell);
-      entry.entities.push([this.geometry.length-1,[],[]]);
+    var entry=this.collections.generateEntry(type);
+    for (var i=0;i<subFeatures.length ;i++) {
+      this.geometry.push(this.mapGeometry(subFeatures[i]));
+      entry.entities.push([this.geometry.length-1]);
     }
   }
 
   mapGeometry(feature:Document) {
     var surface=feature.getElementsByTagName("gml:posList");
-    var shell=[];
-    var wires=[];
     var faces=[];
+    var shell=[];
     for (var i=0;i<surface.length ;i++)
     { 
-      var newpoints = surface[i].textContent.split(' ').map(function(item) {
-        return parseFloat(item);
-      });
-      var poly=[];
-      for (var j=0;j<newpoints.length-3 ;j=j+3) {
-        var point = [newpoints[j],newpoints[j+1],newpoints[j+2]];
-        var ind=this.positions.findIndex(point);
-        if(ind<0) {
-          this.positions.push(point);
-          ind=this.positions.values.length-1;
-        }
-        this.points.push(ind);
-        poly.push(ind);
-      }
-      if(poly.length>0 && poly[0] != poly[poly.length-1]) {
-        poly.push(poly[0]);
-      }
-      faces.push(poly);
+      faces.push(this.mapPolygon(surface[i]));
     }
     shell.push(faces);
     shell.push(Util.createWiresFromFaces(faces));
+    shell.push([200]);
     return shell;
+  }
+
+  mapPolygon(surface) {
+    var newpoints = surface.textContent.split(' ').map(function(item) {
+      return parseFloat(item);
+    });
+    var poly=[];
+    for (var j=0;j<newpoints.length-3 ;j=j+3) {
+      var point = [newpoints[j],newpoints[j+1],newpoints[j+2]];
+      var ind=this.positions.findIndex(point);
+      if(ind<0) {
+        this.positions.push(point);
+        ind=this.positions.values.length-1;
+      }
+      this.points.push(ind);
+      poly.push(ind);
+    }
+    if(poly.length>0 && poly[0] != poly[poly.length-1]) {
+      poly.push(poly[0]);
+    }
+    return poly;
   }
 }

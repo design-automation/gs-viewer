@@ -84,6 +84,18 @@ export class Collections extends Array<CEntry> {
     }
     return true;
   }
+
+  public generateEntry = (type:string): CEntry => {
+    var ind=this.getIndex(type);
+    var entry;
+    if(ind<0) {
+      entry=new CEntry(type, []);
+      this.push(entry);
+    } else {
+      entry=this[ind];
+    }
+    return entry;
+  }
 }
 
 export class CEntry {
