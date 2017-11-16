@@ -1,41 +1,39 @@
 html, body {
   font-family: 'Open Sans', sans-serif;
   text-align: justify;
-  width: 100%;
-  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
-.alldiv {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #dddddd;
-    box-shadow: 0 1px 6px rgba(0,0,0,.3);
+#appdiv {
+  position: absolute;
+  width: 99%;
+  height: 98%;
+  background-color: black;
 }
 
 a { text-decoration: none; color: #fff; text-transform: uppercase; }
-.container { width: auto; margin: 0 auto; }
-#toolbar { background-color: #333; }
-#toolbar ul { list-style: none; overflow: hidden; }
-#toolbar div > ul > li { display:inline-block; float: left; }
-#toolbar div > ul > li:hover { background-color: #fff; }
-#toolbar div > ul > li:hover a { color: #333; }
-#toolbar div > ul > li > a { 
+.toolbar { background-color: #333; }
+.toolbar ul { list-style: none; overflow: hidden; margin-bottom: 0px; }
+.toolbar div > ul > li { display:inline-block; float: left; }
+.toolbar div > ul > li:hover { background-color: #fff; }
+.toolbar div > ul > li:hover a { color: #333; }
+.toolbar div > ul > li > a { 
   font-size: 12px;
-  line-height: 32px;
+  line-height: 20px;
   display: block; float: left;
   padding: 0 16px;
 }
 /**
  * Carets
  */
-#toolbar div ul li i.icon-sort { display: none; }
-#toolbar div ul li:hover i.icon-sort { display: inline; }
-#toolbar div ul li:hover i.icon-caret-down { display: none; }
-#toolbar .dropdown i {
-  margin-left: 12px;
+.toolbar div ul li i.icon-sort { display: none; }
+.toolbar div ul li:hover i.icon-sort { display: inline; }
+.toolbar div ul li:hover i.icon-caret-down { display: none; }
+.toolbar .dropdown i {
+  margin: 0px;
 }
-#toolbar div > ul > li > a:hover {
+.toolbar div > ul > li > a:hover {
   background-color: #fff; 
   color: #333
 } 
@@ -44,7 +42,7 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
  * Sub navigaton
  **/
 .sub { 
-  min-width: 180px; margin-top: 32px;
+  min-width: 180px; margin: 20px;
   display: none; position: absolute; 
   border-left: 1px solid #ebebeb;
   border-right: 1px solid #ebebeb;
@@ -63,58 +61,68 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
   border-left: 4px solid #ff0000;
   float: top;
 }
-#toolbar div > ul > li:hover .sub { display: block; }
+.toolbar div > ul > li:hover .sub { display: block; }
 .sub li a { -webkit-transition: all .5s linear ; -moz-transition: all .5s linear ; -ms-transition: all .5s linear ; -o-transition: all .5s linear ; transition: all .5s linear ; overflow: hidden; }
 
-.form-style-2{
-    padding: 20px;
-    padding-bottom: 40px;
-    border-radius: 5px;
-    color: white;
-    width: 50%
+#container {
+  position: float;
+  height:75%;
+  margin:0px;
 }
-.form-style-2-heading{ 
-    font-weight: bold;
-    font-style: italic;
+
+#toolwindow {
+    position: relative;
+    background-color: slategrey;
+}
+
+.tool-form {
+    padding-top: 10px;
+    padding-left: 10px;
+    color: white;
+}
+.tool-form-heading{ 
     border-bottom: 2px solid #ddd;
-    margin-bottom: 20px;
-    font-size: 20px;
+    margin: 0px;
     padding-bottom: 3px;
 }
-.form-style-2 label{
-    color: #555555;
+.tool-form label{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    color:black;
     display: block;
     margin: 0px 0px 15px 0px;
 }
-.form-style-2 label > span{
-    width: 200px;
-    font-weight: bold;
+.tool-form label > span{
+    width: 150px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
     float: left;
-    padding-top: 8px;
+    padding-top: 4px;
     padding-right: 5px;
 }
-.form-style-2 span.required{
+.tool-form span.required{
     color:red;
 }
-.form-style-2 .tel-number-field{
-    width: 40px;
+.tool-form .tel-number-field{
+    width: 30px;
     text-align: center;
 }
-.form-style-2 input.input-field{
-    width: 48%;  
+.tool-form input.input-field{
+    width: 30px;
 }
-.form-style-2 input.file-input-field{
+.tool-form input.file-input-field{
     border: 1px solid #ccc;
+    height: 20px;
     display: inline-block;
-    padding: 6px 12px;
+    padding: 6px 6px;
     cursor: pointer; 
     background-color: #888888;
 }
-.form-style-2 input.input-field, 
-.form-style-2 .tel-number-field, 
-.form-style-2 .textarea-field, 
-.form-style-2 .select-field{
-   height: 29px;
+.tool-form input.input-field, 
+.tool-form .tel-number-field, 
+.tool-form .textarea-field, 
+.tool-form .select-field{
+   height: 20px;
    overflow: hidden;
    width: 240px;
    background-color: #888888;
@@ -123,20 +131,21 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
    border-radius: 5px;
    color: #ffffff;
 }
-.form-style-2 .input-field:focus, 
-.form-style-2 .tel-number-field:focus, 
-.form-style-2 .textarea-field:focus,  
-.form-style-2 .select-field:focus{
+.tool-form .input-field:focus, 
+.tool-form .tel-number-field:focus, 
+.tool-form .textarea-field:focus,  
+.tool-form .select-field:focus{
     border: 1px solid #0C0;
 }
-.form-style-2 .textarea-field{
+.tool-form .textarea-field{
     height:100px;
     width: 55%;
 }
-.form-style-2 input[type=submit],
-.form-style-2 input[type=button]{
+.tool-form input[type=submit],
+.tool-form input[type=button]{
+    height: 25px;
     border: none;
-    padding: 8px 15px 8px 15px;
+    padding: 2px 8px 2px 8px;
     background: #444466;
     color: #fff;
     box-shadow: 1px 1px 4px #DADADA;
@@ -147,8 +156,8 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
     -moz-border-radius: 3px;
     color: #ffffff;
 }
-.form-style-2 input[type=submit]:hover,
-.form-style-2 input[type=button]:hover{
+.tool-form input[type=submit]:hover,
+.tool-form input[type=button]:hover{
     background: #333377;
     color: #fff;
 }

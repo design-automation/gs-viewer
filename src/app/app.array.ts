@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DATA } from '../formatstructure/data';
-import { OBJTYPE } from '../formatstructure/data';
+import { DATA } from '../data/data';
+import { OBJTYPE } from '../data/data';
 
 export class AppArray<T> {
 	values:Array<T>;

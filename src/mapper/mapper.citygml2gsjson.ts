@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { AppArray } from '../app/app.array';
 import { Mapper } from './mapper.component';
-import { GSJSON } from '../formatstructure/gsjson';
-import { Metadata } from '../formatstructure/gsjson';
-import { Skins } from '../formatstructure/gsjson';
-import { Attribute } from '../formatstructure/gsjson';
-import { Collections } from '../formatstructure/gsjson';
-import { DATA } from '../formatstructure/data';
-import { OBJTYPE } from '../formatstructure/data';
-import { CEntry } from '../formatstructure/gsjson';
+import { GSJSON } from '../data/gsjson';
+import { Metadata } from '../data/gsjson';
+import { Skins } from '../data/gsjson';
+import { Attribute } from '../data/gsjson';
+import { Collections } from '../data/gsjson';
+import { DATA } from '../data/data';
+import { OBJTYPE } from '../data/data';
+import { CEntry } from '../data/gsjson';
 import { Util } from '../util/gsjsonutil';
 
 export class CityGML2GSJSON implements Mapper {

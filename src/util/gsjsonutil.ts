@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
 import { AppArray } from '../app/app.array';
-import { DATA } from '../formatstructure/data';
-import { OBJTYPE } from '../formatstructure/data';
+import { DATA } from '../data/data';
+import { OBJTYPE } from '../data/data';
 
 export class Util {
 
 	static createWiresFromFaces(faces:Array<any>,points:Array<any>) {
-		var edges=Util.createEdgesForWires(faces, points);
+		var edges=Util.createEdgesFromFaces(faces, points);
 		var wires=[];
 		Util.createWires(edges, null, wires, null)
 
 		return wires;
 	}
 
-	static createEdgesForWires(faces:Array<any>, points:Array<any>){
+	static createEdgesFromFaces(faces:Array<any>, points:Array<any>){
 		var edges=new AppArray([]);
 		for (var j=0;j<faces.length;j++) {
 			var face=faces[j];

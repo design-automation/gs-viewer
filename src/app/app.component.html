@@ -1,31 +1,43 @@
 <body>
-
-<div class="alldiv">
-<nav id="toolbar">
-  <div class="container">
+<div id="appdiv">
+<nav class="toolbar">
+  <div>
   <ul>
-    <li class="dropdown"><a href="#">Tools <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
+    <li class="dropdown"><a href="#">File <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
       <ul class="sub">
-        <li><a href="#">Mapping Tools</a></li>
-        <li><a href="#">Semantic Viewer</a></li>
-        <li><a href="#">Cesium Viewer</a></li>
+        <li><a href="#" id="openf">Open</a></li>
+        <li><a href="#" id="savef">Save</a></li>
+        <li><a href="#" id="ethreejs">Export As ThreeJS</a></li>
+        <li><a href="#" id="icitygml">Import From CityGML</a></li>
+        <li><a href="#">Exit</a></li>
       </ul>
     </li>
-    <li><a href="https://github.com/akiajk/gs-JSON">GitHUB</a></li>
-    <li><a href="https://github.com/akiajk/gs-JSON/blob/master/README.md">Wiki</a></li>
-    <li><a href="#">Viewer</a></li>
+    <li class="dropdown"><a href="#">Tools <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
+      <ul class="sub">
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="-1" checked>&nbsp;None</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="0">&nbsp;Views</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="1">&nbsp;Semantics</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="2">&nbsp;Numbering</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="3">&nbsp;Colors</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="4">&nbsp;Ambient Light</a></li>
+        <li><a href="#"><input type="radio" name="tool" id="tool" value="5">&nbsp;Directional Light</a></li>
+      </ul>
+    </li>
+    <li class="dropdown">
+          <a href="#">Wiki<i class="icon-caret-down"></i><i class="icon-sort"></i></a>
+          <ul class="sub">
+          <li><a href="https://github.com/akiajk/gs-JSON">SourceCode</a></li>
+          <li><a href="https://github.com/akiajk/gs-JSON">Tutorial</a></li>
+          </ul>
+    </li>  
     <li><a href="#">About</a></li>
     <li><a href="#">Contact</a></li>
   </ul>
   </div>
 </nav>
-<div class="form-style-2">
-				<label for="inputType"><span>Select Translation</span><select id="inputType" class="select-field">
-				</select></label>
+<div id="container"></div>
+<div id="toolwindow">
 
-				<label for="inputf"><span>Select Input File<span class="required">*</span></span><input type="file" class="file-input-field" name="inputf" id="inputf" value="" /></label>
-
-				<label><span>&nbsp;</span><input type="submit" id="translate" value="Translate" /></label>
 </div>
 </div>
 </body>

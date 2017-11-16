@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { GSJSON } from '../formatstructure/gsjson';
-import { Collections } from '../formatstructure/gsjson';
-import { Metadata } from '../formatstructure/gsjson';
-import { Skins } from '../formatstructure/gsjson';
-import { Attribute } from '../formatstructure/gsjson';
+import { GSJSON } from '../data/gsjson';
+import { Collections } from '../data/gsjson';
+import { Metadata } from '../data/gsjson';
+import { Skins } from '../data/gsjson';
+import { Attribute } from '../data/gsjson';
 
 export enum OBJTYPE {
 	NUMARRAY,

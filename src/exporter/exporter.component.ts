@@ -46,7 +46,8 @@ export class ThreejsExporter implements Exporter {
 			return;
 		}
 		var gsjson=new GSJSON2Threejs().map(this.reader.read());
-		return JSONReaderWriter.write(gsjson);
+		return gsjson;
+		//return JSONReaderWriter.write(gsjson);
 	};
 }
 
