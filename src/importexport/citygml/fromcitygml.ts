@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
-import { AppArray } from '../app/app.array';
-import { Mapper } from './mapper.component';
-import { GSJSON } from '../data/gsjson';
-import { Metadata } from '../data/gsjson';
-import { Skins } from '../data/gsjson';
-import { Attribute } from '../data/gsjson';
-import { Collections } from '../data/gsjson';
-import { DATA } from '../data/data';
-import { OBJTYPE } from '../data/data';
-import { CEntry } from '../data/gsjson';
-import { Util } from '../util/gsjsonutil';
+import { AppArray } from '../../app/app.array';
+import { AbstractMapper } from '../base.component';
+import { GSJSON } from '../../data/gsjson';
+import { Metadata } from '../../data/gsjson';
+import { Skins } from '../../data/gsjson';
+import { Attribute } from '../../data/gsjson';
+import { Collections } from '../../data/gsjson';
+import { DATA } from '../../data/data';
+import { OBJTYPE } from '../../data/data';
+import { CEntry } from '../../data/gsjson';
+import { Util } from '../../util/gsjsonutil';
 
-export class FromCityGML implements Mapper {
+export class FromCityGML extends AbstractMapper {
   posAppArray:AppArray<Array<number>>;
   constructor() {
+    super();
     DATA.initDataset();
     this.posAppArray=new AppArray(DATA.positions);
   }

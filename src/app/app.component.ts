@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Exporter } from '../exporter/exporter.component';
-import { GSJSONExporter } from '../exporter/exporter.component';
-import { ThreejsExporter } from '../exporter/exporter.component';
-import { JSONReaderWriter } from '../exporter/exporter.readerwriter';
+import { Importer } from '../importexport/base.component';
+import { Exporter } from '../importexport/base.component';
+import { ImportExportFactory } from '../importexport/factory.component';
+import { JSONReader } from '../importexport/readerwriter.component';
 import { ViewerComponent } from './viewer/viewer.component';
+import { DATA } from '../data/data';
 
 @Component({
   	selector: 'app-root',
@@ -12,109 +13,79 @@ import { ViewerComponent } from './viewer/viewer.component';
 })
 
 export class AppComponent {
-  static exporter:Exporter;
+  constants=ImportExportFactory.KEYS;
   static selection:HTMLSelectElement;
   static input:HTMLInputElement;
-  static data:string;
-  static inputFile:File;
-  static inputType:string;
-  static outputType:string;
-
-  static reset() {
-    AppComponent.inputType="";
-    AppComponent.outputType="";
-    AppComponent.inputFile=null;
-    AppComponent.data="";
-  }
+  static download:HTMLAnchorElement;
 
   static initForm(){
     AppComponent.input=document.createElement('input');
     AppComponent.input.type="file";
-    document.getElementById("openf").onclick=function() {
-      AppComponent.reset();
-      AppComponent.inputType="gsjson";
-      AppComponent.outputType="gsjson";
-      AppComponent.input.click();
-    }
-    document.getElementById("icitygml").onclick=function() {
-      AppComponent.reset();
-      AppComponent.inputType="citygml";
-      AppComponent.outputType="gsjson";
-      AppComponent.input.click();
-    }
-    document.getElementById("ethreejs").onclick=function() {
-      AppComponent.reset();
-      AppComponent.inputType="gsjson";
-      AppComponent.outputType="threejs";
-      AppComponent.exportf();
-    }
-  }
+    AppComponent.download = document.createElement('a');
 
-  static setListeners() {
-    AppComponent.input.addEventListener("change", this.openf, false);
-  }
-
-  static savef(inputEvent) {
-    AppComponent.save(AppComponent.data);
-  }
-
-  static openf(inputEvent) {
-    AppComponent.inputFile=inputEvent.target.files[0];
-    var filepatharray=AppComponent.inputFile.name.split(".");
-    var ext=filepatharray[filepatharray.length-1];
-    var it=AppComponent.inputType;
-    var ot=AppComponent.outputType;
-    if(it=="citygml" && ot=="gsjson") {
-      if(ext=="gml" || ext=="xml") {
-        var exporter=new GSJSONExporter(AppComponent.inputFile);
-        AppComponent.exporter=exporter;
-        exporter.reader.onload=function() {
-          AppComponent.data=AppComponent.translate();
-          var exporter=new ThreejsExporter(AppComponent.inputFile);
-          AppComponent.exporter=exporter;
-          exporter.reader.onload=function() {
-            var data=AppComponent.translate();
-            //Viewer Code here  
-          }     
-        }     
-        AppComponent.outputType=null;   
-      } else {
-        alert("Select gml or xml file as input for this conversion.");
-        AppComponent.inputFile=null;
+    var importers=document.getElementsByName("importers");
+    for(var i=0;i<importers.length;i++) {
+      importers[i].onclick=function(this,event) {
+        AppComponent.input.id=this.id;
+        AppComponent.input.onchange=function(this,e) {
+          AppComponent.importFile(e,this.id);
+        };
+        AppComponent.input.click();
       }
-    } else if(it=="gsjson" && ot=="gsjson") {
-      AppComponent.data=null;//to do
-      //To Do Viewer
     }
+
+    var exporters=document.getElementsByName("exporters");
+    for(var i=0;i<exporters.length;i++) {
+      exporters[i].onclick=function(this,event) {
+        AppComponent.exportFile(this.id);
+      }
+    }
+    // document.getElementById("openf").onclick=function() {
+    //   AppComponent.input.onclick=function(e) {
+    //     AppComponent.importFile(e,"gs");
+    //   };
+    //   AppComponent.input.click();
+    // }
+    // document.getElementById("savef").onclick=function() {
+    //   AppComponent.exportFile("threejs");
+    // }
+    // document.getElementById("icitygml").onclick=function() {
+    //   AppComponent.input.onclick=function(e) {
+    //     AppComponent.importFile(e,"citygml");
+    //   };
+    //   AppComponent.input.click();
+    // }
+    // document.getElementById("ethreejs").onclick=function() {
+    //   AppComponent.exportFile("threejs");
+    // }
   }
 
-  static exportf() {
-    var exporter=new GSJSONExporter(AppComponent.inputFile);
-    //var exporter=new ThreeJSExporter(AppComponent.data);
-    AppComponent.exporter=exporter;
-    exporter.reader.onload=function() {
-      var data=AppComponent.translate();
-      AppComponent.save(data);
-    }     
-    AppComponent.outputType=null;  
-  }
-
-  static translate() {
-    if(AppComponent.inputFile==null) {
-      alert("Select appropriate input for this conversion.");
+  static importFile(inputEvent, inputType) {
+    var inputFile=inputEvent.target.files[0];  
+    var filepatharray=inputFile.name.split(".");
+    var ext=filepatharray[filepatharray.length-1];
+    
+    if(inputFile==null || inputFile==undefined) {
+      alert("Please select input file");
       return;
     }
-    var data = AppComponent.exporter.export();
-    return data;
+    var importer=ImportExportFactory.getImporter(inputFile, inputType);
+    importer.reader.onload=function() {
+      var data = importer.import();
+      //viewer code here  
+    }
+  }
+
+  static exportFile(outputType:string) {
+    var exporter=ImportExportFactory.getExporter(outputType);
+    AppComponent.save(exporter.export());
   }
 
   static save(data) {
-    var op=JSONReaderWriter.write(data);
-    var a = document.createElement('a');
-    a.href = 'data:' + op;
-    a.download = 'data';
-    a.innerHTML = 'Download File';
-    a.click();
+    AppComponent.download.href = 'data:' + data;
+    AppComponent.download.download = 'data';
+    AppComponent.download.innerHTML = 'Download File';
+    AppComponent.download.click(); 
   }
 }
 
@@ -123,7 +94,6 @@ window.onload=function() {
   viewer=new ViewerComponent();
   animate();
   AppComponent.initForm();
-  AppComponent.setListeners();
 }
 
 function animate() {
