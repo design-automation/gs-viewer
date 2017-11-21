@@ -1,6 +1,7 @@
 import { JSONReader } from './readerwriter.component';
 import { XMLReader } from './readerwriter.component';
 import { FromCityGML } from './citygml/fromcitygml';
+import { ToThreeJS } from './threejs/tothreejs';
 import { AbstractMapper } from './base.component';
 import { Importer } from './base.component';
 import { Exporter } from './base.component';
@@ -39,6 +40,8 @@ export class ImportExportFactory {
 		if(outputType==null || outputType==undefined) {
 			alert("Please select input file");
 			return null;
+		} else if(outputType==exporters.threejs) {
+			 return new Exporter("text/json;charset=utf-8,",new ToThreeJS());
 		} else {
 			 return new Exporter("text/json;charset=utf-8,",ImportExportFactory.DONOTHING);
 		}
