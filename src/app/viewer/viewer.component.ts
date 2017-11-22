@@ -15,7 +15,7 @@ export class ViewerComponent implements OnInit {
     this.lights.addDirectionalLight();
     this.lights.addAmbientLight();
     this.gui=new DatGUI(this);
-    this.sidetools=new SideTools(this);
+    this.sidebar=new SideBar(this);
   }
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class ViewerComponent implements OnInit {
   controls:any;
   lights:Lights;
   gui:DatGUI;
-  sidetools:SideTools;
+  sidebar:SideBar;
 
   init() {
   	this.scene=new THREE.Scene();
@@ -198,39 +198,36 @@ export class DatGUI {
   }
 }
 
-export class SideTools {
-  sidetools:any;
+export class SideBar {
+  sidebar:any;
   right:any;
   button:any;
+  sidetools:SideTools;
 
   constructor(viewer:ViewerComponent){
     var alltools=document.getElementById("sidebar");
     
-    this.sidetools=document.createElement("table");
-    alltools.appendChild(this.sidetools);
-    this.sidetools.style.height="100%";
+    this.sidebar=document.createElement("table");
+    alltools.appendChild(this.sidebar);
+    this.sidebar.style.height="100%";
 
     var tr=document.createElement("tr");
     viewer.container.appendChild(alltools);
     tr.setAttribute('valign','top');
-    this.sidetools.appendChild(tr);
+    this.sidebar.appendChild(tr);
 
     var td=document.createElement("td");
     tr.appendChild(td);
     tr.style.height="100%";
 
-    this.button=document.createElement("input");
-    this.button.type="button";
-    this.button.value=">";
-    this.button.style.height="20px";
-    this.button.className="slider";
-    td.appendChild(this.button); 
+    this.button=SideTools.createSideTool(">", td);
 
     this.right=document.createElement("td");
-    this.right.innerHTML="<input type='button' value='O'/><br/><input type='button' value='C'>";
     this.right.style.background="grey";
     this.right.style.height="100%";
     tr.appendChild(this.right);
+
+    this.sidetools=new SideTools(this.right);
 
     var self=this;
     this.button.onclick= function(this,e) {
@@ -242,5 +239,27 @@ export class SideTools {
           self.button.value="<";
       }
     }
+  }
+}
+
+export class SideTools {
+  zoom:any;
+  selector:any;
+  view:any;
+
+  constructor(parent){
+    this.zoom=SideTools.createSideTool("Z", parent);
+    this.selector=SideTools.createSideTool("S", parent);
+    this.view=SideTools.createSideTool("V", parent);
+  }
+
+  static createSideTool(val, parent) {
+    var btn=document.createElement("input");
+    btn.type="button";
+    btn.id=val;
+    btn.value=val;
+    parent.appendChild(btn);
+    parent.appendChild(document.createElement("br"));
+    return btn;
   }
 }
