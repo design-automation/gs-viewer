@@ -14,7 +14,7 @@ html, body {
 
 a { text-decoration: none; color: #fff; text-transform: uppercase; }
 .toolbar { background-color: #333; }
-.toolbar ul { list-style: none; overflow: hidden; margin-bottom: 0px; }
+.toolbar ul { list-style: none; overflow: hidden; margin-bottom: 0px; z-index: 1; }
 .toolbar div > ul > li { display:inline-block; float: left; }
 .toolbar div > ul > li:hover { background-color: #fff; }
 .toolbar div > ul > li:hover a { color: #333; }
