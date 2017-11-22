@@ -10,11 +10,12 @@ import * as dat from 'dat.gui/build/dat.gui.js'
 })
 export class ViewerComponent implements OnInit {
   constructor() { 
-  	this.init();
+    this.init();
     this.lights=Lights.getInstance(this);
     this.lights.addDirectionalLight();
     this.lights.addAmbientLight();
     this.gui=new DatGUI(this);
+    this.sidetools=new SideTools(this);
   }
 
   ngOnInit() {
@@ -29,6 +30,7 @@ export class ViewerComponent implements OnInit {
   controls:any;
   lights:Lights;
   gui:DatGUI;
+  sidetools:SideTools;
 
   init() {
   	this.scene=new THREE.Scene();
@@ -48,7 +50,7 @@ export class ViewerComponent implements OnInit {
   	this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
   	this.camera.position.z = 500;
   	this.controls=new OrbitControls(this.camera, this.renderer.domElement);
-  	this.controls.enableZoom = false;
+  	this.controls.enableZoom = true;
 
   	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
   	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
@@ -63,8 +65,8 @@ export class ViewerComponent implements OnInit {
   	}
   }
 
-  onWindowResize() {
-  	this.renderer.setPixelRatio( window.devicePixelRatio );
+  onWindowResize(this,e) {
+  	this.renderer.setPixelRatio( this.devicePixelRatio );
   	this.camera.aspect = this.width / this.height;
   	this.camera.updateProjectionMatrix();
   	this.renderer.setSize( this.width, this.height );
@@ -192,6 +194,53 @@ export class DatGUI {
       this.toolwindow.appendChild(this.alightgui.domElement);
     } else if(index==5) {
       this.toolwindow.appendChild(this.dlightgui.domElement);
+    }
+  }
+}
+
+export class SideTools {
+  sidetools:any;
+  right:any;
+  button:any;
+
+  constructor(viewer:ViewerComponent){
+    var alltools=document.getElementById("sidebar");
+    
+    this.sidetools=document.createElement("table");
+    alltools.appendChild(this.sidetools);
+    this.sidetools.style.height="100%";
+
+    var tr=document.createElement("tr");
+    viewer.container.appendChild(alltools);
+    tr.setAttribute('valign','top');
+    this.sidetools.appendChild(tr);
+
+    var td=document.createElement("td");
+    tr.appendChild(td);
+    tr.style.height="100%";
+
+    this.button=document.createElement("input");
+    this.button.type="button";
+    this.button.value=">";
+    this.button.style.height="20px";
+    this.button.className="slider";
+    td.appendChild(this.button); 
+
+    this.right=document.createElement("td");
+    this.right.innerHTML="<input type='button' value='O'/><br/><input type='button' value='C'>";
+    this.right.style.background="grey";
+    this.right.style.height="100%";
+    tr.appendChild(this.right);
+
+    var self=this;
+    this.button.onclick= function(this,e) {
+        if (self.right.style.display == "none") {
+          self.right.style.display = "block";
+          self.button.value=">";
+      } else {
+          self.right.style.display = "none";
+          self.button.value="<";
+      }
     }
   }
 }

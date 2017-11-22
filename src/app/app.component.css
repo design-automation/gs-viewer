@@ -65,7 +65,7 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
 .sub li a { -webkit-transition: all .5s linear ; -moz-transition: all .5s linear ; -ms-transition: all .5s linear ; -o-transition: all .5s linear ; transition: all .5s linear ; overflow: hidden; }
 
 #container {
-  position: float;
+  position: relative;
   height:75%;
   margin:0px;
 }
@@ -73,6 +73,13 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
 #toolwindow {
     position: relative;
     background-color: slategrey;
+}
+
+.sidebar {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
 }
 
 .tool-form {
@@ -160,4 +167,28 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
 .tool-form input[type=button]:hover{
     background: #333377;
     color: #fff;
+}
+
+.rightstyle {
+  width: 30px;
+  height: 100%;
+  float: right;
+  background: #FFFFFF;
+  background-repeat: repeat; 
+  background-attachment: scroll; 
+  overflow: auto; 
+}
+
+.leftstyle {
+    background: #e6e6e6;
+    height: 100%;
+}
+
+.slider {
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-right: 10px solid black;
+    border-bottom: 30px solid transparent;
+
 }
