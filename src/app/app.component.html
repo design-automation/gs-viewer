@@ -1,5 +1,6 @@
 <body>
 <div id="appdiv">
+  <split direction="vertical">
 <nav class="toolbar">
   <div>
   <ul>
@@ -35,11 +36,16 @@
   </ul>
   </div>
 </nav>
+<split-area [size]="91.5" id="splitcontainer">
 <div id="container">
   <div id='sidebar' class='sidebar'></div>
 </div>
+</split-area>
+<split-area [size]="8.5" id="splittoolwindow">
 <div id="toolwindow">
 
 </div>
+</split-area>
+</split>
 </div>
 </body>

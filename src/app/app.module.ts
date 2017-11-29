@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
 import { ViewerComponent } from './viewer/viewer.component';
+import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { ViewerComponent } from './viewer/viewer.component';
     ViewerComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,AngularSplitModule
   ],
   providers: [],
   bootstrap: [AppComponent]

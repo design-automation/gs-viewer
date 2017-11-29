@@ -10,6 +10,7 @@ html, body {
   width: 99%;
   height: 98%;
   background-color: black;
+  overflow: hidden;
 }
 
 a { text-decoration: none; color: #fff; text-transform: uppercase; }
@@ -66,8 +67,9 @@ a { text-decoration: none; color: #fff; text-transform: uppercase; }
 
 #container {
   position: relative;
-  height:75%;
+  height:100%;
   margin:0px;
+  overflow: hidden;
 }
 
 #toolwindow {

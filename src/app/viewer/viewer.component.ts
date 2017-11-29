@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Component, OnInit } from '@angular/core';
-import * as dat from 'dat.gui/build/dat.gui.js'
+import * as dat from 'dat.gui/build/dat.gui.js';
+import { AngularSplitModule } from 'angular-split';
 
 @Component({
   selector: 'app-viewer',
@@ -11,6 +12,7 @@ import * as dat from 'dat.gui/build/dat.gui.js'
 export class ViewerComponent implements OnInit {
   constructor() { 
     this.init();
+    this.view = View.getInstance(this);
     this.lights=Lights.getInstance(this);
     this.lights.addDirectionalLight();
     this.lights.addAmbientLight();
@@ -29,52 +31,53 @@ export class ViewerComponent implements OnInit {
   height:any;
   controls:any;
   lights:Lights;
+  view:View;
   gui:DatGUI;
   sidebar:SideBar;
 
   init() {
-  	this.scene=new THREE.Scene();
-  	this.scene.background = new THREE.Color( 0xcccccc );
-  	this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+    this.scene=new THREE.Scene();
+    this.scene.background = new THREE.Color( 0xcccccc );
   
-  	this.container=document.getElementById( 'container' );
-  	this.width=this.container.clientWidth;
-  	this.height=this.container.clientHeight;
+    this.container=document.getElementById( 'container' );
+    this.width=this.container.clientWidth;
+    this.height=this.container.clientHeight;    
 
-  	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
-	  this.renderer.setPixelRatio( window.devicePixelRatio );
-	  this.renderer.setSize( this.width, this.height );
-	  this.container.appendChild( this.renderer.domElement );
-    window.addEventListener( 'resize', this.onWindowResize, false );
+    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.renderer.setPixelRatio( window.devicePixelRatio );
+    this.renderer.setSize( this.width, this.height );
+    this.container.appendChild( this.renderer.domElement );
+    var self=this;
+    window.addEventListener( 'resize', function() {
+      self.width=self.container.clientWidth;
+      self.height=self.container.clientHeight;
+      self.renderer.setPixelRatio( window.devicePixelRatio );
+      self.camera.aspect = self.width / self.height;
+      self.camera.updateProjectionMatrix();
+      self.renderer.setSize( self.width, self.height );
+      self.render();
+    }, false );
 
-  	this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
-  	this.camera.position.z = 500;
-  	this.controls=new OrbitControls(this.camera, this.renderer.domElement);
-  	this.controls.enableZoom = true;
+    this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
+    this.camera.position.z = 500;
+    this.controls=new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableZoom = true;
 
-  	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-  	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
-  	for ( var i = 0; i < 500; i ++ ) {
-    	var mesh = new THREE.Mesh( geometry, material );
-    	mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-    	mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-    	mesh.position.z = ( Math.random() - 0.5 ) * 1000;
-    	mesh.updateMatrix();
-    	mesh.matrixAutoUpdate = false;
-    	this.scene.add( mesh );
-  	}
-  }
-
-  onWindowResize(this,e) {
-  	this.renderer.setPixelRatio( this.devicePixelRatio );
-  	this.camera.aspect = this.width / this.height;
-  	this.camera.updateProjectionMatrix();
-  	this.renderer.setSize( this.width, this.height );
-  	this.render();
+    var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
+    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+    for ( var i = 0; i < 500; i ++ ) {
+      var mesh = new THREE.Mesh( geometry, material );
+      mesh.position.x = ( Math.random() - 0.5 ) * 1000;
+      mesh.position.y = ( Math.random() - 0.5 ) * 1000;
+      mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+      mesh.updateMatrix();
+      mesh.matrixAutoUpdate = false;
+      this.scene.add( mesh );
+    }
   }
 
   render() {
-  	this.renderer.render( this.scene, this.camera );
+    this.renderer.render( this.scene, this.camera );
   }
 }
 
@@ -147,39 +150,129 @@ export class Lights {
   }
 }
 
+export class View{
+  static view:View;
+  viewer:ViewerComponent;
+  effectController:any;
+  static getInstance(viewer:ViewerComponent) {
+    if(View.view==null || View.view==undefined) {
+      View.view=new View(viewer);
+    }
+    return View.view;
+  }
+
+  private constructor(viewer:ViewerComponent){
+    this.viewer=viewer;
+    this.effectController={
+      grid:false,
+      axis:false,
+      fog:false
+    }
+  }
+  static changegird(){
+    var effectController=View.view.effectController;
+    var gridhelper=new THREE.GridHelper( 10000, 10000 );
+    gridhelper.name="GridHelper";
+    if(effectController.grid){
+      View.view.viewer.scene.add( gridhelper);
+    }else {
+      View.view.viewer.scene.remove(View.view.viewer.scene.getObjectByName("GridHelper"));
+    }
+    View.view.viewer.render();
+  }
+  static changeaxis(){
+    var effectController=View.view.effectController;
+    var axishelper = new THREE.AxisHelper( 1000 );
+    axishelper.name="AxisHelper";
+    if(effectController.axis){
+        View.view.viewer.scene.add( axishelper);
+    }else{
+        View.view.viewer.scene.remove(View.view.viewer.scene.getObjectByName("AxisHelper"));
+    }
+    View.view.viewer.render();
+  }
+  static changefog(){
+    var effectController=View.view.effectController;
+    if(effectController.fog){
+      View.view.viewer.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+    }else {
+        View.view.viewer.scene.fog=null;
+    }
+    View.view.viewer.render();
+  }
+
+}
+
 export class DatGUI {
-  toolwindow:any;
+  tooltab:any;
+  toolview:any;
   alightgui:dat.GUI;
   dlightgui:dat.GUI;
+  viewgui:dat.GUI;
   viewer:ViewerComponent;
   constructor(viewer:ViewerComponent) {
-    this.toolwindow=document.getElementById("toolwindow");
+    var toolwindow=document.getElementById("toolwindow");
+    this.addButton();
     this.viewer=viewer;
     var lights=viewer.lights;
-    
+    var view=viewer.view;
+
     this.alightgui=this.addTool('alight');
     this.dlightgui=this.addTool('dlight');
+    this.viewgui=this.addTool('view');
 
-    var h = this.alightgui.addFolder( "Lighting" );
+    var h = this.alightgui.addFolder( "Ambient Light" );
     h.add( lights.effectController, "hue", 0.0, 1.0, 0.025 ).name("hue").onChange( Lights.changeLights );
     h.add( lights.effectController, "saturation", 0.0, 1.0, 0.025 ).name("saturation").onChange( Lights.changeLights );
     h.add( lights.effectController, "lightness", 0.0, 1.0, 0.025 ).name("lightness").onChange( Lights.changeLights );
     h.add( lights.effectController, "ambient", 0.0, 1.0, 0.025 ).name("ambient").onChange( Lights.changeLights );
 
-    h = this.dlightgui.addFolder( "Light direction" );
+    h = this.dlightgui.addFolder( "Direction Light" );
     h.add( lights.effectController, "x", -1.0, 1.0, 0.025 ).name("x").onChange( Lights.changeLights );
     h.add( lights.effectController, "y", -1.0, 1.0, 0.025 ).name("y").onChange( Lights.changeLights );
     h.add( lights.effectController, "z", -1.0, 1.0, 0.025 ).name("z").onChange( Lights.changeLights );
-    this.enableTool(0);
+    this.enableTool(-1);
 
+    h = this.viewgui.addFolder( "Views" );
+    h.add( view.effectController, "grid" ).name( "grid" ).onChange( View.changegird );
+    h.add( view.effectController, "axis" ).name( "axis" ).onChange( View.changeaxis );
+    h.add( view.effectController, "fog" ).name( "fog" ).onChange( View.changefog );
 
-    var tools=document.getElementsByName("tool");
+    var tools=document.getElementsByName("tool1");
     var gui=this;
     for(var i=0;i<tools.length;i++) {
-      tools[i].onchange=function(event) {
+      tools[i].onclick=function(event) {
         gui.enableTool(((event.target) as any).value);
       }
     };
+  }
+
+  Numbering(){
+    this.toolview.innerHTML=
+      "<table style=\"background-color:black; color:white;\" width=100% height= 15px border=\"1\" cellspacing=\"0\" cellpadding=\"0\" id=\"table\" name =\"table\">"+
+      "<tr>"+"<td width=\"200\" name=\"points\"  align=center >Points</td>"+
+      "<td width=\"300\" name=\"X\" align=center>X</td>"+
+      "<td width=\"300\" name=\"Y\" align=center>Y</td>"+
+      "<td width=\"300\" name=\"Z\" align=center>Z</td></tr></table></div>";
+  }
+
+  AttributeView(){
+    this.toolview.innerHTML="<split direction=\"vertical\">"+
+    "<split-area [size]=\"40\" >"+"<div id=\"buttonview\"></div>"+
+    "</split-area>"+"<split-area [size]=\"60\" >"+"<div id=\"tableview\"></div>"+
+    "</split-area></split>";
+    var buttonview=document.getElementById("buttonview");
+    buttonview.style.background="black";
+    var boxes=SideTools.createSideTool("Boxes", buttonview);
+    boxes.style.width="60px";
+    var floors=SideTools.createSideTool("Floors", buttonview);
+    floors.style.width="60px";
+    var roofs=SideTools.createSideTool("Roofs", buttonview);
+    roofs.style.width="60px";
+    var text=SideTools.createSideTool("Text", buttonview);
+    text.style.width="60px";
+    var walls=SideTools.createSideTool("Walls", buttonview);
+    walls.style.width="60px";
   }
 
   addTool(id) {
@@ -189,12 +282,33 @@ export class DatGUI {
   }
 
   enableTool(index) {
-    this.toolwindow.innerHTML="";
-    if(index==4) {
-      this.toolwindow.appendChild(this.alightgui.domElement);
+    this.toolview.innerHTML="";
+    if(index==0) {
+      this.toolview.appendChild(this.viewgui.domElement);
+    }else if(index==1) {
+      this.AttributeView();
+    }else if(index==2) {
+      this.Numbering();
+    }else if(index==4) {
+      this.toolview.appendChild(this.alightgui.domElement);
     } else if(index==5) {
-      this.toolwindow.appendChild(this.dlightgui.domElement);
+      this.toolview.appendChild(this.dlightgui.domElement);
     }
+  }
+  addButton(){
+    var toolwindow=document.getElementById("toolwindow");
+    this.tooltab=document.createElement("div"); 
+    this.tooltab.style.background="grey"; 
+    this.tooltab.innerHTML="<a href=\"#\"><button name=\"tool1\" id=\"tool\" value=\"-1\">&nbsp;None</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"0\">&nbsp;Views</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"1\">&nbsp;Attirbute</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"2\">&nbsp;Numbering</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"3\">&nbsp;Colors</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"4\">&nbsp;Ambient Light</button>"+
+        "<button name=\"tool1\" id=\"tool\" value=\"5\">&nbsp;Directional Light</button>";
+    toolwindow.appendChild(this.tooltab);
+    this.toolview=document.createElement("div");
+    toolwindow.appendChild(this.toolview);
   }
 }
 
@@ -225,6 +339,7 @@ export class SideBar {
     this.right=document.createElement("td");
     this.right.style.background="grey";
     this.right.style.height="100%";
+    this.right.style.display="none";
     tr.appendChild(this.right);
 
     this.sidetools=new SideTools(this.right);
@@ -246,11 +361,14 @@ export class SideTools {
   zoom:any;
   selector:any;
   view:any;
+  viewer:ViewerComponent;
 
   constructor(parent){
     this.zoom=SideTools.createSideTool("Z", parent);
+    this.zoomfunction(this.viewer);
     this.selector=SideTools.createSideTool("S", parent);
     this.view=SideTools.createSideTool("V", parent);
+
   }
 
   static createSideTool(val, parent) {
@@ -260,6 +378,17 @@ export class SideTools {
     btn.value=val;
     parent.appendChild(btn);
     parent.appendChild(document.createElement("br"));
+    var br=document.createElement("br");
+    parent.appendChild(document.createElement("br"));
     return btn;
   }
+
+  zoomfunction(viewer:ViewerComponent){
+    this.viewer=viewer;
+    var z=document.getElementById("Z");
+    this.zoom.onclick= function(this,e) {
+      //alert(this.viewer);
+    }
+  }
+  
 }
