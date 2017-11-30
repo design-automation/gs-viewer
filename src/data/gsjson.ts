@@ -55,25 +55,27 @@ export class Attribute {
 
 export class Groups extends Array<GEntry> {
 
-  public getIndex = (name:string) : number => {
+  public getIndex = (name:string, ptype:string) : number => {
       var ind=this.findIndex(function(entry, index, arr){
-        return Groups.areEqual(name, entry);
+        return Groups.areEqual(name, ptype, entry);
       });
       return ind;
   }
 
-  private static areEqual = (name:string, gEntry) : boolean => {
+  private static areEqual = (name:string, pname:string, gEntry) : boolean => {
     if(name!=gEntry.name) {
+      return false;
+    } else if(pname!=gEntry.parent) {
       return false;
     }
     return true;
   }
 
-  public generateEntry = (type:string): GEntry => {
-    var ind=this.getIndex(type);
+  public generateEntry = (type:string, ptype:string): GEntry => {
+    var ind=this.getIndex(type, ptype);
     var entry;
     if(ind<0) {
-      entry=new GEntry(type, []);
+      entry=new GEntry(type, ptype, []);
       this.push(entry);
     } else {
       entry=this[ind];
@@ -88,8 +90,9 @@ export class GEntry {
   parent:string;
   props:any;
 
-  constructor(name:string, objects:Array<number>) {
+  constructor(name:string, pname:string, objects:Array<number>) {
     this.name=name;
+    this.parent=pname;
     this.objects=objects;
   }
 }

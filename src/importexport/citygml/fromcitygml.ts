@@ -30,7 +30,7 @@ export class FromCityGML extends AbstractMapper {
     if(bldgs.length==0) {
       return;
     }
-    var building=DATA.json.groups.generateEntry(type);
+    var building=DATA.json.groups.generateEntry(type, "citygml");
     building.objects=undefined;
     var num_roofs=0,num_walls=0,num_interiorwalls=0,num_floors=0;
     for (var i=0;i<bldgs.length ;i++) {
@@ -54,8 +54,7 @@ export class FromCityGML extends AbstractMapper {
     if(features.length==0) {
       return 0;
     }
-    var entry=DATA.json.groups.generateEntry(type);
-    entry.parent=parent.name;
+    var entry=DATA.json.groups.generateEntry(type, parent.name);
     for (var i=0;i<features.length ;i++) {
       var feature=features[i];
       DATA.json.objs.push(this.mapGeometry(feature));
@@ -71,8 +70,7 @@ export class FromCityGML extends AbstractMapper {
     if(subFeatures.length==0) {
       return;
     }
-    var entry=DATA.json.groups.generateEntry(type);
-    entry.parent=parent.name;
+    var entry=DATA.json.groups.generateEntry(type, parent.name);
     for (var i=0;i<subFeatures.length ;i++) {
       DATA.json.objs.push(this.mapGeometry(subFeatures[i]));
       entry.objects.push(DATA.json.objs.length-1);
