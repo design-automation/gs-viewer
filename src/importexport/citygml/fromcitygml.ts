@@ -52,7 +52,7 @@ export class FromCityGML extends AbstractMapper {
   mapBuildElement(bldg, type, parent) {
     var features=bldg.getElementsByTagName(type);
     if(features.length==0) {
-      return;
+      return 0;
     }
     var entry=DATA.json.groups.generateEntry(type);
     entry.parent=parent.name;
