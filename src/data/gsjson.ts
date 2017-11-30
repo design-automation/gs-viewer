@@ -4,9 +4,10 @@ import { AppArray } from '../app/app.array';
 export class GSJSON {
   metadata:Metadata;
   skins:Skins;
+  points:Array<any>;
+  objs:Array<any>;
+  groups:Groups;
   geometry:Array<any>;
-  attributes:Array<Attribute>;
-  collections:Collections;
 }
 
 export class Metadata { 
@@ -52,27 +53,27 @@ export class Attribute {
     }
 }
 
-export class Collections extends Array<CEntry> {
+export class Groups extends Array<GEntry> {
 
   public getIndex = (name:string) : number => {
       var ind=this.findIndex(function(entry, index, arr){
-        return Collections.areEqual(name, entry);
+        return Groups.areEqual(name, entry);
       });
       return ind;
   }
 
-  private static areEqual = (name:string, cEntry) : boolean => {
-    if(name!=cEntry.name) {
+  private static areEqual = (name:string, gEntry) : boolean => {
+    if(name!=gEntry.name) {
       return false;
     }
     return true;
   }
 
-  public generateEntry = (type:string): CEntry => {
+  public generateEntry = (type:string): GEntry => {
     var ind=this.getIndex(type);
     var entry;
     if(ind<0) {
-      entry=new CEntry(type, []);
+      entry=new GEntry(type, []);
       this.push(entry);
     } else {
       entry=this[ind];
@@ -81,13 +82,14 @@ export class Collections extends Array<CEntry> {
   }
 }
 
-export class CEntry {
+export class GEntry {
   name:string;
-  entities:Array<any>;
+  objects:Array<number>;
+  parent:string;
+  props:any;
 
-  constructor(name:string, entities:Array<any>) {
+  constructor(name:string, objects:Array<number>) {
     this.name=name;
-    this.entities=entities;
+    this.objects=objects;
   }
 }
-

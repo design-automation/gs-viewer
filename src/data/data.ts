@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GSJSON } from '../data/gsjson';
-import { Collections } from '../data/gsjson';
+import { Groups } from '../data/gsjson';
 import { Metadata } from '../data/gsjson';
 import { Skins } from '../data/gsjson';
 import { Attribute } from '../data/gsjson';
@@ -25,14 +25,17 @@ export class DATA {
     DATA.json.metadata=new Metadata("",0.1,"","",""); 
     DATA.json.skins=new Skins([],[],[]);
     
-    DATA.json.geometry=[];
+    //DATA.json.geometry=[];
     
     DATA.points=[];
     DATA.positions=[];
-    DATA.json.attributes=new Array<Attribute>(); 
-    DATA.json.attributes.push(new Attribute("", "position", "points", DATA.points, DATA.positions)); 
-    
-    DATA.json.collections=new Collections();
+    //DATA.json.attributes=new Array<Attribute>(); 
+    //DATA.json.attributes.push(new Attribute("", "position", "points", DATA.points, DATA.positions)); 
+    DATA.json.points=[];
+    DATA.json.objs=[];
+    DATA.json.points.push(DATA.points);
+    DATA.json.points.push(DATA.positions);
+    DATA.json.groups=new Groups();
   }
   static areEqualTypes(value,entry,type) {
     if(type==OBJTYPE.EDGE) {
