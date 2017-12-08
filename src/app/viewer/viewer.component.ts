@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import * as dat from 'dat.gui/build/dat.gui.js';
 import { AngularSplitModule } from 'angular-split';
 import { TreeView} from '@syncfusion/ej2-navigations'; 
-//import * as gs from  "gs-json";
+import {gs_json as gs} from  "gs-json";
 
 @Component({
   selector: 'app-viewer',
@@ -16,6 +16,7 @@ export class ViewerComponent implements OnInit {
     this.init();
     this.view = View.getInstance(this);
     this.lights=Lights.getInstance(this);
+    this.lights.addDirectionalLight();
     this.lights.addAmbientLight();
     this.gui=new DatGUI(this);
     this.sidebar=new SideBar(this);
@@ -24,7 +25,8 @@ export class ViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    //var model = this.exportThreejsUrl("../mixed.gs");
+    var model = this.exportThreejsUrl("../mixed.gs");
+    let ns: gs.IModelData; 
   }
 
   container:any;
@@ -119,13 +121,13 @@ export class ViewerComponent implements OnInit {
     this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
     this.camera.position.z = 500;
     this.camera.updateMatrixWorld();
-    var light = new THREE.DirectionalLight( 0xffffff,0.5 );
+    //this.light = new THREE.DirectionalLight( 0xffffff,0.5 );
     this.controls=new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enabled = false;
-    this.controls.addEventListener( 'change',  function() {
-      light.position.copy( self.camera.position );
-    } );
-    this.scene.add( light );
+    //this.controls.addEventListener( 'change',  function() {
+    //  this.light.position.copy( self.camera.position );
+    //} );
+    //this.scene.add( this.light );
 
     var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
     for ( var i = 0; i < 500; i ++ ) {
@@ -139,7 +141,7 @@ export class ViewerComponent implements OnInit {
       this.scene.add( mesh );
     }
   }
-  /*exportThreejsUrl(url:string):boolean {
+  exportThreejsUrl(url:string):boolean {
     //For example, the url can be "./base/assets/gs-json/box.gs"
     let xmlhttp = new XMLHttpRequest();
     let data: gs.IModelData;
@@ -189,7 +191,7 @@ export class ViewerComponent implements OnInit {
         }
 
     }
-  }*/
+  }
   render() {
     this.renderer.render( this.scene, this.camera );
   }
@@ -229,18 +231,18 @@ export class Lights {
         hue:        0,
         saturation: 0,  // non-zero so that fractions will be shown
         lightness:  0.7,
-        lambient: 0.17,
-        lhue:        0.04,
-        lsaturation: 0.01,  // non-zero so that fractions will be shown
-        llightness:  1.0,
-        lx: 0.32,
-        ly: 0.39,
-        lz: 0.7,
         shadow:false,
-        newshading:this.wireMaterial,
+        newshading:this.wireMaterial
   }
     this.addAmbientLight();
-    //this.addDirectionalLight();
+    this.addDirectionalLight();
+  }
+
+  addDirectionalLight() {
+    var light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 1, 1, 1 );
+    this.viewer.scene.add( light );
+    this.dlight.push(light);
   }
 
   addAmbientLight() {
@@ -257,12 +259,17 @@ export class Lights {
       var ambientLight=alight[i];
       ambientLight.color.setHSL( effectController.hue, effectController.saturation, effectController.lightness * effectController.ambient );
     }
+
+    for(var i=0;i<dlight.length;i++) {
+      var light=dlight[i];
+      light.color.setHSL( effectController.hue, effectController.saturation, effectController.lightness );
+    }
     Lights.lights.viewer.render();
   }
 
   static changeshadow(){
     var effectController=Lights.lights.effectController;
-    var dlight=Lights.lights.dlight;
+    /*var dlight=Lights.lights.dlight;
     if(effectController.shadow){
       for(var i=0;i<dlight.length;i++) {
         var light=dlight[i];
@@ -277,7 +284,7 @@ export class Lights {
         //light.shadowDarkness=0;
       }
       Lights.lights.viewer.render();
-    }
+    }*/
   }
 
   static changematerial(){
@@ -590,7 +597,6 @@ export class Viewers{
       if(setitialized){
         settingstyle.background="#696969";
         settingstyle.color="white";
-        console.log(this.setting);
         settingwindow.style.width="600px";
         settingwindow.style.height="260px";
         settingwindow.style.position="absolute";
@@ -611,6 +617,7 @@ export class Viewers{
     this.zoom=document.getElementById("Z");
     var zoomself=this;
     this.zoom.onclick= function(this,e) {
+      document.body.style.cursor = "crosshair";
       zoomself.zoom.style.background="#696969";
       zoomself.zoom.style.color="white";
       zoomself.pan.style.background=null;
@@ -625,6 +632,7 @@ export class Viewers{
     this.pan=document.getElementById("P");
     var panself=this;
     this.pan.onclick= function(this,e) {
+      document.body.style.cursor = "move";
       panself.pan.style.background="#696969";
       panself.pan.style.color="white";
       panself.zoom.style.background=null;
@@ -639,6 +647,7 @@ export class Viewers{
     this.rotate=document.getElementById("R");
     var rotateself=this;
     this.rotate.onclick= function(this,e) {
+      document.body.style.cursor = " -webkit-grab";
       rotateself.pan.style.background=null;
       rotateself.pan.style.color=null;
       rotateself.zoom.style.background=null;
