@@ -110,7 +110,6 @@ export class ViewerComponent implements OnInit {
           });
         }
       } else {
-        console.log(INTERSECTED1.material.emissive.getHex());
         if ( INTERSECTED1 ) INTERSECTED1.material.emissive.setHex( INTERSECTED1.currentHex );
         INTERSECTED1 = null;
       }
