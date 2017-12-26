@@ -13,17 +13,6 @@
         <li><a href="#">Exit</a></li>
       </ul>
     </li>
-    <li class="dropdown"><a href="#">Tools <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
-      <ul class="sub">
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="-1" checked>&nbsp;None</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="0">&nbsp;Views</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="1">&nbsp;Semantics</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="2">&nbsp;Numbering</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="3">&nbsp;Colors</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="4">&nbsp;Ambient Light</a></li>
-        <li><a href="#"><input type="radio" name="tool" id="tool" value="5">&nbsp;Directional Light</a></li>
-      </ul>
-    </li>
     <li class="dropdown">
           <a href="#">Wiki<i class="icon-caret-down"></i><i class="icon-sort"></i></a>
           <ul class="sub">
@@ -37,14 +26,13 @@
   </div>
 </nav>
 <split-area [size]="91.5" id="splitcontainer">
-<div id="container">
-  <div id='sidebar' class='sidebar'></div>
+  <div>
+  <app-viewer></app-viewer>
+  
 </div>
 </split-area>
 <split-area [size]="8.5" id="splittoolwindow">
-<div id="toolwindow">
-
-</div>
+  <app-toolwindow></app-toolwindow>
 </split-area>
 </split>
 </div>

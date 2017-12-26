@@ -4,12 +4,16 @@ import { Exporter } from '../importexport/base.component';
 import { ImportExportFactory } from '../importexport/factory.component';
 import { JSONReader } from '../importexport/readerwriter.component';
 import { ViewerComponent } from './viewer/viewer.component';
+import { ToolwindowComponent } from './toolwindow/toolwindow.component';
+import { SettingComponent } from './setting/setting.component';
+import { AttributeComponent } from './toolwindow/attribute.component';
+import { GroupsComponent } from './toolwindow/groups.component';
 import { DATA } from '../data/data';
 
 @Component({
   	selector: 'app-root',
-  	styleUrls: ['./app.component.css'],
-  	templateUrl: './app.component.html',
+    templateUrl: './app.component.html',
+  	styleUrls: ['./app.component.css']
 })
 
 export class AppComponent {
@@ -89,7 +93,7 @@ export class AppComponent {
   }
 }
 
-var viewer;
+/*var viewer;
 window.onload=function() {
   viewer=new ViewerComponent();
   animate();
@@ -100,4 +104,4 @@ function animate() {
     requestAnimationFrame( animate );
     viewer.controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
     viewer.render();
-}
+}*/
