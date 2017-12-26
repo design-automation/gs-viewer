@@ -10,10 +10,5 @@
         "../node_modules/angular-split/src"
       ]
     }
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts",
-    "./node_modules/*"
-  ]
+  }
 }
