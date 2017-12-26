@@ -1,0 +1,19 @@
+<div id="attributeview">
+  <input name="check"  type="checkbox"> <label id="checkname">selection</label>
+  <button id="objects" name="sixtool" [class.sixtool]="sixtool === 'objects'" (click)="objects(sixtool)">objects</button>
+  <button id="shells" name="sixtool" [class.sixtool]="sixtool === 'shells'" (click)="shells(sixtool)" >shells</button>
+  <button id="faces" name="sixtool" [class.sixtool]="sixtool === 'faces'" (click)="faces(sixtool)" >faces</button>
+  <button id="wires" name="sixtool" [class.sixtool]="sixtool === 'wires'" (click)="wires(sixtool)" >wires</button>
+  <button id="edges" name="sixtool" [class.sixtool]="sixtool === 'edges'" (click)="edges(sixtool)" >edges</button>
+  <button id="vertices" name="sixtool" [class.sixtool]="sixtool === 'vertices'" (click)="vertices(sixtool)" >vertices</button>
+  <button id="points" name="sixtool" [class.sixtool]="sixtool === 'points'" (click)="points(sixtool)" >points</button>
+    <div id="tableview">
+      <table  width=100% height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table">
+      <tr><td width="200" name="Number"  align=center >Number</td>
+      <td width="300" align=center></td>
+      <td width="300"  align=center></td>
+      <td width="300" align=center></td>
+      <td width="300"  align=center></td>
+      <td width="300" align=center></td></tr></table>
+    </div>
+</div>
