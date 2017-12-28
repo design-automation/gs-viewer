@@ -17,7 +17,6 @@ export class SettingComponent implements OnInit {
   effectController:any;
   scene:any;
   renderer:any;
-  camera:any;
   light:any;
   alight:Array<THREE.AmbientLight>;
   gridVisible: boolean; 

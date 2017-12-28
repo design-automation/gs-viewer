@@ -1,4 +1,4 @@
-<div id="sidebar" >
+<div id="sidebar">
 	<split direction="vertical">
   	<button id="setting" [class.selected]="settingVisible" (click)= "settingVisible =!settingVisible">
       <i class="fa fa-cog"></i>
@@ -10,7 +10,8 @@
   	<i class="icon-camera-retro"></i>
 	</split>
 </div>
-<div id="container" >
+<div id="container"  (mousemove)="onDocumentMouseMove($event)" (click)="onDocumentMouseDown($event)" >
+  <!--<app-canvas></app-canvas>-->
 	<button id="change" (click)="sidebar(initial)">{{changeside}}</button>
   <app-setting *ngIf="settingVisible == true"></app-setting>
 </div>

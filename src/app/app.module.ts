@@ -11,6 +11,7 @@ import { GroupsComponent } from './toolwindow/groups.component';
 import { AngularSplitModule } from 'angular-split';
 import { DataService } from './data.service';
 import {MatSliderModule} from '@angular/material/slider';
+import { CanvasComponent } from './viewer/canvas.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {MatSliderModule} from '@angular/material/slider';
     ToolwindowComponent,
     SettingComponent,
     AttributeComponent,
-    GroupsComponent
+    GroupsComponent,
+    CanvasComponent
   ],
   imports: [
     BrowserModule,AngularSplitModule,

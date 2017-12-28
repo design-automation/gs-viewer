@@ -5,7 +5,6 @@ import * as THREE from 'three';
 export class DataService {
 
   _data: any;
-  _camera:any;
   _renderer:any;
   _saturation:any;
   _lightness:any;
@@ -17,9 +16,11 @@ export class DataService {
   hue: number;
   saturation:number;
   lightness:number;
+  scenechange:any;
 
   constructor() { 
     this._alight=[];
+    this.scenechange=this._data;
   }
 
   addScene(scene): void{
@@ -28,14 +29,6 @@ export class DataService {
 
   getScene(): any{
   	return this._data;
-  }
-
-  addCamera(camera): void{
-  	this._camera = camera;
-  }
-
-  getCamera(): any{
-  	return this._camera;
   }
 
   addRender(renderer): void{
@@ -85,6 +78,12 @@ export class DataService {
 
   getGeom(): any{
     return this._Geom;
+  }
+  addscenechange(scenechange){
+    this.scenechange=scenechange;
+  }
+  getscenechange():any{
+    return this.scenechange;
   }
   
 }

@@ -1,19 +1,26 @@
 <div id="attributeview">
   <input name="check"  type="checkbox"> <label id="checkname">selection</label>
   <button id="objects" name="sixtool" [class.sixtool]="sixtool === 'objects'" (click)="objects(sixtool)">objects</button>
-  <button id="shells" name="sixtool" [class.sixtool]="sixtool === 'shells'" (click)="shells(sixtool)" >shells</button>
   <button id="faces" name="sixtool" [class.sixtool]="sixtool === 'faces'" (click)="faces(sixtool)" >faces</button>
   <button id="wires" name="sixtool" [class.sixtool]="sixtool === 'wires'" (click)="wires(sixtool)" >wires</button>
   <button id="edges" name="sixtool" [class.sixtool]="sixtool === 'edges'" (click)="edges(sixtool)" >edges</button>
   <button id="vertices" name="sixtool" [class.sixtool]="sixtool === 'vertices'" (click)="vertices(sixtool)" >vertices</button>
   <button id="points" name="sixtool" [class.sixtool]="sixtool === 'points'" (click)="points(sixtool)" >points</button>
     <div id="tableview">
-      <table  width=100% height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table">
-      <tr><td width="200" name="Number"  align=center >Number</td>
-      <td width="300" align=center></td>
-      <td width="300"  align=center></td>
-      <td width="300" align=center></td>
-      <td width="300"  align=center></td>
-      <td width="300" align=center></td></tr></table>
+      <div *ngIf="sixtool == 'objects'">
+        <table  width=200 height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table">
+      <tr><td  name="Number"  align=center >Object Number</td></tr></table>
+        <!--<table  width=200 height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table"
+        *ngFor="let datascale of attributeScale; let i = index">
+        <tr><td  name="Number"  align=center >Object Number</td></tr></table>-->
+      </div>
+      <!--<table  width=100% height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table">
+      <tr><td  width="200" name="Number"  align=center >Number</td>
+      <td width="200" align=center>Scale.X</td>
+      <td width="200"  align=center>Scale.Y</td>
+      <td width="200" align=center>Scale.Z</td></tr></table>
+      <table  width=100% height= 15px border="1" cellspacing="0" cellpadding="0" id="table" name ="table" *ngFor="let datascale of attributeScale; let i = index">
+    <tr><td width="200" name="Number"  align=center >{{i}}</td><td width="200">{{datascale.x}}</td><td width="200">{{datascale.y}}</td><td width="200">{{datascale.z}}</td></tr>
+  </table>-->
     </div>
 </div>

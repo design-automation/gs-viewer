@@ -6,6 +6,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import { DataService } from "../data.service";
+//import { Octree } from "octree";
 
 @Component({
   selector: 'app-viewer',
@@ -31,6 +32,9 @@ export class ViewerComponent implements OnInit {
   model:any;
   boxes:any;
   geometry:THREE.Geometry;
+  scenechange:any;
+  INTERSECTED:any;
+  INTERSECTEDcolor:any;
   
   constructor(private dataService: DataService) { 
     this.scene=new THREE.Scene();
@@ -40,30 +44,23 @@ export class ViewerComponent implements OnInit {
     this.dataService.addAmbientLight();
     this.boxes=box_with_groups();
     this.model= new gs.Model(this.boxes);
-    console.log(this.model);
     this.geometry = new THREE.Geometry();
     this.dataService.addGeom(this.geometry);
-
+    this.scenechange=this.scene;
+    this.mouse=new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
   }
 
   ngOnInit() {
     this.scene.background = new THREE.Color( 0xcccccc );
   
-    this.container=document.getElementById("container");
-    
+    this.container=document.getElementById( 'container' );
     this.width=this.container.clientWidth;
-    this.height=this.container.clientHeight; 
+    this.height=this.container.clientHeight;    
 
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( this.width, this.height );
     this.container.appendChild( this.renderer.domElement );
-
-    this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
-    //this.camera.position.z = 500;
-    this.camera.position.z = 10;
-    this.camera.updateMatrixWorld();
-    this.camera.updateProjectionMatrix();
-    this.camera.lookAt(this.scene.position);
 
     var self=this;
     window.addEventListener( 'resize', function() {
@@ -76,110 +73,143 @@ export class ViewerComponent implements OnInit {
       self.render();
     }, false );
 
-    var INTERSECTED;
-    window.addEventListener( 'mousemove',function(e){
-      self.raycaster = new THREE.Raycaster();
-      self.mouse = new THREE.Vector2();
+    /*window.addEventListener( 'mousedown',function(e){
+      var INTERSECTED;
       e.preventDefault();
-      self.mouse.x = (e.clientX/self.width)*2 -1;
-      self.mouse.y = -(e.clientY/self.height)*2 + 1;
       self.raycaster.setFromCamera(self.mouse,self.camera);
       var intersects = self.raycaster.intersectObjects(self.scene.children);
       if ( intersects.length > 0 ) {
         if ( INTERSECTED != intersects[ 0 ].object ) {
-          if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+          if ( INTERSECTED ) {
+            INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+          }
+          console.log("1");         
           INTERSECTED = intersects[ 0 ].object;
+          console.log(self.INTERSECTEDcolor);
           INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+          
           INTERSECTED.material.color.setHex( 0xff0000 );
-        }
-      } else {
-        if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-        INTERSECTED = null;
-      }
-      self.render();
-    }, false );
-
-    /*window.addEventListener( 'mousedown',function(e){
-      self.raycaster = new THREE.Raycaster();
-      self.mouse = new THREE.Vector2();
-      var INTERSECTED1;
-      e.preventDefault();
-      self.mouse.x = (e.clientX/self.width)*2 -1;
-      self.mouse.y = -(e.clientY/self.height)*2 + 1;
-      self.raycaster.setFromCamera(self.mouse,self.camera);
-      var intersects = self.raycaster.intersectObjects(self.scene.children);
-      if ( intersects.length > 0 ) {
-        if ( INTERSECTED1 != intersects[ 0 ].object ) {
-          if ( INTERSECTED1 ) {
-            INTERSECTED1.material.color.setHex( INTERSECTED1.currentHex );
-          }          
-          INTERSECTED1 = intersects[ 0 ].object;
-          INTERSECTED1.currentHex = INTERSECTED1.material.color.getHex();
-          INTERSECTED1.material.color.setHex( 0xff0000 );
           window.addEventListener("keydown", function(event) {
-            if(event.key === "Delete") self.scene.remove(INTERSECTED1);
-            if(event.key==="s") self.scene.add(INTERSECTED1);
+            if(event.key === "Delete") self.scene.remove(INTERSECTED);
+            if(event.key==="s") self.scene.add(INTERSECTED);
           });
         }
       } else {
-        if ( INTERSECTED1 ) INTERSECTED1.material.color.setHex( INTERSECTED1.currentHex );
-        INTERSECTED1 = null;
+        console.log("3");
+        //INTERSECTED.material.color=self.INTERSECTEDcolor;
+        if ( INTERSECTED ) {INTERSECTED.material.color.setHex( INTERSECTED.currentHex );}
+        INTERSECTED = null;
       }
       self.render();
     }, false );*/
 
-    this.light = new THREE.DirectionalLight( 0xffffff,0.5);
-    this.controls=new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enabled = false;
-    this.controls.addEventListener( 'change',  function() {
-      //this.light.position.copy( this.camera.position );
-    } )
-    this.scene.add( this.light );
 
-    /*var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-    for ( var i = 0; i < 500; i ++ ) {
+    this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
+    this.camera.position.z = 10;
+    this.camera.updateMatrixWorld();
+    this.camera.lookAt(this.scene.position);
+    console.log(this.camera);
+
+    self.light = new THREE.DirectionalLight( 0xffffff,0.5);
+    this.controls=new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enabled = true;
+    this.controls.addEventListener( 'change',  function() {
+      self.light.position.copy( self.camera.position );
+    } );
+    this.scene.add( self.light );
+    this.geometry=this.pushGSGeometry();
+    for ( var i = 0; i < 50; i ++ ) {
       var material = new THREE.MeshPhongMaterial( { color: 0xffffff} );
-      var mesh = new THREE.Mesh( geometry, material );
-      mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-      mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-      mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+      var mesh = new THREE.Mesh( this.geometry, material );
+      mesh.position.x = ( Math.random() - 0.5 ) * 50;
+      mesh.position.y = ( Math.random() - 0.5 ) * 50;
+      mesh.position.z = ( Math.random() - 0.5 ) * 50;
       mesh.updateMatrix();
       mesh.matrixAutoUpdate = false;
       this.scene.add( mesh );
     }
-    */ 
-    var wireMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, side: THREE.DoubleSide,wireframe:false } );
+
+    this.render();
+  }
+
+  pushThreeGeometry(){
+    //var geom = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
+    var geom = new THREE.BoxBufferGeometry( 20, 20, 20 )
+    return geom;
+  }
+  pushGSGeometry(){
+    var geom=new THREE.Geometry();
+    var material = new THREE.MeshPhongMaterial( { color: 0xffffff,side:THREE.DoubleSide} );
     for (const p of this.model.getGeom().getPoints()) {
-      // Do something here with your points
-      // For example, get the position of each point
       const xyz: number[] = p.getPosition();
-      this.geometry.vertices.push(new THREE.Vector3(xyz[0], xyz[1], xyz[2]));
-      var points = new THREE.Mesh( this.geometry,wireMaterial);
-      this.scene.add(points);
+      geom.vertices.push(new THREE.Vector3(xyz[0], xyz[1], xyz[2]));
     }
     for (const polymesh of this.model.getGeom().getObjs(gs.EObjType.polymesh)) {
       const faces: gs.IFace[] = polymesh.getFaces();
         for (const face of faces) {
           const point_IDs: number[] = face.getVertices().map((v, i) => v.getPoint().getID());
-          // Do something here.
-          this.geometry.faces.push(new THREE.Face3(point_IDs[0],point_IDs[1],point_IDs[2]));
-          this.geometry.faces.push(new THREE.Face3(point_IDs[0],point_IDs[2],point_IDs[3]));
-          var plane = new THREE.Mesh( this.geometry, wireMaterial);
-          this.scene.add(points);
+          geom.faces.push(new THREE.Face3(point_IDs[0],point_IDs[1],point_IDs[2]));
+          geom.faces.push(new THREE.Face3(point_IDs[0],point_IDs[2],point_IDs[3]));
+        
         }
     }
-    this.render();
+    return geom;
+  }
+
+  onDocumentMouseMove(event) {
+    event.preventDefault();
+    this.mouse=new THREE.Vector2();
+    this.mouse.x = ( event.offsetX / this.container.clientWidth ) * 2 - 1;
+    this.mouse.y =-( event.offsetY / this.container.clientHeight ) * 2 + 1;
+  }
+
+  onDocumentMouseDown(event){
+    var INTERSECTED;
+    this.raycaster.setFromCamera(this.mouse,this.camera);
+      var intersects = this.raycaster.intersectObjects(this.scene.children);
+      if ( intersects.length > 0 ) {
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+          if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+          INTERSECTED = intersects[ 0 ].object;
+          INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+          //INTERSECTEDcolor=INTERSECTED.material.color;
+          console.log(this.INTERSECTEDcolor);
+          INTERSECTED.material.color.setHex( 0xFF0000);
+        }
+      } else {
+        if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+      }
 
   }
-  
+
+
   render():void {
     let self = this;
     (function render(){
+      self.raycaster.setFromCamera(self.mouse,self.camera);
+      var intersects = self.raycaster.intersectObjects(self.scene.children);
+      if ( intersects.length > 0 ) {
+        if ( self.INTERSECTED != intersects[ 0 ].object ) {
+          if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
+          self.INTERSECTED = intersects[ 0 ].object;
+          self.INTERSECTED.currentHex = self.INTERSECTED.material.color.getHex();
+          self.INTERSECTEDcolor=self.INTERSECTED.material.color;
+          console.log(self.INTERSECTEDcolor);
+          self.INTERSECTED.material.color.setHex( 0xFF0000);
+        }
+      } else {
+        if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
+        self.INTERSECTED = null;
+      }
       requestAnimationFrame(render);
       self.renderer.render(self.scene, self.camera);
     }());
     this.renderer.render( this.scene, this.camera );
+
   }
+
+  
   
   sidebar(initial):void{
     var change=document.getElementById("change");
@@ -196,33 +226,33 @@ export class ViewerComponent implements OnInit {
   }
 
   zoom(Visible){
-    document.body.style.cursor = "crosshair";
+    /*document.body.style.cursor = "crosshair";
     this.controls.mouseButtons={ZOOM:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enableZoom=true;
+    this.controls.enableZoom=true;*/
     this.Visible="zoom";
   }
 
   pan(Visible){
-    document.body.style.cursor = "-webkit-grab";
+    /*document.body.style.cursor = "-webkit-grab";
     this.controls.mouseButtons={PAN:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enablePan=true;
+    this.controls.enablePan=true;*/
     this.Visible="pan";
   }
 
   rotate(Visible){
-    document.body.style.cursor = " -webkit-grab";
+    /*document.body.style.cursor = " -webkit-grab";
     this.controls.mouseButtons={ORBIT:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enableOrbit=true;
+    this.controls.enableOrbit=true;*/
     this.Visible="rotate";
   }
 
   select(Visible){
-    document.body.style.cursor = " default";
+    /*document.body.style.cursor = " default";
     this.controls.enabled=false;
-    this.controls.enableOrbit=false;
+    this.controls.enableOrbit=false;*/
     this.Visible="select";
   }
  
