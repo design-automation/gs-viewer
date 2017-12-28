@@ -1,0 +1,12 @@
+<div id="toolwindow">
+  <div id="toolbar">
+  	<button id="close"  [class.visible]="Visible === 'close'" (click)="close(Visible)" name="tools"> ▼ </button>
+  	<button id="Attributes"  [class.visible]="Visible === 'attributes'" (click)="Attributes(Visible)" name="tools">Attributes</button>
+  	<button id="Groups" [class.visible]="Visible === 'groups'" (click)="Groups(Visible)" name="tools">Groups</button>
+  </div>
+  <div id="toolview">
+    <div id="closeview" *ngIf="Visible === 'close'"></div>
+    <!-- <app-attribute *ngIf="Visible === 'attributes'"></app-attribute>
+    <app-groups *ngIf="Visible === 'groups'"></app-groups> -->
+  </div>
+</div>

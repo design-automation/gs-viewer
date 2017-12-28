@@ -1,0 +1,19 @@
+<div id="sidebar" >
+  	<button id="setting" [class.selected]="settingVisible" (click)= "settingVisible =!settingVisible">
+      <i class="fa fa-cog"></i>
+    </button>
+  	<button id="zooming" [class.visible]="Visible === 'zoom'" (click)="zoom(Visible)"><i class="fa fa-search"></i></button>
+  	<button id="paning" [class.visible]="Visible === 'pan'" (click)="pan(Visible)"><i class="fa fa-hand-paper-o"></i></button>
+  	<button id="rotating" [class.visible]="Visible === 'rotate'" (click)="rotate(Visible)"><i class="fa fa-refresh"></i></button>
+  	<button id="selecting" [class.visible]="Visible === 'select'" (click)="select(Visible)"><i class="fa fa-mouse-pointer"></i></button>
+  	<i class="icon-camera-retro"></i>
+</div>
+<div id="container" >
+	<button id="change" (click)="sidebar(initial)">{{changeside}}</button>
+  <app-setting *ngIf="settingVisible == true"></app-setting>
+</div>
+
+
+	
+
+
