@@ -1,7 +1,7 @@
 <body>
 <div id="appdiv">
   <split direction="vertical">
-<nav class="toolbar">
+<!--<nav class="toolbar">
   <div>
   <ul>
     <li class="dropdown"><a href="#">File <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
@@ -24,14 +24,22 @@
     <li><a href="#">Contact</a></li>
   </ul>
   </div>
-</nav>
-<split-area [size]="91.5" id="splitcontainer">
+</nav>-->
+<split-area [size]="99" id="splitcontainer">
   <div>
-  <app-viewer></app-viewer>
+    <split direction="horizontal">
+      <split-area [size]="10" id="splitgroups">
+        <app-groups></app-groups>
+      </split-area>
+      <split-area [size]="90" id="splitviewer">
+        <app-viewer></app-viewer>
+      </split-area>
+    </split>
   
-</div>
+  </div>
 </split-area>
-<split-area [size]="8.5" id="splittoolwindow">
+<split-area [size]="1" id="splittoolwindow">
+
   <app-toolwindow></app-toolwindow>
 </split-area>
 </split>

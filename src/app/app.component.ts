@@ -6,7 +6,6 @@ import { JSONReader } from '../importexport/readerwriter.component';
 import { ViewerComponent } from './viewer/viewer.component';
 import { ToolwindowComponent } from './toolwindow/toolwindow.component';
 import { SettingComponent } from './setting/setting.component';
-import { AttributeComponent } from './toolwindow/attribute.component';
 import { GroupsComponent } from './toolwindow/groups.component';
 import { CanvasComponent } from './viewer/canvas.component';
 import { DATA } from '../data/data';

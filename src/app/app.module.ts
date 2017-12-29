@@ -6,7 +6,6 @@ import { OrbitControls } from 'three-orbitcontrols-ts';
 import { ViewerComponent } from './viewer/viewer.component';
 import { ToolwindowComponent } from './toolwindow/toolwindow.component';
 import { SettingComponent } from './setting/setting.component';
-import { AttributeComponent } from './toolwindow/attribute.component';
 import { GroupsComponent } from './toolwindow/groups.component';
 import { AngularSplitModule } from 'angular-split';
 import { DataService } from './data.service';
@@ -19,7 +18,6 @@ import { CanvasComponent } from './viewer/canvas.component';
     ViewerComponent,
     ToolwindowComponent,
     SettingComponent,
-    AttributeComponent,
     GroupsComponent,
     CanvasComponent
   ],

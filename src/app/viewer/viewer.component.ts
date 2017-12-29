@@ -22,19 +22,17 @@ export class ViewerComponent implements OnInit {
   height:any;
   light:any;
   controls:any;
-  changeside:string="❱";
-  initial:boolean=true;
   view:any;
   raycaster:any;
   mouse:any;
   settingVisible: boolean=false;
-  Visible:string="select";
+  Visible:string="rotate";
   model:any;
   boxes:any;
   geometry:THREE.Geometry;
   INTERSECTED:any;
   INTERSECTEDcolor:any;
-  selecting:Array;
+  selecting:any;
   
   constructor(private dataService: DataService) { 
     this.scene=new THREE.Scene();
@@ -196,22 +194,6 @@ export class ViewerComponent implements OnInit {
 
   }
 
-  
-  
-  sidebar(initial):void{
-    var change=document.getElementById("change");
-    var sidebar=document.getElementById("sidebar");
-    if(this.initial){
-      this.changeside="❱";
-      sidebar.style.display="block";
-    }
-    else{
-      this.changeside="❰";
-      sidebar.style.display="none";
-    }
-    this.initial=!this.initial;
-  }
-
   zoom(Visible){
     /*document.body.style.cursor = "crosshair";
     this.controls.mouseButtons={ZOOM:THREE.MOUSE.LEFT};
@@ -219,6 +201,15 @@ export class ViewerComponent implements OnInit {
     this.controls.enableZoom=true;*/
     this.Visible="zoom";
   }
+
+  zoomfit(Visible){
+    /*document.body.style.cursor = "crosshair";
+    this.controls.mouseButtons={ZOOM:THREE.MOUSE.LEFT};
+    this.controls.enabled=true;
+    this.controls.enableZoom=true;*/
+    this.Visible="zoomfit";
+  }
+
 
   pan(Visible){
     /*document.body.style.cursor = "-webkit-grab";
