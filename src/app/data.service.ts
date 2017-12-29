@@ -17,6 +17,7 @@ export class DataService {
   saturation:number;
   lightness:number;
   scenechange:any;
+  INTERSECTEDColor:any;
 
   constructor() { 
     this._alight=[];
@@ -85,5 +86,13 @@ export class DataService {
   getscenechange():any{
     return this.scenechange;
   }
+  addINTERSECTEDColor(INTERSECTEDColor):void{
+    if(this.INTERSECTEDColor==null){
+      this.INTERSECTEDColor=INTERSECTEDColor;
+    }
+  }
   
+  getINTERSECTEDColor():any{
+    return this.INTERSECTEDColor
+  }
 }

@@ -32,9 +32,9 @@ export class ViewerComponent implements OnInit {
   model:any;
   boxes:any;
   geometry:THREE.Geometry;
-  scenechange:any;
   INTERSECTED:any;
   INTERSECTEDcolor:any;
+  selecting:Array;
   
   constructor(private dataService: DataService) { 
     this.scene=new THREE.Scene();
@@ -46,9 +46,10 @@ export class ViewerComponent implements OnInit {
     this.model= new gs.Model(this.boxes);
     this.geometry = new THREE.Geometry();
     this.dataService.addGeom(this.geometry);
-    this.scenechange=this.scene;
     this.mouse=new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+    this.selecting=[];
+    
   }
 
   ngOnInit() {
@@ -73,42 +74,10 @@ export class ViewerComponent implements OnInit {
       self.render();
     }, false );
 
-    /*window.addEventListener( 'mousedown',function(e){
-      var INTERSECTED;
-      e.preventDefault();
-      self.raycaster.setFromCamera(self.mouse,self.camera);
-      var intersects = self.raycaster.intersectObjects(self.scene.children);
-      if ( intersects.length > 0 ) {
-        if ( INTERSECTED != intersects[ 0 ].object ) {
-          if ( INTERSECTED ) {
-            INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-          }
-          console.log("1");         
-          INTERSECTED = intersects[ 0 ].object;
-          console.log(self.INTERSECTEDcolor);
-          INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-          
-          INTERSECTED.material.color.setHex( 0xff0000 );
-          window.addEventListener("keydown", function(event) {
-            if(event.key === "Delete") self.scene.remove(INTERSECTED);
-            if(event.key==="s") self.scene.add(INTERSECTED);
-          });
-        }
-      } else {
-        console.log("3");
-        //INTERSECTED.material.color=self.INTERSECTEDcolor;
-        if ( INTERSECTED ) {INTERSECTED.material.color.setHex( INTERSECTED.currentHex );}
-        INTERSECTED = null;
-      }
-      self.render();
-    }, false );*/
-
-
     this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
     this.camera.position.z = 10;
     this.camera.updateMatrixWorld();
     this.camera.lookAt(this.scene.position);
-    console.log(this.camera);
 
     self.light = new THREE.DirectionalLight( 0xffffff,0.5);
     this.controls=new OrbitControls(this.camera, this.renderer.domElement);
@@ -164,25 +133,40 @@ export class ViewerComponent implements OnInit {
   }
 
   onDocumentMouseDown(event){
+    this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
     var INTERSECTED;
     this.raycaster.setFromCamera(this.mouse,this.camera);
       var intersects = this.raycaster.intersectObjects(this.scene.children);
       if ( intersects.length > 0 ) {
-        if ( INTERSECTED != intersects[ 0 ].object ) {
+        if ( INTERSECTED!= intersects[ 0 ].object ) {
           if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-          INTERSECTED = intersects[ 0 ].object;
+          INTERSECTED= intersects[ 0 ].object;
           INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-          //INTERSECTEDcolor=INTERSECTED.material.color;
-          console.log(this.INTERSECTEDcolor);
-          INTERSECTED.material.color.setHex( 0xFF0000);
+          var flagInArr = false; 
+          for(var i=0;i<this.selecting.length;i++){
+              if(this.selecting[i].uuid==INTERSECTED.uuid){
+                flagInArr = true;
+                this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
+                this.selecting.splice(i,1);
+                i=i-1;
+              }
+          }
+
+          if(flagInArr == false){
+            INTERSECTED.material.color.setHex( 0x2E9AFE);
+            this.selecting.push(INTERSECTED);
+          }
         }
       } else {
         if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
         INTERSECTED = null;
+        for(var i=0;i<this.selecting.length;i++){
+          this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
+        }
+        this.selecting=[];
       }
 
   }
-
 
   render():void {
     let self = this;
@@ -194,12 +178,15 @@ export class ViewerComponent implements OnInit {
           if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
           self.INTERSECTED = intersects[ 0 ].object;
           self.INTERSECTED.currentHex = self.INTERSECTED.material.color.getHex();
-          self.INTERSECTEDcolor=self.INTERSECTED.material.color;
-          console.log(self.INTERSECTEDcolor);
+          self.dataService.addINTERSECTEDColor(self.INTERSECTED.currentHex);
           self.INTERSECTED.material.color.setHex( 0xFF0000);
         }
       } else {
-        if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
+        if ( self.INTERSECTED ) {
+          if(self.INTERSECTED.currentHex!=16711680){
+            self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
+          }
+        }
         self.INTERSECTED = null;
       }
       requestAnimationFrame(render);
