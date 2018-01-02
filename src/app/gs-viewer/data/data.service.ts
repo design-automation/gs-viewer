@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
+import {Observable} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class DataService {
+
+  _gsModel;
 
   _data: any;
   _renderer:any;
@@ -24,6 +28,37 @@ export class DataService {
     this.scenechange=this._data;
   }
 
+  // ---- 
+  // Subscription Handling
+  // 
+  private subject = new Subject<any>();
+  sendMessage(message?: string) {
+      this.subject.next({ text: message });
+  }
+ 
+  clearMessage() {
+      this.subject.next();
+  }
+
+  getMessage(): Observable<any> {
+      return this.subject.asObservable();
+  }
+
+
+  //
+  //  Normal functions
+  //
+  getGsModel(){
+    return this._gsModel; 
+  }
+
+  setGsModel(model){
+    this._gsModel = model;
+    this.sendMessage();
+  }
+
+
+  
   addScene(scene): void{
   	this._data = scene;
   }
@@ -94,167 +129,4 @@ export class DataService {
   getINTERSECTEDColor():any{
     return this.INTERSECTEDColor
   }
-}
-
-export function box_with_groups() {
-    return {
-        attribs: null,
-        geom: {
-            objs: [
-                [
-                    [
-                        [0, 1, 2, 3, -1],
-                    ],
-                    [
-                        [1, 5, 4, 0, -1],
-                        [2, 6, 5, 1, -1],
-                        [3, 7, 6, 2, -1],
-                        [0, 4, 7, 3, -1],
-                        [5, 6, 7, 4, -1],
-                    ],
-                    [200],
-                ],
-            ],
-            points: [
-                [0, 1, 2, 3, 4, 5, 6, 7],
-                [
-                    [-0.7, -1.0, 0.0],
-                    [0.2, -1.0, 0.0],
-                    [0.2, -1.0, 3.0],
-                    [-0.7, -1.0, 3.0],
-                    [-0.7, 1.0, 0.0],
-                    [0.2, 1.0, 0.0],
-                    [0.2, 1.0, 3.0],
-                    [-0.7, 1.0, 3.0],
-                ],
-            ],
-        },
-        groups: [
-            {
-                name: "building_obj",
-                objs: [0],
-                props: [["descr", "The building object, that has wire and faces."]],
-            },
-            // groups with topo
-            {
-                name: "building_all_faces",
-                topos: [
-                    [[0, [0, 1, 2, 3, 4]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "walls",
-                parent: "building_obj",
-                props: [["descr", "Three walls."], ["material", "brick"], ["thickness", 300]],
-                topos: [
-                    [[0, [1, 3, 4]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "floor",
-                parent: "building_obj",
-                topos: [
-                    [[0, [0]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "roof",
-                parent: "building_obj",
-                topos: [
-                    [[0, [2]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "winodw_openings",
-                parent: "building_obj",
-                topos: [
-                    [],
-                    [[0, [0]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "vertical_edges_of_faces",
-                parent: "building_obj",
-                topos: [
-                    [
-                        [0,
-                            [
-                                [1, [1, 3]],
-                                [3, [1, 3]],
-                                [4, [0, 2]],
-                            ],
-                        ],
-                    ],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "vertices_on_ground",
-                parent: "building_obj",
-                topos: [
-                    [
-                        [0,
-                            [
-                                [0, [0, 1, 2, 3]],
-                                [1, [2, 3]],
-                                [3, [0, 1]],
-                                [4, [0, 3]],
-                            ],
-                        ],
-                    ],
-                    [
-                        [0,
-                            [
-                                [0, [0, 1]],
-                            ],
-                        ],
-                    ],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "points_on_ground",
-                parent: "building_obj",
-                points: [0, 1, 4, 5],
-            },
-        ],
-        metadata: {
-            crs: { epsg: 3857 },
-            filetype: "gs-json",
-            location: "+0-0",
-            version: "0.1.1",
-        },
-        skins: null,
-    };
 }

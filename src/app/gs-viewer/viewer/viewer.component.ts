@@ -1,18 +1,18 @@
+import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
-import { Component, OnInit } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
-import { DataService } from "../data/data.service";
-import {box_with_groups } from "../data/data.service";
+
+import {DataSubscriber} from "../data/DataSubscriber";
 
 @Component({
   selector: 'app-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.css']
 })
-export class ViewerComponent implements OnInit {
+export class ViewerComponent extends DataSubscriber implements OnInit {
   scene:any;
   renderer:any;
   container:any;
@@ -33,44 +33,63 @@ export class ViewerComponent implements OnInit {
   INTERSECTEDcolor:any;
   selecting:any;
   canvas:any;
+
+  myElement;
   
-  constructor(private dataService: DataService) { 
+  constructor(injector: Injector, myElement: ElementRef) { 
+    super(injector);
     this.scene=new THREE.Scene();
     this.dataService.addScene(this.scene);
     this.renderer = new THREE.WebGLRenderer( {antialias: true} );
     this.dataService.addRender(this.renderer);
     this.dataService.addAmbientLight();
-    this.boxes=box_with_groups();
-    this.model= new gs.Model(this.boxes);
+    
+    
     this.geometry = new THREE.Geometry();
     this.dataService.addGeom(this.geometry);
     this.mouse=new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
     this.selecting=[];
-    
+    this.myElement = myElement;
   }
 
+  //
+  //  checks if the flowchart service has a flowchart and calls update function for the viewer
+  //
+  notify(): void{
+    this.updateViewer();
+  }
+
+
   ngOnInit() {
+   this.updateViewer();
+  }
+
+  updateViewer(){ 
+
+    this.boxes = this.dataService.getGsModel();
+    this.model= new gs.Model(this.boxes);
+
     this.scene.background = new THREE.Color( 0xcccccc );
-  
-    this.container=document.getElementById( 'container' );
-    this.width=this.container.clientWidth;
+    this.container= this.myElement.nativeElement.children[0];//document.getElementById( 'container' );
+    this.width=this.container.clientWidth || 600;
     this.height=this.container.clientHeight;    
 
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( this.width, this.height );
+      
     this.container.appendChild( this.renderer.domElement );
 
     var self=this;
-    window.addEventListener( 'resize', function() {
-      self.width=self.container.clientWidth;
-      self.height=self.container.clientHeight;
-      self.renderer.setPixelRatio( window.devicePixelRatio );
-      self.camera.aspect = self.width / self.height;
-      self.camera.updateProjectionMatrix();
-      self.renderer.setSize( self.width, self.height );
-      self.render();
-    }, false );
+    // window.addEventListener( 'resize', function() {
+    //   self.width=self.container.clientWidth;
+    //   self.height=self.container.clientHeight;
+    //   self.renderer.setPixelRatio( window.devicePixelRatio );
+    //   self.camera.aspect = self.width / self.height;
+    //   self.camera.updateProjectionMatrix();
+    //   self.renderer.setSize( self.width, self.height );
+    //   self.render();
+    // }, false );
 
     this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
     this.camera.position.z = 10;
@@ -98,6 +117,7 @@ export class ViewerComponent implements OnInit {
 
     this.render();
   }
+
 
   pushGSGeometry(){
     var geom=new THREE.Geometry();

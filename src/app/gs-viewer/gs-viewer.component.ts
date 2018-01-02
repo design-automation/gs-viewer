@@ -14,7 +14,7 @@ export class GSViewerComponent {
 	constructor(private dataService: DataService){};
 
 	ngOnInit() {
-		//this.dataService.setModel(this.data);
+		this.dataService.setGsModel(this.data);
 	}
 
 }
