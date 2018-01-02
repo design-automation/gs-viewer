@@ -1,45 +1,4 @@
-<!-- <body>
-<div id="appdiv">
-  <split direction="vertical">
-<nav class="toolbar">
-  <div>
-  <ul>
-    <li class="dropdown"><a href="#">File <i class="icon-caret-down"></i><i class="icon-sort"></i></a>
-      <ul class="sub">
-        <li><a href="#" id="{{constants.importers.gs}}" name="importers">Open</a></li>
-        <li><a href="#" id="{{constants.exporters.gs}}" name="exporters">Save</a></li>
-        <li><a href="#" id="{{constants.exporters.threejs}}" name="exporters">Export As ThreeJS</a></li>
-        <li><a href="#" id="{{constants.importers.citygml}}" name="importers">Import From CityGML</a></li>
-        <li><a href="#">Exit</a></li>
-      </ul>
-    </li>
-    <li class="dropdown">
-          <a href="#">Wiki<i class="icon-caret-down"></i><i class="icon-sort"></i></a>
-          <ul class="sub">
-          <li><a href="https://github.com/akiajk/gs-JSON">SourceCode</a></li>
-          <li><a href="https://github.com/akiajk/gs-JSON">Tutorial</a></li>
-          </ul>
-    </li>  
-    <li><a href="#">About</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  </div>
-</nav>
-<split-area [size]="91.5" id="splitcontainer">
-  <div>
-  <app-viewer></app-viewer>
-  
-</div>
-</split-area>
-<split-area [size]="8.5" id="splittoolwindow">
-  <app-toolwindow></app-toolwindow>
-</split-area>
-</split>
-</div>
-</body> -->
-
-
-<div id="appdiv">
+<div>
 
   <!-- navigation bar -->
   <nav class="toolbar">
@@ -67,9 +26,9 @@
     </div>
   </nav>
 
-  <gs-viewer></gs-viewer>
-
   <!-- gs-viewer demo -->
+  <gs-viewer [data]="gs_dummy_data"></gs-viewer>
+
 
 
 </div>

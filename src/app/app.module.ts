@@ -2,7 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
-import {GSViewerModule} from '../gs-viewer-module/lib/gs-viewer';
+// if importing from npm
+// import {GSViewer} from 'gs-viewer';
+
+
+// for dev purpose -
+import {GSViewer} from './gs-viewer/gs-viewer.module';
+ 
 
 @NgModule({
   declarations: [
@@ -10,7 +16,7 @@ import {GSViewerModule} from '../gs-viewer-module/lib/gs-viewer';
   ],
   imports: [
     BrowserModule,
-    GSViewerModule.forRoot()
+    GSViewer
   ],
   providers: [],
   bootstrap: [AppComponent]
