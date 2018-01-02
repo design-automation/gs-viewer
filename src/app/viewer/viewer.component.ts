@@ -6,7 +6,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import { DataService } from "../data.service";
-//import { Octree } from "octree";
+import {box_with_groups } from "../data.service";
 
 @Component({
   selector: 'app-viewer',
@@ -33,11 +33,12 @@ export class ViewerComponent implements OnInit {
   INTERSECTED:any;
   INTERSECTEDcolor:any;
   selecting:any;
+  canvas:any;
   
   constructor(private dataService: DataService) { 
     this.scene=new THREE.Scene();
     this.dataService.addScene(this.scene);
-    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.renderer = new THREE.WebGLRenderer( {antialias: true} );
     this.dataService.addRender(this.renderer);
     this.dataService.addAmbientLight();
     this.boxes=box_with_groups();
@@ -86,7 +87,7 @@ export class ViewerComponent implements OnInit {
     this.scene.add( self.light );
     this.geometry=this.pushGSGeometry();
     for ( var i = 0; i < 50; i ++ ) {
-      var material = new THREE.MeshPhongMaterial( { color: 0xffffff} );
+      var material = new THREE.MeshPhongMaterial( { color: 0xffffff,side:THREE.DoubleSide} );
       var mesh = new THREE.Mesh( this.geometry, material );
       mesh.position.x = ( Math.random() - 0.5 ) * 50;
       mesh.position.y = ( Math.random() - 0.5 ) * 50;
@@ -99,11 +100,6 @@ export class ViewerComponent implements OnInit {
     this.render();
   }
 
-  pushThreeGeometry(){
-    //var geom = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-    var geom = new THREE.BoxBufferGeometry( 20, 20, 20 )
-    return geom;
-  }
   pushGSGeometry(){
     var geom=new THREE.Geometry();
     var material = new THREE.MeshPhongMaterial( { color: 0xffffff,side:THREE.DoubleSide} );
@@ -117,7 +113,6 @@ export class ViewerComponent implements OnInit {
           const point_IDs: number[] = face.getVertices().map((v, i) => v.getPoint().getID());
           geom.faces.push(new THREE.Face3(point_IDs[0],point_IDs[1],point_IDs[2]));
           geom.faces.push(new THREE.Face3(point_IDs[0],point_IDs[2],point_IDs[3]));
-        
         }
     }
     return geom;
@@ -234,167 +229,4 @@ export class ViewerComponent implements OnInit {
     this.Visible="select";
   }
  
-}
-
-export function box_with_groups() {
-    return {
-        attribs: null,
-        geom: {
-            objs: [
-                [
-                    [
-                        [0, 1, 2, 3, -1],
-                    ],
-                    [
-                        [1, 5, 4, 0, -1],
-                        [2, 6, 5, 1, -1],
-                        [3, 7, 6, 2, -1],
-                        [0, 4, 7, 3, -1],
-                        [5, 6, 7, 4, -1],
-                    ],
-                    [200],
-                ],
-            ],
-            points: [
-                [0, 1, 2, 3, 4, 5, 6, 7],
-                [
-                    [-0.7, -1.0, 0.0],
-                    [0.2, -1.0, 0.0],
-                    [0.2, -1.0, 3.0],
-                    [-0.7, -1.0, 3.0],
-                    [-0.7, 1.0, 0.0],
-                    [0.2, 1.0, 0.0],
-                    [0.2, 1.0, 3.0],
-                    [-0.7, 1.0, 3.0],
-                ],
-            ],
-        },
-        groups: [
-            {
-                name: "building_obj",
-                objs: [0],
-                props: [["descr", "The building object, that has wire and faces."]],
-            },
-            // groups with topo
-            {
-                name: "building_all_faces",
-                topos: [
-                    [[0, [0, 1, 2, 3, 4]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "walls",
-                parent: "building_obj",
-                props: [["descr", "Three walls."], ["material", "brick"], ["thickness", 300]],
-                topos: [
-                    [[0, [1, 3, 4]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "floor",
-                parent: "building_obj",
-                topos: [
-                    [[0, [0]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "roof",
-                parent: "building_obj",
-                topos: [
-                    [[0, [2]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "winodw_openings",
-                parent: "building_obj",
-                topos: [
-                    [],
-                    [[0, [0]]],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "vertical_edges_of_faces",
-                parent: "building_obj",
-                topos: [
-                    [
-                        [0,
-                            [
-                                [1, [1, 3]],
-                                [3, [1, 3]],
-                                [4, [0, 2]],
-                            ],
-                        ],
-                    ],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "vertices_on_ground",
-                parent: "building_obj",
-                topos: [
-                    [
-                        [0,
-                            [
-                                [0, [0, 1, 2, 3]],
-                                [1, [2, 3]],
-                                [3, [0, 1]],
-                                [4, [0, 3]],
-                            ],
-                        ],
-                    ],
-                    [
-                        [0,
-                            [
-                                [0, [0, 1]],
-                            ],
-                        ],
-                    ],
-                    [],
-                    [],
-                    [],
-                    [],
-                ],
-            },
-            {
-                name: "points_on_ground",
-                parent: "building_obj",
-                points: [0, 1, 4, 5],
-            },
-        ],
-        metadata: {
-            crs: { epsg: 3857 },
-            filetype: "gs-json",
-            location: "+0-0",
-            version: "0.1.1",
-        },
-        skins: null,
-    };
 }

@@ -1,11 +1,10 @@
 #container {
   position: relative;
-  height:704px;
-  width: 1562px;
+  height:100%;
+  width: 100%;
   margin:0px;
   overflow: hidden;
   color: white;
-  float: right;
 }
 
 #rotating{
