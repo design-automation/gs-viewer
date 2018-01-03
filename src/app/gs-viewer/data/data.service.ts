@@ -22,6 +22,7 @@ export class DataService {
   lightness:number;
   scenechange:any;
   INTERSECTEDColor:any;
+  selecting:any = [];
 
   constructor() { 
     this._alight=[];
@@ -128,5 +129,19 @@ export class DataService {
   }
   getINTERSECTEDColor():any{
     return this.INTERSECTEDColor
+  }
+  addselecting(selecting){
+    //this.selecting.push(selecting[selecting.length-1||0]);
+    if(selecting[selecting.length-1]==undefined){
+      this.selecting=[];
+    }
+    this.sendMessage();
+  }
+  pushselecting(selecting){
+    this.selecting.push(selecting);
+    this.sendMessage();
+  }
+  getselecting(){
+    return this.selecting;
   }
 }

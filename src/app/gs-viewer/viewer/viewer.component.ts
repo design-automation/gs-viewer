@@ -44,7 +44,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.dataService.addRender(this.renderer);
     this.dataService.addAmbientLight();
     
-    
     this.geometry = new THREE.Geometry();
     this.dataService.addGeom(this.geometry);
     this.mouse=new THREE.Vector2();
@@ -57,12 +56,16 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
   //
   notify(): void{
-    this.updateViewer();
+    //while(this.scene.children.length > 0){ 
+        //this.scene.remove(this.scene.children[0]); 
+    //}
+    //this.updateViewer();
+
   }
 
 
   ngOnInit() {
-   this.updateViewer();
+    this.updateViewer();
   }
 
   updateViewer(){ 
@@ -97,8 +100,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.camera.lookAt(this.scene.position);
 
     self.light = new THREE.DirectionalLight( 0xffffff,0.5);
+    self.light.castShadow = true; 
     this.controls=new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enabled = true;
+    this.controls.mouseButtons={ORBIT:THREE.MOUSE.LEFT};
     this.controls.addEventListener( 'change',  function() {
       self.light.position.copy( self.camera.position );
     } );
@@ -114,7 +118,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       mesh.matrixAutoUpdate = false;
       this.scene.add( mesh );
     }
-
     this.render();
   }
 
@@ -140,12 +143,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   onDocumentMouseMove(event) {
     event.preventDefault();
     this.mouse=new THREE.Vector2();
-    this.mouse.x = ( event.offsetX / this.container.clientWidth ) * 2 - 1;
-    this.mouse.y =-( event.offsetY / this.container.clientHeight ) * 2 + 1;
+    this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
+    this.mouse.y =-( event.clientY / this.height ) * 2 + 1;
   }
 
   onDocumentMouseDown(event){
     this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
+    this.selecting=this.dataService.selecting;
     var INTERSECTED;
     this.raycaster.setFromCamera(this.mouse,this.camera);
       var intersects = this.raycaster.intersectObjects(this.scene.children);
@@ -177,7 +181,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
         this.selecting=[];
       }
-
+      
+      this.dataService.addselecting(this.selecting);
   }
 
   render():void {
@@ -209,42 +214,41 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   zoom(Visible){
-    /*document.body.style.cursor = "crosshair";
+    document.body.style.cursor = "crosshair";
     this.controls.mouseButtons={ZOOM:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enableZoom=true;*/
+    this.controls.enableZoom=true;
     this.Visible="zoom";
   }
 
   zoomfit(Visible){
-    /*document.body.style.cursor = "crosshair";
+    document.body.style.cursor = "crosshair";
     this.controls.mouseButtons={ZOOM:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enableZoom=true;*/
+    this.controls.enableZoom=true;
     this.Visible="zoomfit";
   }
 
-
   pan(Visible){
-    /*document.body.style.cursor = "-webkit-grab";
+    document.body.style.cursor = "-webkit-grab";
     this.controls.mouseButtons={PAN:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enablePan=true;*/
+    this.controls.enablePan=true;
     this.Visible="pan";
   }
 
   rotate(Visible){
-    /*document.body.style.cursor = " -webkit-grab";
+    document.body.style.cursor = " -webkit-grab";
     this.controls.mouseButtons={ORBIT:THREE.MOUSE.LEFT};
     this.controls.enabled=true;
-    this.controls.enableOrbit=true;*/
+    this.controls.enableOrbit=true;
     this.Visible="rotate";
   }
 
   select(Visible){
-    /*document.body.style.cursor = " default";
+    document.body.style.cursor ="default";
     this.controls.enabled=false;
-    this.controls.enableOrbit=false;*/
+    this.controls.enableOrbit=false;
     this.Visible="select";
   }
  
