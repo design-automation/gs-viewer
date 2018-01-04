@@ -1,0 +1,50 @@
+{
+  "name": "gs-viewer",
+  "version": "2.0.0",
+  "description": "A viewer for gs-json files",
+  "main": "gs-viewer.umd.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "copy": "node tools/copy-package.js && node tools/cleanup.js",
+    "bundle": "rimraf dist && rollup -c rollup.config.umd.js && rollup -c rollup.config.esm.js && tsc && ngc",
+    "postbundle": "node tools/removecode.js",
+    "build": "npm run bundle && npm run copy"
+  },
+  "author": "Hoiyao",
+  "license": "MIT",
+  "dependencies": {
+    "@angular/animations": "^5.1.2",
+    "@angular/cdk": "^5.0.2",
+    "@angular/common": "^5.0.5",
+    "@angular/compiler": "^5.1.2",
+    "@angular/core": "^5.1.2",
+    "@angular/forms": "^5.0.5",
+    "@angular/http": "^5.0.5",
+    "@angular/material": "^5.0.2",
+    "@types/three": "^0.84.33",
+    "angular-split": "^1.0.0-rc.0",
+    "gs-json": "^0.1.1",
+    "hammerjs": "^2.0.8",
+    "rxjs": "^5.5.6",
+    "three-orbitcontrols-ts": "^0.1.2",
+    "typescript": "^2.6.2"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "^5.1.2",
+    "@types/node": "^8.0.55",
+    "ts-node": "~3.3.0",
+    "tslint": "~5.8.0",
+    "typescript": "~2.6.2",
+    "del": "^3.0.0",
+    "node-sass": "^4.7.2",
+    "rollup-plugin-angular": "^0.5.3",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-typescript": "^0.8.1"
+  },
+  "jsnext:main": "./gs-viewer.esm.js",
+  "module": "./gs-viewer.esm.js",
+  "types": "./gs-viewer.d.ts"
+}
