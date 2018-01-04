@@ -70,6 +70,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   updateViewer(){ 
     this.model= this.dataService.getGsModel(); 
+    
+    // todo: fix case when model is undefined
+    if(this.model == undefined){
+      return;
+    }
+    
     const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
     let loader = new THREE.ObjectLoader();
     let object = loader.parse( scene_data );
@@ -139,7 +145,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
 
-  pushGSGeometry(){
+  pushGSGeometry(): any{
     var geom=new THREE.Geometry();
     var material = new THREE.MeshPhongMaterial( { color: 0xffffff,side:THREE.DoubleSide} );
     for (const p of this.model.getGeom().getPoints()) {
