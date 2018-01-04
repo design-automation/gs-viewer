@@ -117,6 +117,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var j=0;j<object.children[i].children.length;j++){
             if(object.children[i].children[j].type==="Mesh"){
               object.children[i].children[j]["geometry"].computeVertexNormals();
+              object.children[i].children[j]["geometry"].computeBoundingBox();
+              object.children[i].children[j]["geometry"].computeBoundingSphere();
             }
           }
         }
@@ -263,24 +265,31 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.enabled=true;
     this.controls.enableZoom=true;
     this.Visible="zoomfit";
+    console.log(this.camera);
+    console.log(this.selecting.length);
     if(this.selecting.length!==0){
+      var cameralocation=new THREE.Vector3();
+      cameralocation=this.camera.position;
       var axisX=0;
       var axisY=0;
       var axisZ=0;
+      var radius=0;
       var centerX=0;
       var centerY=0;
       var centerZ=0;
       var radius=0;
       for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x);
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y);
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z);
+        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
+        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
+        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
       }
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
-      this.camera.position.set();
-  }
+      console.log(this.camera);
+      console.log(this.selecting);
+
+    }
 
   }
 
@@ -310,7 +319,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
+      centerZ=axisY/this.scene.children[1].children.length;
       this.controls.target.set(centerX,centerY,centerZ);
     }
     this.controls.mouseButtons={ORBIT:THREE.MOUSE.LEFT};

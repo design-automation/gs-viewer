@@ -57,15 +57,13 @@ export class SettingComponent implements OnInit {
 
   changegrid(){
     this.gridVisible = !this.gridVisible;
-    console.log(this.scene.children[1].children[0].children[0].geometry);
-    var max=0;
+    var maxX=2;
+    var maxY=2;
     for(var i=0;i<this.scene.children[1].children.length;i++){
-      var axisX=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.x);
-      var axisY=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.y);
-      var axis=this.scene.children[1].children[i].children[0].geometry.boundingSphere.radius);
-      var calcuate=Math.max(Math.abs(axisX+axis),Math.abs(axisX-axis),Math.abs(axisY+axis),Math.abs(axisY-axis));
-      max=Math.ceil(Math.max(calcuate,max));
+      maxX=Math.max(maxX,Math.abs(this.scene.children[1].children[i].children[0].geometry.boundingBox.max.x));
+      maxY=Math.max(maxY,Math.abs(this.scene.children[1].children[i].children[0].geometry.boundingBox.max.y));
     }
+    var max=Math.ceil(Math.max(maxX,maxY)*1.3);
     if(this.gridVisible){
       var gridhelper=new THREE.GridHelper( max, max );
       gridhelper.name="GridHelper";
@@ -78,14 +76,15 @@ export class SettingComponent implements OnInit {
 
   changeaxis(){
     this.axisVisible = !this.axisVisible;
-    var max=0;
+    var maxX=2;
+    var maxY=2;
+    var maxZ=2;
     for(var i=0;i<this.scene.children[1].children.length;i++){
-      var axisX=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.x);
-      var axisY=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.y);
-      var axis=this.scene.children[1].children[i].children[0].geometry.boundingSphere.radius);
-      var calcuate=Math.max(Math.abs(axisX+axis),Math.abs(axisX-axis),Math.abs(axisY+axis),Math.abs(axisY-axis));
-      max=Math.ceil(Math.max(calcuate,max));
+      maxX=Math.max(maxX,Math.abs(this.scene.children[1].children[i].children[0].geometry.boundingBox.max.x));
+      maxY=Math.max(maxY,Math.abs(this.scene.children[1].children[i].children[0].geometry.boundingBox.max.y));
+      maxZ=Math.max(maxZ,Math.abs(this.scene.children[1].children[i].children[0].geometry.boundingBox.max.z));
     }
+    var max=Math.ceil(Math.max(maxX,maxY,maxZ)*1.2);
     if(this.axisVisible){
       var axishelper = new THREE.AxisHelper( max );
       axishelper.name="AxisHelper";
