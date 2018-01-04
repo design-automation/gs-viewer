@@ -265,8 +265,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.enabled=true;
     this.controls.enableZoom=true;
     this.Visible="zoomfit";
-    console.log(this.camera);
-    console.log(this.selecting.length);
     if(this.selecting.length!==0){
       var cameralocation=new THREE.Vector3();
       cameralocation=this.camera.position;
@@ -286,8 +284,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
-      console.log(this.camera);
-      console.log(this.selecting);
 
     }
 
@@ -304,7 +300,18 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   rotate(Visible){
     document.body.style.cursor = " -webkit-grab";
     if(this.selecting.length===0){
-      this.controls.target.set(0,0,0);
+      var centerX=0;
+      var centerY=0;
+      var centerZ=0;
+      for(var i=0;i<this.scene.children[1].children.length;i++){
+        centerX+=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.x;
+        centerY+=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.y;
+        centerZ+=this.scene.children[1].children[i].children[0].geometry.boundingSphere.center.z;
+      }
+      centerX=centerX/this.scene.children[1].children.length;
+      centerY=centerY/this.scene.children[1].children.length;
+      centerZ=centerZ/this.scene.children[1].children.length;
+      this.controls.target.set(centerX,centerY,centerZ);
     }else{
       var axisX=0;
       var axisY=0;
@@ -313,9 +320,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var centerY=0;
       var centerZ=0;
       for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x);
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y);
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z);
+        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
+        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
+        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
       }
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
@@ -333,7 +340,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.enabled=false;
     this.controls.enableOrbit=false;
     this.Visible="select";
-
   }
  
 }
