@@ -77,7 +77,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(object.children[i].children!==undefined){
         for(var j=0;j<object.children[i].children.length;j++){
           if(object.children[i].children[j].type==="Mesh"){
-            object.children[i].children[j].geometry.computeVertexNormals();
+            object.children[i].children[j]["geometry"].computeVertexNormals();
           }
         }
       }
