@@ -15,7 +15,7 @@ import {DataSubscriber} from "../data/DataSubscriber";
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
   Visible:string="point";
   boxes:any;
-  model:any;
+  model:gs.IModel;
   scene:any;
   attribute:any;
   selectedVisible:boolean=false;
@@ -34,12 +34,33 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.num=[];
     this.collection=[];
     this.myElement = myElement;
+    
   }
 
   ngOnInit() {
-  	this.boxes = this.dataService.getGsModel();
-    this.model= new gs.Model(this.boxes);
+    this.model= this.dataService.getGsModel(); 
   	this.point(this.Visible);
+    console.log(this.model);
+    console.log(this.model.getAttribs());
+    const attribs: gs.IAttrib[] = this.model.getAttribs();
+    for (const attrib of attribs) {
+      const type: gs.EGeomType = attrib.getGeomType();
+      const name: string = attrib.getName();
+      const values: any[] = attrib.getValues();
+        // const labels: string[] = attrb.getLabels();
+        switch (type) {
+          case gs.EGeomType.points:
+            // code...
+            break;
+          case gs.EGeomType.vertices:
+            // code...
+            break;
+          default:
+            // code...
+            break;
+        }
+      }
+      
   }
 
   notify(){ 
@@ -175,6 +196,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   object(Visible){
+    //console.log(this.object);
   	this.Visible="object";
   	this.attribute=[];
   	this.num=[];
@@ -183,9 +205,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       	var attributepoints:any=[];
       	attributepoints.original=this.attribute.length;
       	attributepoints.mesh=this.scene.children[i];
-		attributepoints.axisX=this.scene.children[i].position.x;
-		attributepoints.axisY=this.scene.children[i].position.y;
-		attributepoints.axisZ=this.scene.children[i].position.z;
+		    attributepoints.axisX=this.scene.children[i].position.x;
+		    attributepoints.axisY=this.scene.children[i].position.y;
+		    attributepoints.axisZ=this.scene.children[i].position.z;
       	this.attribute.push(attributepoints);
       }
     }

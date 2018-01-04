@@ -7,6 +7,8 @@ import * as gs from "gs-json";
 
 import {DataSubscriber} from "../data/DataSubscriber";
 
+
+
 @Component({
   selector: 'app-viewer',
   templateUrl: './viewer.component.html',
@@ -26,13 +28,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   mouse:any;
   settingVisible: boolean=false;
   Visible:string="rotate";
-  model:any;
+  model: gs.IModel;
   boxes:any;
   geometry:THREE.Geometry;
   INTERSECTED:any;
   INTERSECTEDcolor:any;
   selecting:any;
   canvas:any;
+  objectdata:any;
 
   myElement;
   
@@ -99,8 +102,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.render();
   }
 
-  updateViewer(){ 
-    this.model= this.dataService.getGsModel(); 
+  updateViewer(){
+   
+    this.model = this.dataService.getGsModel(); 
     if(this.model == undefined){
       return this.sceneViewer();
     }else{
@@ -111,19 +115,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
       const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
       let loader = new THREE.ObjectLoader();
-      let object = loader.parse( scene_data );
-      for(var i =0;i<object.children.length;i++){
-        if(object.children[i].children!==undefined){
-          for(var j=0;j<object.children[i].children.length;j++){
-            if(object.children[i].children[j].type==="Mesh"){
-              object.children[i].children[j]["geometry"].computeVertexNormals();
-              object.children[i].children[j]["geometry"].computeBoundingBox();
-              object.children[i].children[j]["geometry"].computeBoundingSphere();
+      this.objectdata = loader.parse( scene_data );
+      for(var i =0;i<this.objectdata.children.length;i++){
+        if(this.objectdata.children[i].children!==undefined){
+          for(var j=0;j<this.objectdata.children[i].children.length;j++){
+            if(this.objectdata.children[i].children[j].type==="Mesh"){
+              this.objectdata.children[i].children[j]["geometry"].computeVertexNormals();
+              this.objectdata.children[i].children[j]["geometry"].computeBoundingBox();
+              this.objectdata.children[i].children[j]["geometry"].computeBoundingSphere();
             }
           }
         }
       }
-      this.scene.add( object );
+      this.scene.add( this.objectdata );
+
     }
 
     this.scene.background = new THREE.Color( 0xcccccc );

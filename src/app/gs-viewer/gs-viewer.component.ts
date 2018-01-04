@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {DataService} from './data/data.service';
+import * as gs from "gs-json";
 
 @Component({
   selector: 'gs-viewer',
@@ -9,7 +10,7 @@ import {DataService} from './data/data.service';
 export class GSViewerComponent {
 
 	// gs model data passed to the viewer
-	@Input() data;
+	@Input() data:gs.IModel;
 
 	constructor(private dataService: DataService){};
 

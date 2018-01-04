@@ -23,6 +23,7 @@ export class DataService {
   scenechange:any;
   INTERSECTEDColor:any;
   selecting:any = [];
+  object:any;
 
   constructor() { 
     this._alight=[];
@@ -143,4 +144,11 @@ export class DataService {
   getselecting(){
     return this.selecting;
   }
+  /*addobject(object){
+    this.objectdata=object;
+    console.log(object);
+  }
+  getobject(){
+    //return this.objectdata;
+  }*/
 }
