@@ -53,6 +53,8 @@
 }
 #numberbutton{
   width:100%;
-  background-color:white;
   border:0;
+}
+.selectid{
+  background-color:#66CCFF;
 }

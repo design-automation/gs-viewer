@@ -71,7 +71,7 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0" id="tablename" name="table" bordercolor="#d0d0d0" *ngFor="let datascale of attribute ">
         <tr>
-          <button  id="numberbutton"  (click)=Onselect(datascale.original)>{{ datascale.original}}</button>
+          <button  id="numberbutton"  [class.selectid]="datascale.original==selectdata"  (click)=Onselect(datascale.original)>{{ datascale.original}}</button>
           <td width="20%" align=center>{{datascale.axisX}}</td>
           <td width="20%" align=center>{{datascale.axisY}}</td>
           <td width="20%" align=center>{{datascale.axisZ}}</td>

@@ -69,9 +69,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   updateViewer(){ 
-
     this.boxes = this.dataService.getGsModel();
-    this.model= new gs.Model(this.boxes);
+    this.model= gs.genModelTorus();
+    const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
+    let loader = new THREE.ObjectLoader();
+    let object = loader.parse( scene_data );
+    for(var i =0;i<object.children.length;i++){
+      if(object.children[i].children!==undefined){
+        for(var j=0;j<object.children[i].children.length;j++){
+          if(object.children[i].children[j].type==="Mesh"){
+            object.children[i].children[j].geometry.computeVertexNormals();
+          }
+        }
+      }
+    }
+    
+    this.scene.add( object );
 
     this.scene.background = new THREE.Color( 0xcccccc );
     this.container= this.myElement.nativeElement.children[0];//document.getElementById( 'container' );
@@ -94,21 +107,26 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     //   self.render();
     // }, false );
 
-    this.camera = new THREE.PerspectiveCamera( 60, this.width / this.height, 1, 1000 );
+    this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
     this.camera.position.z = 10;
     this.camera.updateMatrixWorld();
     this.camera.lookAt(this.scene.position);
 
     self.light = new THREE.DirectionalLight( 0xffffff,0.5);
-    self.light.castShadow = true; 
+    self.light.castShadow = false; 
+    //self.light.position.set(10,10,10);
+    //self.light.target.position.set( 0, 0, 0 );
     this.controls=new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.mouseButtons={ORBIT:THREE.MOUSE.LEFT};
+
+    self.light.position.copy( self.camera.position );
     this.controls.addEventListener( 'change',  function() {
       self.light.position.copy( self.camera.position );
     } );
+    self.light.target.position.set( 0, 0, 0 );
     this.scene.add( self.light );
     this.geometry=this.pushGSGeometry();
-    for ( var i = 0; i < 50; i ++ ) {
+    /*for ( var i = 0; i < 50; i ++ ) {
       var material = new THREE.MeshPhongMaterial( { color: 0xffffff,side:THREE.DoubleSide} );
       var mesh = new THREE.Mesh( this.geometry, material );
       mesh.position.x = ( Math.random() - 0.5 ) * 50;
@@ -117,7 +135,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       mesh.updateMatrix();
       mesh.matrixAutoUpdate = false;
       this.scene.add( mesh );
-    }
+    }*/
     this.render();
   }
 
@@ -148,6 +166,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onDocumentMouseDown(event){
+    console.log(this.scene);
     this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
     this.selecting=this.dataService.selecting;
     var INTERSECTED;
@@ -181,7 +200,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
         this.selecting=[];
       }
-      
+
       this.dataService.addselecting(this.selecting);
   }
 

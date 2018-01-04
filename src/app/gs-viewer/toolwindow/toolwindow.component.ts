@@ -6,6 +6,7 @@ import { DataService } from "../data/data.service";
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
 
+
 @Component({
   selector: 'app-toolwindow',
   templateUrl: './toolwindow.component.html',
@@ -24,6 +25,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   geometry:any;
   num:any;
   selectedOjb:any;
+  selectdata:any;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -249,18 +251,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   Onselect(i){
-  	console.log(i);
+  	//this.selecting=this.dataService.selecting;
   	var select;
-  	//var INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
   	for(var j=0;j<this.attribute.length;j++){
-  	  //this.attribute[j].mesh.material.color.setHex(INTERSECTEDcolor);
   	  if(this.attribute[j].original==i){
-  	  	console.log(this.attribute[j].original);
   	  	select=this.attribute[j].mesh;
   	  	this.dataService.pushselecting(select);
   	  	select.material.color.setHex(0x2E9AFE);
-  		console.log(this.attribute[i]);
-  		console.log(this.selecting);
   	  }
   	}
 
