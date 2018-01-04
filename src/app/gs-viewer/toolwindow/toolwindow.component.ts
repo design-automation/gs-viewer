@@ -65,14 +65,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       	}
       }
     }*/
-    var pointsgeom=this.boxes.geom.points[1];
+    /*var pointsgeom=this.boxes.geom.points[1];
     for(var i=0;i<pointsgeom.length;i++){
       var attributepoints=new THREE.Vector3();
       attributepoints.x=pointsgeom[i][0];
       attributepoints.y=pointsgeom[i][1];
       attributepoints.z=pointsgeom[i][2];
       this.attribute.push(attributepoints);
-    }
+    }*/
   }
 
   pointcheck(){

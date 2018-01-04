@@ -69,8 +69,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   updateViewer(){ 
-    this.boxes = this.dataService.getGsModel();
-    this.model= gs.genModelTorus();
+    this.model= this.dataService.getGsModel(); 
     const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
     let loader = new THREE.ObjectLoader();
     let object = loader.parse( scene_data );
@@ -166,12 +165,19 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onDocumentMouseDown(event){
-    console.log(this.scene);
+    console.log(this.scene.children);
+    var scenechildren=[];
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name!="GridHelper"||this.scene.children[i].name!="AxisHelper"){
+        scenechildren.push(this.scene.children[i]);
+        console.log();
+      }
+    }
     this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
     this.selecting=this.dataService.selecting;
     var INTERSECTED;
     this.raycaster.setFromCamera(this.mouse,this.camera);
-      var intersects = this.raycaster.intersectObjects(this.scene.children);
+      var intersects = this.raycaster.intersectObjects(this.scene.children[1].children);
       if ( intersects.length > 0 ) {
         if ( INTERSECTED!= intersects[ 0 ].object ) {
           if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
@@ -208,7 +214,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     let self = this;
     (function render(){
       self.raycaster.setFromCamera(self.mouse,self.camera);
-      var intersects = self.raycaster.intersectObjects(self.scene.children);
+      var intersects = self.raycaster.intersectObjects(self.scene.children[1].children);
       if ( intersects.length > 0 ) {
         if ( self.INTERSECTED != intersects[ 0 ].object ) {
           if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
