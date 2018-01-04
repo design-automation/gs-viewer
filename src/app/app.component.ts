@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DATA } from '../data/data';
 
+import * as gs from 'gs-json';
+
 @Component({
   	selector: 'app-root',
     templateUrl: './app.component.html',
@@ -11,8 +13,8 @@ export class AppComponent {
 
 	// dummy gs_data
 	// to pass to the viewer
-	gs_dummy_data =  
-    {
+	gs_dummy_data = gs.genModelTorus();
+    data_boxes ={
         attribs: null,
         geom: {
             objs: [
