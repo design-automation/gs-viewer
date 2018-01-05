@@ -59,7 +59,7 @@ export class DataService {
 
   setGsModel(model){
     this._gsModel = model;
-    this.sendMessage();
+    this.sendMessage("model_update");
   }
 
 

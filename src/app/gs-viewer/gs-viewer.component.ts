@@ -18,4 +18,10 @@ export class GSViewerComponent {
 		this.dataService.setGsModel(this.data);
 	}
 
+	ngDoCheck(){
+		if(this.dataService.getGsModel() !== this.data){
+			this.dataService.setGsModel(this.data);
+		}
+	}
+
 }

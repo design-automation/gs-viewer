@@ -57,12 +57,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
   //
-  notify(): void{
+  notify(message): void{
     //while(this.scene.children.length > 0){ 
         //this.scene.remove(this.scene.children[0]); 
     //}
     //this.sceneViewer();
-
+    if(message == "model_update"){
+      this.updateViewer();
+    }
   }
 
 
@@ -388,6 +390,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.Visible="select";
     event.stopPropagation();
   }
+
   setting(event){
     this.settingVisible=!this.settingVisible;
     event.stopPropagation();

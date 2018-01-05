@@ -16,14 +16,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   Visible:string="point";
   boxes:any;
   model:gs.IModel;
-  scene:any;
-  attribute:any;
+  scene:THREE.Scene;
+  attribute:Array<any>;
   selectedVisible:boolean=false;
   collection:any;
   myElement;
   selecting:any;
   geometry:any;
-  num:any;
+  num:Array<any>;
   selectedOjb:any;
   selectdata:any;
 
@@ -38,13 +38,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   ngOnInit() {
-    this.model= this.dataService.getGsModel(); 
+    //this.model= this.dataService.getGsModel(); 
+    /*this.model=gs.genModelBoxWithAttribs();
   	this.point(this.Visible);
     const attribs: gs.IAttrib[] = this.model.getAttribs();
+    console.log(attribs[0].getGeomType());
     for (const attrib of attribs) {
+      console.log(attrib.getGeomType());
       const type: gs.EGeomType = attrib.getGeomType();
       const name: string = attrib.getName();
-      const values: any[] = attrib.getValues();
+      //const values: any[] = attrib.getValues();
         // const labels: string[] = attrb.getLabels();
         switch (type) {
           case gs.EGeomType.points:
@@ -57,8 +60,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             // code...
             break;
         }
-      }
-      
+      }*/
   }
 
   notify(){ 
@@ -99,7 +101,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<this.scene.children.length;i++){
       for(var j=0;j<this.selecting.length;j++){
         if(this.scene.children[i].uuid==this.selecting[j].uuid){
-      	  var pointsgeom=this.scene.children[i].geometry.vertices;
+      	  var pointsgeom=this.scene.children[i]["geometry"].vertices;
       		for(var j=0;j<pointsgeom.length;j++){
 		  	  var attributepoints=new THREE.Vector3();
 		  	  attributepoints.x=pointsgeom[j].x;
@@ -126,7 +128,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<this.scene.children.length;i++){
       for(var j=0;j<this.selecting.length;j++){
       	if(this.scene.children[i].uuid==this.selecting[j].uuid){
-      	  var pointsgeom=this.scene.children[i].geometry.vertices;
+      	  var pointsgeom=this.scene.children[i]["geometry"].vertices;
       		for(var j=0;j<pointsgeom.length;j++){
 		  	  var attributepoints=new THREE.Vector3();
 		  	  attributepoints.x=pointsgeom[j].x;
@@ -180,7 +182,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	for(var i=0;i<this.scene.children.length;i++){
   	  for(var j=0;j<this.selecting.length;j++){
   		if(this.scene.children[i].uuid==this.selecting[j].uuid){
-  			var facesgeom=this.scene.children[i].geometry.faces;
+  			var facesgeom=this.scene.children[i]["geometry"].faces;
   			for(var j=0;j<facesgeom.length;j++){
 	  	  	  var attributepoints=new THREE.Vector3();
 	  	      attributepoints.x=facesgeom[j].a;
