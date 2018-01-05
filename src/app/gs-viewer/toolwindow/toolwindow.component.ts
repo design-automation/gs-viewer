@@ -40,8 +40,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
   	this.point(this.Visible);
-    console.log(this.model);
-    console.log(this.model.getAttribs());
     const attribs: gs.IAttrib[] = this.model.getAttribs();
     for (const attrib of attribs) {
       const type: gs.EGeomType = attrib.getGeomType();

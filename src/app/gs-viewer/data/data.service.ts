@@ -24,6 +24,9 @@ export class DataService {
   INTERSECTEDColor:any;
   selecting:any = [];
   object:any;
+  axis:boolean;
+  grid:boolean;
+  shadow:boolean;
 
   constructor() { 
     this._alight=[];
@@ -144,11 +147,13 @@ export class DataService {
   getselecting(){
     return this.selecting;
   }
-  /*addobject(object){
-    this.objectdata=object;
-    console.log(object);
+  addgrid(grid){
+    this.grid=grid;
   }
-  getobject(){
-    //return this.objectdata;
-  }*/
+  addaxis(axis){
+    this.axis=axis;
+  }
+  addshadow(shadow){
+    this.shadow=shadow;
+  }
 }
