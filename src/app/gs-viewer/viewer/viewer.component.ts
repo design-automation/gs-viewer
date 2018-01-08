@@ -69,6 +69,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
 
   ngOnInit() {
+    this.sceneViewer();
     this.updateViewer();
   }
 
@@ -99,56 +100,32 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   updateViewer(){
-    this.model = this.dataService.getGsModel(); 
-    if(this.model == undefined){
-      return this.sceneViewer();
-    }else{
-      for(var i=0;i<this.scene.children.length;i++){
-        if(this.scene.children[i].type==="Scene"){
-          this.scene.remove(this.scene.children[i]);
+      try{
+        this.model = this.dataService.getGsModel(); 
+        for(var i=0;i<this.scene.children.length;i++){
+          if(this.scene.children[i].type==="Scene"){
+            this.scene.remove(this.scene.children[i]);
+          }
         }
-      }
-      const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
-      let loader = new THREE.ObjectLoader();
-      this.objectdata = loader.parse( scene_data );
-      for(var i =0;i<this.objectdata.children.length;i++){
-        if(this.objectdata.children[i].children!==undefined){
-          for(var j=0;j<this.objectdata.children[i].children.length;j++){
-            if(this.objectdata.children[i].children[j].type==="Mesh"){
-              this.objectdata.children[i].children[j]["geometry"].computeVertexNormals();
-              this.objectdata.children[i].children[j]["geometry"].computeBoundingBox();
-              this.objectdata.children[i].children[j]["geometry"].computeBoundingSphere();
+        const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
+        let loader = new THREE.ObjectLoader();
+        this.objectdata = loader.parse( scene_data );
+        for(var i =0;i<this.objectdata.children.length;i++){
+          if(this.objectdata.children[i].children!==undefined){
+            for(var j=0;j<this.objectdata.children[i].children.length;j++){
+              if(this.objectdata.children[i].children[j].type==="Mesh"){
+                this.objectdata.children[i].children[j]["geometry"].computeVertexNormals();
+                this.objectdata.children[i].children[j]["geometry"].computeBoundingBox();
+                this.objectdata.children[i].children[j]["geometry"].computeBoundingSphere();
+              }
             }
           }
         }
+        this.scene.add( this.objectdata );
       }
-      this.scene.add( this.objectdata );
-
-    }
-
-    this.scene.background = new THREE.Color( 0xcccccc );
-    this.container= this.myElement.nativeElement.children[0];//document.getElementById( 'container' );
-    this.width=this.container.clientWidth || 600;
-    this.height=this.container.clientHeight;    
-    this.renderer.setPixelRatio( window.devicePixelRatio );
-    this.renderer.setSize( this.width, this.height );
-    this.container.appendChild( this.renderer.domElement );
-    this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
-    this.camera.position.z = 10;
-    this.camera.updateProjectionMatrix();
-    this.camera.lookAt(this.scene.position);
-    this.light = new THREE.DirectionalLight( 0xffffff,0.5);
-    this.light.castShadow = false; 
-    this.controls=new this.OC(this.camera, this.renderer.domElement);
-    this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
-    var self=this;
-    self.light.position.copy( self.camera.position );
-    self.controls.addEventListener( 'change',  function() {
-      self.light.position.copy( self.camera.position );
-    } );
-    self.light.target.position.set( 0, 0, 0 );
-    self.scene.add( self.light );
-    this.render();
+      catch(ex){
+         console.log("Cannot display give model");
+      }
   }
 
   onDocumentMouseMove(event) {
