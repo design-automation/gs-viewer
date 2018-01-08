@@ -12,7 +12,7 @@ export class DataSubscriber{
 		this.dataService = injector.get(DataService);
 		this._subscription = this.dataService.getMessage().subscribe(message => { 
 	      this._message = message; 
-	      this.notify(message);
+	      this.notify(message.text);
 	    });
 	}
 
