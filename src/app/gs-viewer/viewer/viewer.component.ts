@@ -41,7 +41,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
-    this.scene=new THREE.Scene();
+    this.scene=this.dataService.scene;
     this.dataService.addScene(this.scene);
     this.renderer = new THREE.WebGLRenderer( {antialias: true} );
     this.dataService.addRender(this.renderer);
@@ -124,30 +124,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
       this.scene.add( this.objectdata );
     }
-
-    this.scene.background = new THREE.Color( 0xcccccc );
-    this.container= this.myElement.nativeElement.children[0];//document.getElementById( 'container' );
-    this.width=this.container.clientWidth || 600;
-    this.height=this.container.clientHeight;    
-    this.renderer.setPixelRatio( window.devicePixelRatio );
-    this.renderer.setSize( this.width, this.height );
-    this.container.appendChild( this.renderer.domElement );
-    this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
-    this.camera.position.z = 50;
-    this.camera.updateProjectionMatrix();
-    this.camera.lookAt(this.scene.position);
-    this.light = new THREE.DirectionalLight( 0xffffff,0.5);
-    this.light.castShadow = false; 
-    this.controls=new this.OC(this.camera, this.renderer.domElement);
-    this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
-    var self=this;
-    self.light.position.copy( self.camera.position );
-    self.controls.addEventListener( 'change',  function() {
-      self.light.position.copy( self.camera.position );
-    } );
-    self.light.target.position.set( 0, 0, 0 );
-    self.scene.add( self.light );
-    this.render();
+    this.sceneViewer();
   }
 
   onDocumentMouseMove(event) {
