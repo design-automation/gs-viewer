@@ -28,6 +28,7 @@ export class DataService {
   grid:boolean;
   shadow:boolean;
   selectcheck:boolean;
+  visible:string;
 
   constructor() { 
     this._alight=[];
@@ -148,6 +149,14 @@ export class DataService {
   getselecting(){
     return this.selecting;
   }
+  getSelectingIndex(uuid):number {
+    for(var i=0;i<this.selecting.length;i++){
+      if(this.selecting[i].uuid==uuid){
+        return i;
+      }
+    }
+    return -1;
+  }
   addgrid(grid){
     this.grid=grid;
   }
@@ -159,5 +168,8 @@ export class DataService {
   }
   addselect(select){
     this.selectcheck=select;
+  }
+  getToolSelected() {
+    return this.visible;
   }
 }

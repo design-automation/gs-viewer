@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { DataService } from "../data/data.service";
@@ -55,7 +54,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-  	
+  	this.dataService.visible=this.Visible;
   }
 
   point(Visible){

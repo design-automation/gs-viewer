@@ -34,7 +34,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   geometry:THREE.Geometry;
   INTERSECTED:any;
   INTERSECTEDcolor:any;
-  selecting:Array<any>;
   objectdata:any;
   spritey:Array<any>;
   myElement;
@@ -50,7 +49,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.dataService.addGeom(this.geometry);
     this.mouse=new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
-    this.selecting=[];
     this.spritey=[];
     this.myElement = myElement;
     document.body.style.cursor = " pointer";
@@ -63,13 +61,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //
   notify(message): void{
     if(message == "model_update"){
-      this.updateViewer();
+      this.initViewer();
     }
   }
 
 
   ngOnInit() {
-    this.updateViewer();
+    this.initViewer();
   }
 
   sceneViewer(){
@@ -98,7 +96,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.render();
   }
 
-  updateViewer(){
+  initViewer(){
     this.model = this.dataService.getGsModel(); 
     if(this.model == undefined){
       return this.sceneViewer();
@@ -122,7 +120,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
       }
+      console.log(this.objectdata.children[0].children[0]);
       this.scene.add( this.objectdata );
+
     }
 
     this.scene.background = new THREE.Color( 0xcccccc );
@@ -133,7 +133,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.renderer.setSize( this.width, this.height );
     this.container.appendChild( this.renderer.domElement );
     this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
-    this.camera.position.z = 50;
+    this.camera.position.z = 10;
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
     this.light = new THREE.DirectionalLight( 0xffffff,0.5);
@@ -155,6 +155,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.mouse=new THREE.Vector2();
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
     this.mouse.y =-( event.clientY / this.height ) * 2 + 1;
+    var e=event;
+    //this.onMouseHover(e);
   }
 
   Mousedown(event){
@@ -164,61 +166,140 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
+  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
+  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
+  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
+  
   onDocumentMouseDown(event){
-    this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
-    this.selecting=this.dataService.selecting;
-    var scenechildren=new THREE.Scene();
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].type==="Mesh"){
-        var children=this.scene.children[1].children[i].children[j];
-        scenechildren.children.push(children);
+    var selectedObj, intersects;
+    var scenechildren=[];
+
+    var children;
+    for (var i = 0; i<this.scene.children.length; i++) {
+      if(this.scene.children[i].name=="Scene") {
+        children=this.scene.children[i].children;
+        break;
+      }
+      if(i==this.scene.children.length-1) {
+        return;
+      }
+    }
+    
+    for(var i=0;i<children.length;i++){
+      for(var j=0;j<children[i].children.length;j++){
+        if(children[i].children[j].type==="Mesh"){
+          scenechildren.push(children[i].children[j]);
         }
       }
     }
-    var INTERSECTED;
     this.raycaster.setFromCamera(this.mouse,this.camera);
-      var intersects = this.raycaster.intersectObjects(scenechildren.children);
-      if ( intersects.length > 0 ) {
-        if ( INTERSECTED!= intersects[ 0 ].object ) {
-          if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-          INTERSECTED= intersects[ 0 ].object;
-          INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-          var flagInArr = false; 
-          for(var i=0;i<this.selecting.length;i++){
-              if(this.selecting[i].uuid==INTERSECTED.uuid){
-                flagInArr = true;
-                this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
-                this.selecting.splice(i,1);
-                i=i-1;
-              }
-          }
-          if(flagInArr == false){
-            INTERSECTED.material.color.setHex( 0x2E9AFE);
-            this.selecting.push(INTERSECTED);
-            var threesprite=this.sprite("O1", { fontsize: 70} );
-            this.spritey.push(threesprite);
-            var position:THREE.Vector3=this.selecting[this.selecting.length-1].geometry.boundingBox.max;
-            this.spritey[this.spritey.length-1].position.set(position.x,position.y,position.z);
-            this.scene.add(this.spritey[this.spritey.length-1]);
-          }
-        }
+    intersects = this.raycaster.intersectObjects(scenechildren);
+    if ( intersects.length > 0 ) {
+      selectedObj=intersects[ 0 ].object;
+      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
+      if(index<0) {
+        selectedObj.material=this.selMaterial;
+        this.dataService.selecting.push(selectedObj);
       } else {
-        if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-        INTERSECTED = null;
-        for(var i=0;i<this.selecting.length;i++){
-          this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
-        }
-        for(var j=0;j<this.scene.children.length;j++){
-          if(this.scene.children[j].type==="Sprite"){
-            this.scene.remove(this.scene.children[j]);
-            j=j-1;
+        selectedObj.material=this.basicColHex;
+        this.dataService.selecting.splice(index,1);
+      }
+    } else {
+      for(var i=0;i<this.dataService.selecting.length;i++){
+        this.dataService.selecting[i].material=this.basicColHex;
+      }
+      this.dataService.selecting=[];
+    }
+    this.updateViewer();
+  }
+
+  // onMouseHover(event){
+  //   var intersects;
+  //   var scenechildren=[];
+
+  //   var children;
+  //   for (var i = 0; i<this.scene.children.length; i++) {
+  //     if(this.scene.children[i].name=="Scene") {
+  //       children=this.scene.children[i].children;
+  //       break;
+  //     }
+  //     if(i==this.scene.children.length-1) {
+  //       return;
+  //     }
+  //   }
+    
+  //   for(var i=0;i<children.length;i++){
+  //     for(var j=0;j<children[i].children.length;j++){
+  //       if(children[i].children[j].type==="Mesh"){
+  //         scenechildren.push(children[i].children[j]);
+  //       }
+  //     }
+  //   }
+  //   //this.raycaster.setFromCamera(this.mouse,this.camera);
+  //   intersects = this.raycaster.intersectObjects(scenechildren);
+  //   for (var i = 0; i < scenechildren.length ; i++) {
+  //     if(this.dataService.getSelectingIndex(scenechildren[i].uuid)<0) {
+  //       for (var j = 0; j < intersects.length; j++) {
+  //         if(scenechildren[i].uuid==intersects.uuid) {
+  //           this.dataService.selecting[i].material=this.mouseHovHex;
+  //         } else {
+  //           this.dataService.selecting[i].material=this.basicColHex;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+  updateViewer() {
+    this.updateSprite();
+  }
+
+  updateSprite() {
+    for (var i = this.spritey.length - 1; i >= 0; i--) {
+      this.scene.remove(this.spritey[i]);
+    }
+    this.spritey=[];
+    for (var i = 0; i < this.dataService.selecting.length; i++) {
+      var obj=this.dataService.selecting[i];
+      var childArray=obj.parent.children;
+      var sprit;
+      var position:THREE.Vector3;
+      console.log(childArray);
+      if(childArray[childArray.length-1].type==this.dataService.visible) {
+        sprit=this.sprite(childArray[childArray.length-1].children[0].name,{fontsize: 70});
+        position=obj.geometry.boundingBox.max;
+        sprit.position.set(position.x,position.y,position.z);
+        this.scene.add(sprit);
+        this.spritey.push(sprit);
+      } else {
+        for (var j = 0; j < childArray.length-1; j++) {
+          if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
+            this.addSprites(childArray[j]);
+            break;
           }
         }
-        this.spritey=[];
-        this.selecting=[];
+        if(j==childArray.length-1) {
+            sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
+            position=obj.geometry.boundingBox.max;
+            sprit.position.set(position.x,position.y,position.z);
+            this.scene.add(sprit);
+            this.spritey.push(sprit);
+        }
       }
-      this.dataService.addselecting(this.selecting);
+    }
+  }
+
+  addSprites(childArray) {
+    var sprit;
+    var position:THREE.Vector3;
+    console.log(childArray);
+    for (var i = 0; i < childArray.children.length; i++) {
+      sprit=this.sprite(childArray.children[i].name,{fontsize: 30});
+      position=childArray.children[i].position;
+      sprit.position.set(position.x,position.y,position.z);
+      this.scene.add(sprit);
+      this.spritey.push(sprit);
+    }
   }
 
   render():void {
@@ -226,32 +307,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     (function render(){
       if(self.Visible=="select"){
       var scenechildren=new THREE.Scene();
-      for(var i=0;i<self.scene.children[1].children.length;i++){
-        for(var j=0;j<self.scene.children[1].children[i].children.length;j++){
-          if(self.scene.children[1].children[i].children[j].type==="Mesh"){
-          var children=self.scene.children[1].children[i].children[j];
-          scenechildren.children.push(children);
+        for(var i=0;i<self.scene.children[1].children.length;i++){
+          for(var j=0;j<self.scene.children[1].children[i].children.length;j++){
+            if(self.scene.children[1].children[i].children[j].type==="Mesh") {
+              var children=self.scene.children[1].children[i].children[j];
+              scenechildren.children.push(children);
+            }
           }
         }
-      }
-      self.raycaster.setFromCamera(self.mouse,self.camera);
-      var intersects = self.raycaster.intersectObjects(scenechildren.children);
-      if ( intersects.length > 0 ) {
-        if ( self.INTERSECTED != intersects[ 0 ].object ) {
-          if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
-          self.INTERSECTED = intersects[ 0 ].object;
-          self.INTERSECTED.currentHex = self.INTERSECTED.material.color.getHex();
-          self.dataService.addINTERSECTEDColor(self.INTERSECTED.currentHex);
-          self.INTERSECTED.material.color.setHex( 0xFF0000);
-        }
-      } else {
-        if ( self.INTERSECTED ) {
-          if(self.INTERSECTED.currentHex!=16711680){
-            self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
-          }
-        }
-        self.INTERSECTED = null;
-      }
       }
       requestAnimationFrame(render);
       self.renderer.render(self.scene, self.camera);
@@ -273,7 +336,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.enabled=true;
     this.controls.enableZoom=true;
     this.Visible="zoomfit";
-    if(this.selecting.length===0){
+    if(this.dataService.selecting.length===0){
       var obj=new THREE.Object3D();
       obj=this.scene;
       var boxHelper = new THREE.BoxHelper(obj);
@@ -295,13 +358,19 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
     }else{
-      var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
+      var axisX=0;
+      var axisY=0;
+      var axisZ=0;
       var radius=0;
-      for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
-        radius=Math.max(this.selecting[i].geometry.boundingSphere.radius,radius);
+      var centerX=0;
+      var centerY=0;
+      var centerZ=0;
+      var radius=0;
+      for(var i=0;i<this.dataService.selecting.length;i++){
+        axisX+=this.dataService.selecting[i].geometry.boundingSphere.center.x;
+        axisY+=this.dataService.selecting[i].geometry.boundingSphere.center.y;
+        axisZ+=this.dataService.selecting[i].geometry.boundingSphere.center.z;
+        radius=Math.max(this.dataService.selecting[i].geometry.boundingSphere.radius,radius);
       }
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
@@ -310,9 +379,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3(Math.abs( radius / Math.sin( fov / 2 )),
-                                    Math.abs( radius / Math.sin( fov / 2 ) ),
-                                    Math.abs( radius / Math.sin( fov / 2 )));
+      var tmp_vec=new THREE.Vector3( Math.abs( radius / Math.sin( fov / 2 )),
+                                     Math.abs( radius / Math.sin( fov / 2 ) ),
+                                     Math.abs( radius / Math.sin( fov / 2 )));
       vec_centre_to_pos.setLength(tmp_vec.length());
       var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
       perspectiveNewPos.addVectors(center, vec_centre_to_pos);
@@ -335,7 +404,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   rotate(Visible){
     document.body.style.cursor = " pointer";
-    if(this.selecting.length===0){
+    if(this.dataService.selecting.length===0){
       var centerX=0;
       var centerY=0;
       var centerZ=0;
@@ -347,7 +416,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       centerX=centerX/this.scene.children[1].children.length;
       centerY=centerY/this.scene.children[1].children.length;
       centerZ=centerZ/this.scene.children[1].children.length;
-      //this.controls.target.set(centerX,centerY,centerZ);
+      this.controls.target.set(centerX,centerY,centerZ);
     }else{
       var axisX=0;
       var axisY=0;
@@ -355,15 +424,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var centerX=0;
       var centerY=0;
       var centerZ=0;
-      for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
+      for(var i=0;i<this.dataService.selecting.length;i++){
+        axisX+=this.dataService.selecting[i].geometry.boundingSphere.center.x;
+        axisY+=this.dataService.selecting[i].geometry.boundingSphere.center.y;
+        axisZ+=this.dataService.selecting[i].geometry.boundingSphere.center.z;
       }
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
       centerZ=axisY/this.scene.children[1].children.length;
-      //this.controls.target.set(centerX,centerY,centerZ);
+      this.controls.target.set(centerX,centerY,centerZ);
     }
     this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
     this.controls.enabled=true;
