@@ -8,8 +8,8 @@ export class DataService {
 
   _gsModel;
 
-  _data: any;
-  _renderer:any;
+  scene:THREE.Scene;
+  _renderer:THREE.WebGLRenderer;
   _saturation:any;
   _lightness:any;
   _alight:any;
@@ -29,10 +29,16 @@ export class DataService {
   shadow:boolean;
   selectcheck:boolean;
   visible:string;
+  mouse:THREE.Vector2;
+  raycaster:THREE.Raycaster;
 
   constructor() { 
     this._alight=[];
-    this.scenechange=this._data;
+    if(this.scene===undefined){
+      this.scene=new THREE.Scene();
+    }else{
+      this.scene=this.getScene();
+    }
   }
 
   // ---- 
@@ -67,11 +73,11 @@ export class DataService {
 
   
   addScene(scene): void{
-  	this._data = scene;
+  	this.scene = scene;
   }
 
   getScene(): any{
-  	return this._data;
+  	return this.scene;
   }
 
   addRender(renderer): void{
@@ -87,7 +93,7 @@ export class DataService {
     this._saturationValue=0;
     this._lightnessValue=0.47;
     var light = new THREE.HemisphereLight( 0xffffff,0.5);
-    this._data.add( light );
+    this.scene.add( light );
     this._alight.push(light);
     var alight=this._alight;
     for(var i=0;i<alight.length;i++) {

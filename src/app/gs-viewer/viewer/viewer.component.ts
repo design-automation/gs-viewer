@@ -40,7 +40,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
-    this.scene=new THREE.Scene();
+    this.scene=this.dataService.scene;
     this.dataService.addScene(this.scene);
     this.renderer = new THREE.WebGLRenderer( {antialias: true} );
     this.dataService.addRender(this.renderer);
@@ -86,6 +86,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.light.castShadow = false; 
     this.controls=new this.OC(this.camera, this.renderer.domElement);
     this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
+    this.controls.enableKeys=false;
     var self=this;
     self.light.position.copy( self.camera.position );
     self.controls.addEventListener( 'change',  function() {
@@ -148,6 +149,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     self.light.target.position.set( 0, 0, 0 );
     self.scene.add( self.light );
     this.render();
+    this.sceneViewer();
   }
 
   onDocumentMouseMove(event) {
