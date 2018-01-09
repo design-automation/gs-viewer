@@ -88,6 +88,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.light.castShadow = false; 
     this.controls=new this.OC(this.camera, this.renderer.domElement);
     this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
+    this.controls.enableKeys=false;
     var self=this;
     self.light.position.copy( self.camera.position );
     self.controls.addEventListener( 'change',  function() {
