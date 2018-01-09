@@ -27,6 +27,7 @@ export class DataService {
   axis:boolean;
   grid:boolean;
   shadow:boolean;
+  selectcheck:boolean;
 
   constructor() { 
     this._alight=[];
@@ -155,5 +156,8 @@ export class DataService {
   }
   addshadow(shadow){
     this.shadow=shadow;
+  }
+  addselect(select){
+    this.selectcheck=select;
   }
 }

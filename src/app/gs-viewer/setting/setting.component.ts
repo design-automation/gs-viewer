@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Component, OnInit, Input } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ViewerComponent } from '../viewer/viewer.component';
@@ -68,7 +67,7 @@ export class SettingComponent implements OnInit {
       maxX=Math.max(maxX,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.x));
       maxY=Math.max(maxY,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.y));
     }
-    var max=Math.ceil(Math.max(maxX,maxY)*1.3);
+    var max=Math.ceil(Math.max(maxX,maxY)*1.3)*2;
     if(this.gridVisible){
       var gridhelper=new THREE.GridHelper( max, max );
       gridhelper.name="GridHelper";

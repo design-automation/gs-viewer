@@ -123,7 +123,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
       this.scene.add( this.objectdata );
-
     }
 
     this.scene.background = new THREE.Color( 0xcccccc );
@@ -134,7 +133,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.renderer.setSize( this.width, this.height );
     this.container.appendChild( this.renderer.domElement );
     this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
-    this.camera.position.z = 10;
+    this.camera.position.z = 50;
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
     this.light = new THREE.DirectionalLight( 0xffffff,0.5);
@@ -184,7 +183,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         if ( INTERSECTED!= intersects[ 0 ].object ) {
           if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
           INTERSECTED= intersects[ 0 ].object;
-          console.log(INTERSECTED);
           INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
           var flagInArr = false; 
           for(var i=0;i<this.selecting.length;i++){
@@ -195,11 +193,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
                 i=i-1;
               }
           }
-
           if(flagInArr == false){
             INTERSECTED.material.color.setHex( 0x2E9AFE);
             this.selecting.push(INTERSECTED);
-            console.log(this.spritey.length);
             var threesprite=this.sprite("O1", { fontsize: 70} );
             this.spritey.push(threesprite);
             var position:THREE.Vector3=this.selecting[this.selecting.length-1].geometry.boundingBox.max;
@@ -223,7 +219,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.selecting=[];
       }
       this.dataService.addselecting(this.selecting);
-
   }
 
   render():void {
@@ -288,9 +283,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3( center.x+Math.abs( radius / Math.sin( fov / 2 )),
-                                     center.y+Math.abs( radius / Math.sin( fov / 2 ) ),
-                                     center.z+Math.abs( radius / Math.sin( fov / 2 )));
+      var tmp_vec=new THREE.Vector3( Math.abs( radius / Math.sin( fov / 2 )),
+                                     Math.abs( radius / Math.sin( fov / 2 ) ),
+                                     Math.abs( radius / Math.sin( fov / 2 )));
       vec_centre_to_pos.setLength(tmp_vec.length());
       var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
       perspectiveNewPos.addVectors(center, vec_centre_to_pos);
@@ -300,13 +295,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
     }else{
-      var axisX=0;
-      var axisY=0;
-      var axisZ=0;
-      var radius=0;
-      var centerX=0;
-      var centerY=0;
-      var centerZ=0;
+      var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
       var radius=0;
       for(var i=0;i<this.selecting.length;i++){
         axisX+=this.selecting[i].geometry.boundingSphere.center.x;
@@ -321,9 +310,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3( center.x+Math.abs( radius / Math.sin( fov / 2 )),
-                                     center.y+Math.abs( radius / Math.sin( fov / 2 ) ),
-                                     center.z+Math.abs( radius / Math.sin( fov / 2 )));
+      var tmp_vec=new THREE.Vector3(Math.abs( radius / Math.sin( fov / 2 )),
+                                    Math.abs( radius / Math.sin( fov / 2 ) ),
+                                    Math.abs( radius / Math.sin( fov / 2 )));
       vec_centre_to_pos.setLength(tmp_vec.length());
       var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
       perspectiveNewPos.addVectors(center, vec_centre_to_pos);
@@ -358,7 +347,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       centerX=centerX/this.scene.children[1].children.length;
       centerY=centerY/this.scene.children[1].children.length;
       centerZ=centerZ/this.scene.children[1].children.length;
-      this.controls.target.set(centerX,centerY,centerZ);
+      //this.controls.target.set(centerX,centerY,centerZ);
     }else{
       var axisX=0;
       var axisY=0;
@@ -374,7 +363,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
       centerZ=axisY/this.scene.children[1].children.length;
-      this.controls.target.set(centerX,centerY,centerZ);
+      //this.controls.target.set(centerX,centerY,centerZ);
     }
     this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
     this.controls.enabled=true;
