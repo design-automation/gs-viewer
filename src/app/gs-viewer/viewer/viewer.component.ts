@@ -1,7 +1,6 @@
 import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import * as OrbitControls from 'three-orbit-controls';
-//import
 import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
