@@ -20,6 +20,7 @@ export class SettingComponent implements OnInit {
   saturation:number;
   lightness:number;
   frameVisible:boolean;
+  gridisChecked:boolean;
 
   ngOnInit(){
     if(this.hue == undefined) {
@@ -38,21 +39,9 @@ export class SettingComponent implements OnInit {
       this.lightness=this.dataService.lightness;
     }
     this.gridVisible=this.dataService.grid;
-    if(this.gridVisible==true){
-      document.getElementById("grid").setAttribute('checked', 'checked');
-    }
     this.axisVisible=this.dataService.axis;
-    if(this.axisVisible==true){
-      document.getElementById("axis").setAttribute('checked', 'checked');
-    }
     this.shadowVisible=this.dataService.shadow;
-    if(this.shadowVisible==true){
-      document.getElementById("shadow").setAttribute('checked', 'checked');
-    }
     this.frameVisible=this.dataService.frame;
-    if(this.frameVisible==true){
-      document.getElementById("frame").setAttribute('checked', 'checked');
-    }
   }
 
   constructor(private dataService: DataService){
@@ -137,12 +126,22 @@ export class SettingComponent implements OnInit {
   changeframe(){
    this.frameVisible = !this.frameVisible;
    if(this.frameVisible){
-     for(var i=0;i<this.scene.children[1].children.length;i++){
-       this.scene.children[1].children[i].children[0].material.wireframe=true;
+     for(var n=0;n<this.scene.children.length;n++){
+        if(this.scene.children[n].type==="Scene"){
+         for(var i=0;i<this.scene.children[n].children.length;i++){
+           this.scene.children[n].children[i].children[0].material.wireframe=true;
+        }
+        break;
+      }
     }
    }else{
-     for(var i=0;i<this.scene.children[1].children.length;i++){
-       this.scene.children[1].children[i].children[0].material.wireframe=false;
+     for(var n=0;n<this.scene.children.length;n++){
+       if(this.scene.children[n].type==="Scene"){
+         for(var i=0;i<this.scene.children[n].children.length;i++){
+           this.scene.children[n].children[i].children[0].material.wireframe=false;
+        }
+        break;
+      }
     }
    }
    this.dataService.addframe(this.frameVisible);
