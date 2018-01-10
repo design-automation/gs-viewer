@@ -111,6 +111,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
       let loader = new THREE.ObjectLoader();
       this.objectdata = loader.parse( scene_data );
+      
       for(var i =0;i<this.objectdata.children.length;i++){
         if(this.objectdata.children[i].children!==undefined){
           for(var j=0;j<this.objectdata.children[i].children.length;j++){
@@ -122,7 +123,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
       }
-      this.scene.add( this.objectdata );
+
+      let scene = this.scene;
+      this.objectdata.children.map(function(child){
+        console.log(scene.add(child));
+      })
+
+      //this.scene.add( this.objectdata );
+      //this.scene.add( this.objectdata );
+      console.log(this.scene.children);
     }
     this.sceneViewer();
   }
@@ -172,10 +181,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var index=this.dataService.getSelectingIndex(selectedObj.uuid);
       if(index<0) {
         selectedObj.material=this.selMaterial;
-        this.dataService.selecting.push(selectedObj);
+        //this.dataService.selecting.push(selectedObj);
+        this.dataService.pushselecting(selectedObj);
       } else {
         selectedObj.material=this.basicColHex;
-        this.dataService.selecting.splice(index,1);
+        //this.dataService.selecting.splice(index,1);
+        this.dataService.spliceselecting(index,1);
       }
     } else {
       for(var i=0;i<this.dataService.selecting.length;i++){
@@ -201,7 +212,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var childArray=obj.parent.children;
       var sprit;
       var position:THREE.Vector3;
-      console.log(childArray);
       if(childArray[childArray.length-1].type==this.dataService.visible) {
         sprit=this.sprite(childArray[childArray.length-1].children[0].name,{fontsize: 70});
         position=obj.geometry.boundingBox.max;

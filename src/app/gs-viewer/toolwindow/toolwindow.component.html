@@ -84,7 +84,7 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute " width="40%">
         <tr>
-          <button  id="numberbutton" >{{ datascale.id}}</button>
+          <button  id="numberbutton" (click)=Onselect(datascale.id)>{{datascale.id}}</button>
         </tr>
       </table>
     </div>

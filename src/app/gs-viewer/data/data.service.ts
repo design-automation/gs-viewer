@@ -154,6 +154,10 @@ export class DataService {
     this.selecting.push(selecting);
     this.sendMessage();
   }
+  spliceselecting(index,number){
+    this.selecting.splice(index,number);
+    this.sendMessage();
+  }
   getselecting(){
     return this.selecting;
   }

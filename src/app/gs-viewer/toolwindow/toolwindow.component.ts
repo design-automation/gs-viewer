@@ -41,19 +41,36 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   notify(){ 
-  	if(this.selectedVisible==true){
-  	  this.objectcheck();
-  	}
-    /*for(var i=0;i<this.dataService.selecting.length;i++){
-      for(var j=0;j<this.scene.children[1].children.length;j++){
-        if(this.dataService.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
-           console.log(this.scene.children[1].children[j].children[0].parent);
-           this.selectObj.push(this.scene.children[1].children[j].children[0].parent);
+    this.selectObj=[];
+    for(var i=0;i<this.dataService.selecting.length;i++){
+       for(var n=0;n<this.scene.children.length;n++){
+        if(this.scene.children[n].type==="Scene"){
+          for(var j=0;j<this.scene.children[n].children.length;j++){
+            if(this.dataService.selecting[i].uuid===this.scene.children[n].children[j].children[0].uuid){
+               this.selectObj.push(this.scene.children[n].children[j].children[0].parent);
+            }
+          }
         }
       }
-    }*/
+    }
+    if(this.selectedVisible==true){
+      if(this.Visible==="object"){
+        this.objectcheck();
+      }
+      if(this.Visible==="face"){
+        this.facecheck();
+      }
+      if(this.Visible==="wire"){
+        this.wirecheck();
+      }
+      if(this.Visible==="edge"){
+        this.edgecheck();
+      }
+      if(this.Visible==="vertice"){
+        this.verticecheck();
+      }
+    }
     this.dataService.visible=this.Visible;
-  	
   }
 
   point(Visible){
@@ -100,6 +117,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    if(this.selectedVisible==true){
+      this.verticecheck();
+    }
   }
 
   verticecheck(){
@@ -136,6 +156,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
         break;
       }
+    }
+    if(this.selectedVisible==true){
+      this.edgecheck();
     }
   }
 
@@ -174,6 +197,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    if(this.selectedVisible==true){
+      this.wirecheck();
+    }
   }
 
   wirecheck(){
@@ -210,6 +236,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    if(this.selectedVisible==true){
+      this.facecheck();
+    }
   }
   
   facecheck(){
@@ -242,6 +271,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    if(this.selectedVisible==true){
+      this.objectcheck();
+    }
   }
 
   objectcheck(){
@@ -257,18 +289,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   changeselected(){
   	this.selectedVisible = !this.selectedVisible;
-    this.selectObj=[];
-    for(var i=0;i<this.dataService.selecting.length;i++){
-       for(var n=0;n<this.scene.children.length;n++){
-        if(this.scene.children[n].type==="Scene"){
-          for(var j=0;j<this.scene.children[n].children.length;j++){
-            if(this.dataService.selecting[i].uuid===this.scene.children[n].children[j].children[0].uuid){
-               this.selectObj.push(this.scene.children[n].children[j].children[0].parent);
-            }
-          }
-        }
-      }
-    }
     if(this.selectedVisible){
       if(this.Visible==="point"){
       	this.pointcheck();
@@ -315,13 +335,31 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   Onselect(i){
   	var select;
-  	for(var j=0;j<this.attribute.length;j++){
-  	  if(this.attribute[j].original==i){
-  	  	select=this.attribute[j].mesh;
-  	  	this.dataService.pushselecting(select);
-  	  	select.material.color.setHex(0x2E9AFE);
-  	  }
-  	}
+    console.log(i);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        console.log(this.scene.children[n].children.length);
+        for(var m=0;m<this.scene.children[n].children.length;m++){
+          var sprite:Array<any>=this.scene.children[n].children[m].children[this.scene.children[n].children[m].children.length-1].children;
+          console.log(sprite);
+          for(var j=0;j<sprite.length;j++){
+            if(sprite[j].name===i){
+              console.log(sprite[j].parent.parent);
+            }
+          }
+        }
+        
+        //this.scene.children[n].children
+      }
+    }
+  	// for(var j=0;j<this.attribute.length;j++){
+  	//   if(this.attribute[j].id==i){
+  	//   	select=this.attribute[j].mesh;
+  	//   	this.dataService.pushselecting(select);
+  	//   	select.material.color.setHex(0x2E9AFE);
+   //      console.log(this.attribute[j]);
+  	//   }
+  	// }
 
   }
 
