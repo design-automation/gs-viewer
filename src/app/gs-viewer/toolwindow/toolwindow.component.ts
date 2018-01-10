@@ -84,15 +84,20 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   vertice(Visible){
   	this.Visible="vertice";
   	this.attribute=[];
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].name==="Vertices"){
-          for(var n=0;n<this.scene.children[1].children[i].children[j].children.length;n++){
-            var attributevertice:any=[];
-            attributevertice.id=this.scene.children[1].children[i].children[j].children[n].name;
-            this.attribute.push(attributevertice);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            if(this.scene.children[n].children[i].children[j].name==="Vertices"){
+              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
+                var attributeface:any=[];
+                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
+                this.attribute.push(attributeface);
+              }
+            }
           }
         }
+        break;
       }
     }
   }
@@ -115,17 +120,21 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   edge(Visible){
   	this.Visible="edge";
     this.attribute=[];
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].name==="Edges"){
-          for(var n=0;n<this.scene.children[1].children[i].children[j].children.length;n++){
-            var attributeedge:any=[];
-            attributeedge.id=this.scene.children[1].children[i].children[j].children[n].name;
-            this.attribute.push(attributeedge);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            if(this.scene.children[n].children[i].children[j].name==="Edges"){
+              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
+                var attributeedge:any=[];
+                attributeedge.id=this.scene.children[n].children[i].children[j].children[m].name;
+                this.attribute.push(attributeedge);
+              }
+              break;
+            }
           }
-          break;
         }
-        
+        break;
       }
     }
   }
@@ -149,15 +158,20 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   wire(Visible){
   	this.Visible="wire";
     this.attribute=[];
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].name==="Wires"){
-          for(var n=0;n<this.scene.children[1].children[i].children[j].children.length;n++){
-            var attributewire:any=[];
-            attributewire.id=this.scene.children[1].children[i].children[j].children[n].name;
-            this.attribute.push(attributewire);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            if(this.scene.children[n].children[i].children[j].name==="Wires"){
+              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
+                var attributeface:any=[];
+                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
+                this.attribute.push(attributeface);
+              }
+            }
           }
         }
+        break;
       }
     }
   }
@@ -180,15 +194,20 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   face(Visible){
   	this.Visible="face";
   	this.attribute=[];
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].name==="Faces"){
-          for(var n=0;n<this.scene.children[1].children[i].children[j].children.length;n++){
-            var attributeface:any=[];
-            attributeface.id=this.scene.children[1].children[i].children[j].children[n].name;
-            this.attribute.push(attributeface);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            if(this.scene.children[n].children[i].children[j].name==="Faces"){
+              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
+                var attributeface:any=[];
+                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
+                this.attribute.push(attributeface);
+              }
+            }
           }
         }
+        break;
       }
     }
   }
@@ -211,11 +230,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   object(Visible){
   	this.Visible="object";
     this.attribute=[];
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children[this.scene.children[1].children[i].children.length-1].children.length;j++){
-        var attributeobj:any=[];
-        attributeobj.id=this.scene.children[1].children[i].children[this.scene.children[1].children[i].children.length-1].children[j].name;
-        this.attribute.push(attributeobj);
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children[this.scene.children[n].children[i].children.length-1].children.length;j++){
+            var attributeobj:any=[];
+            attributeobj.id=this.scene.children[n].children[i].children[this.scene.children[n].children[i].children.length-1].children[j].name;
+            this.attribute.push(attributeobj);
+          }
+        }
+        break;
       }
     }
   }
@@ -224,7 +248,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	this.attribute=[];
     for(var i=0;i<this.selectObj.length;i++){
       for(var j=0;j<this.selectObj[i].children[this.selectObj[i].children.length-1].children.length;j++){
-        console.log(this.selectObj[i]);
         var attributeobj:any=[];
         attributeobj.id=this.selectObj[i].children[this.selectObj[i].children.length-1].children[j].name;
         this.attribute.push(attributeobj);
@@ -236,10 +259,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	this.selectedVisible = !this.selectedVisible;
     this.selectObj=[];
     for(var i=0;i<this.dataService.selecting.length;i++){
-      for(var j=0;j<this.scene.children[1].children.length;j++){
-        if(this.dataService.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
-           console.log(this.scene.children[1].children[j].children[0].parent);
-           this.selectObj.push(this.scene.children[1].children[j].children[0].parent);
+       for(var n=0;n<this.scene.children.length;n++){
+        if(this.scene.children[n].type==="Scene"){
+          for(var j=0;j<this.scene.children[n].children.length;j++){
+            if(this.dataService.selecting[i].uuid===this.scene.children[n].children[j].children[0].uuid){
+               this.selectObj.push(this.scene.children[n].children[j].children[0].parent);
+            }
+          }
         }
       }
     }
