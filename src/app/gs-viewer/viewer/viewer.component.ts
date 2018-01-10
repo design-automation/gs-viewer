@@ -28,7 +28,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   raycaster:THREE.Raycaster;
   mouse:THREE.Vector2;
   settingVisible: boolean=false;
-  Visible:string="rotate";
+  activeTool:string="rotate";
   model: gs.IModel;
   geometry:THREE.Geometry;
   INTERSECTED:any;
@@ -135,17 +135,40 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   Mousedown(event){
-    if(this.Visible=="select"){
+    if(this.activeTool=="select"){
       var e=event;
       this.onDocumentMouseDown(e);
     }
   }
-  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
-  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
-  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
+  selectMat=new THREE.MeshPhongMaterial( { color: 0xaaaaFF, blending:0, flatShading:true, side:THREE.DoubleSide} );
+  basicMat=new THREE.MeshPhongMaterial( { color: 0xFFFFFF, blending:0, flatShading:true, side:THREE.DoubleSide} );
+  mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa, blending:0, flatShading:true, side:THREE.DoubleSide} );
   
   onDocumentMouseDown(event){
     var selectedObj, intersects;
+    var scenechildren=this.getSceneChildren();
+    this.raycaster.setFromCamera(this.mouse,this.camera);
+    intersects = this.raycaster.intersectObjects(scenechildren);
+    if ( intersects.length > 0 ) {
+      selectedObj=intersects[ 0 ].object;
+      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
+      if(index<0) {
+        selectedObj.material=this.selectMat;
+        this.dataService.selecting.push(selectedObj);
+      } else {
+        selectedObj.material=this.basicMat;
+        this.dataService.selecting.splice(index,1);
+      }
+    } else {
+      for(var i=0;i<this.dataService.selecting.length;i++){
+        this.dataService.selecting[i].material=this.basicMat;
+      }
+      this.dataService.selecting=[];
+    }
+    this.updateViewer();
+  }
+
+  getSceneChildren() {
     var scenechildren=[];
     var children;
     for (var i = 0; i<this.scene.children.length; i++) {
@@ -154,7 +177,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         break;
       }
       if(i==this.scene.children.length-1) {
-        return;
+        return [];
       }
     }
     
@@ -165,27 +188,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    this.raycaster.setFromCamera(this.mouse,this.camera);
-    intersects = this.raycaster.intersectObjects(scenechildren);
-    if ( intersects.length > 0 ) {
-      selectedObj=intersects[ 0 ].object;
-      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
-      if(index<0) {
-        selectedObj.material=this.selMaterial;
-        this.dataService.selecting.push(selectedObj);
-      } else {
-        selectedObj.material=this.basicColHex;
-        this.dataService.selecting.splice(index,1);
-      }
-    } else {
-      for(var i=0;i<this.dataService.selecting.length;i++){
-        this.dataService.selecting[i].material=this.basicColHex;
-      }
-      this.dataService.selecting=[];
-    }
-    this.updateViewer();
+    return scenechildren;
   }
-
 
   updateViewer() {
     this.updateSprite();
@@ -195,33 +199,27 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for (var i = this.spritey.length - 1; i >= 0; i--) {
       this.scene.remove(this.spritey[i]);
     }
+    if(!this.dataService.selectedVisible) {
+      return;
+    }
     this.spritey=[];
     for (var i = 0; i < this.dataService.selecting.length; i++) {
       var obj=this.dataService.selecting[i];
       var childArray=obj.parent.children;
       var sprit;
       var position:THREE.Vector3;
-      console.log(childArray);
-      if(childArray[childArray.length-1].type==this.dataService.visible) {
-        sprit=this.sprite(childArray[childArray.length-1].children[0].name,{fontsize: 70});
-        position=obj.geometry.boundingBox.max;
-        sprit.position.set(position.x,position.y,position.z);
-        this.scene.add(sprit);
-        this.spritey.push(sprit);
-      } else {
-        for (var j = 0; j < childArray.length-1; j++) {
-          if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
-            this.addSprites(childArray[j]);
-            break;
-          }
+      for (var j = 0; j < childArray.length-1; j++) {
+        if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
+          this.addSprites(childArray[j]);
+          break;
         }
-        if(j==childArray.length-1) {
-            sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
-            position=obj.geometry.boundingBox.max;
-            sprit.position.set(position.x,position.y,position.z);
-            this.scene.add(sprit);
-            this.spritey.push(sprit);
-        }
+      }
+      if(j==childArray.length-1) {
+          sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
+          position=obj.geometry.boundingBox.max;
+          sprit.position.set(position.x,position.y,position.z);
+          this.scene.add(sprit);
+          this.spritey.push(sprit);
       }
     }
   }
@@ -242,16 +240,24 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   render():void {
     let self = this;
     (function render(){
-      if(self.Visible=="select"){
-      var scenechildren=new THREE.Scene();
-        for(var i=0;i<self.scene.children[1].children.length;i++){
-          for(var j=0;j<self.scene.children[1].children[i].children.length;j++){
-            if(self.scene.children[1].children[i].children[j].type==="Mesh") {
-              var children=self.scene.children[1].children[i].children[j];
-              scenechildren.children.push(children);
+      if(self.activeTool=="select"){
+        var scenechildren=self.getSceneChildren();
+        self.raycaster.setFromCamera(self.mouse,self.camera);
+        var intersects = self.raycaster.intersectObjects(scenechildren);
+        for (var i = 0; i < scenechildren.length; i++) {
+          var currObj=scenechildren[i];
+          if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
+            if ( intersects.length > 0 &&  intersects[ 0 ].object.uuid==currObj.uuid) {
+              currObj.material=self.mousehovMat;
+            } else {
+              currObj.material=self.basicMat;
             }
           }
         }
+      }
+      if(self.dataService.modified) {
+        self.updateViewer();
+        self.dataService.modified=false;
       }
       requestAnimationFrame(render);
       self.renderer.render(self.scene, self.camera);
@@ -264,7 +270,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
     this.controls.enabled=true;
     this.controls.enableZoom=true;
-    this.Visible="zoom";
+    this.activeTool="zoom";
   }
 
   zoomfit(Visible){
@@ -272,7 +278,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
     this.controls.enabled=true;
     this.controls.enableZoom=true;
-    this.Visible="zoomfit";
+    this.activeTool="zoomfit";
     if(this.selecting.length===0){
       var obj=new THREE.Object3D();
       obj=this.scene;
@@ -330,7 +336,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.mouseButtons={ORBIT:null,ZOOM:null,PAN:0};
     this.controls.enabled=true;
     this.controls.enablePan=true;
-    this.Visible="pan";
+    this.activeTool="pan";
   }
 
   rotate(Visible){
@@ -368,13 +374,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
     this.controls.enabled=true;
     this.controls.enableRotate=true;
-    this.Visible="rotate";
+    this.activeTool="rotate";
   }
 
   select(event, Visible){
     document.body.style.cursor ="default";
     this.controls.enabled=false;
-    this.Visible="select";
+    this.activeTool="select";
     event.stopPropagation();
   }
 

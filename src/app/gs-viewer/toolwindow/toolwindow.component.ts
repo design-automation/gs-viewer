@@ -12,12 +12,10 @@ import {DataSubscriber} from "../data/DataSubscriber";
   styleUrls: ['./toolwindow.component.css']
 })
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
-  Visible:string="object";
   boxes:any;
   model:gs.IModel;
   scene:THREE.Scene;
   attribute:Array<any>;
-  selectedVisible:boolean=false;
   collection:any;
   myElement;
   selecting:any;
@@ -37,11 +35,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
-  	this.object(this.Visible);
+  	this.object(this.dataService.visible);
   }
 
   notify(){ 
-  	if(this.selectedVisible==true){
+  	if(this.dataService.selectedVisible==true){
   	  this.objectcheck();
   	}
     /*for(var i=0;i<this.dataService.selecting.length;i++){
@@ -52,12 +50,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }*/
-    this.dataService.visible=this.Visible;
-  	
   }
 
   point(Visible){
-  	this.Visible="point";
+  	this.dataService.visible="Points";
   	this.attribute=[];
     for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
       var attributepoints:any=[];
@@ -67,6 +63,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       this.attribute.push(attributepoints);
     }
+    this.dataService.modified=true;
   }
 
   pointcheck(){
@@ -79,10 +76,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       this.attribute.push(attributepoints);
     }
+    this.dataService.modified=true;
   }
 
   vertice(Visible){
-  	this.Visible="vertice";
+  	this.dataService.visible="Vertices";
   	this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -100,6 +98,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    this.dataService.modified=true;
   }
 
   verticecheck(){
@@ -115,10 +114,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
+    this.dataService.modified=true;
   }
 
   edge(Visible){
-  	this.Visible="edge";
+  	this.dataService.visible="Edges";
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -137,6 +137,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    this.dataService.modified=true;
   }
 
   edgecheck(){
@@ -153,10 +154,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
+    this.dataService.modified=true;
   }
 
   wire(Visible){
-  	this.Visible="wire";
+  	this.dataService.visible="Wires";
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -174,6 +176,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    this.dataService.modified=true;
   }
 
   wirecheck(){
@@ -189,10 +192,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
+    this.dataService.modified=true;
   }
 
   face(Visible){
-  	this.Visible="face";
+  	this.dataService.visible="Faces";
   	this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -210,6 +214,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    this.dataService.modified=true;
   }
   
   facecheck(){
@@ -225,10 +230,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
+    this.dataService.modified=true;
   }
 
   object(Visible){
-  	this.Visible="object";
+  	this.dataService.visible="Objects";
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -242,6 +248,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
+    this.dataService.modified=true;
   }
 
   objectcheck(){
@@ -253,10 +260,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         this.attribute.push(attributeobj);
       } 
     }
+    this.dataService.modified=true;
   }
 
   changeselected(){
-  	this.selectedVisible = !this.selectedVisible;
+  	this.dataService.selectedVisible = !this.dataService.selectedVisible;
     this.selectObj=[];
     for(var i=0;i<this.dataService.selecting.length;i++){
        for(var n=0;n<this.scene.children.length;n++){
@@ -269,48 +277,47 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    if(this.selectedVisible){
-      if(this.Visible==="point"){
+    if(this.dataService.selectedVisible){
+      if(this.dataService.visible==="point"){
       	this.pointcheck();
       }
-      if(this.Visible==="vertice"){
+      if(this.dataService.visible==="vertice"){
       	this.verticecheck();
       }
-      if(this.Visible==="edge"){
+      if(this.dataService.visible==="edge"){
         this.edgecheck();
       }
-      if(this.Visible==="wire"){
+      if(this.dataService.visible==="wire"){
         this.wirecheck();
       }
-      if(this.Visible==="face"){
+      if(this.dataService.visible==="face"){
       	this.facecheck();
       }
-      if(this.Visible==="object"){
+      if(this.dataService.visible==="object"){
       	this.objectcheck();
       }
-      
     }
     else{
-      if(this.Visible==="point"){
-      	this.point(this.Visible);
+      if(this.dataService.visible==="point"){
+      	this.point(this.dataService.visible);
       }
-      if(this.Visible==="vertice"){
-      	this.vertice(this.Visible);
+      if(this.dataService.visible==="vertice"){
+      	this.vertice(this.dataService.visible);
       }
-      if(this.Visible==="edge"){
-      	this.edge(this.Visible);
+      if(this.dataService.visible==="edge"){
+      	this.edge(this.dataService.visible);
       }
-      if(this.Visible==="wire"){
-      	this.wire(this.Visible);
+      if(this.dataService.visible==="wire"){
+      	this.wire(this.dataService.visible);
       }
-      if(this.Visible==="face"){
-      	this.face(this.Visible);
+      if(this.dataService.visible==="face"){
+      	this.face(this.dataService.visible);
       }
-      if(this.Visible==="object"){
-      	this.object(this.Visible);
-      }
-     
+      if(this.dataService.visible==="object"){
+      	this.object(this.dataService.visible);
+      } 
     }
+    this.dataService.modified=true;
   }
 
   Onselect(i){
@@ -322,7 +329,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	  	select.material.color.setHex(0x2E9AFE);
   	  }
   	}
-
+    this.dataService.modified=true;
   }
-
 }
