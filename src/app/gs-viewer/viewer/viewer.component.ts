@@ -1,7 +1,6 @@
 import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import * as OrbitControls from 'three-orbit-controls';
-//import { OrbitControls } from 'three-orbitcontrols-ts';
 import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
@@ -63,13 +62,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //
   notify(message): void{
     if(message == "model_update"){
-      this.updateViewer();
+      this.initViewer();
     }
   }
 
 
   ngOnInit() {
-    this.updateViewer();
+    this.initViewer();
   }
 
   sceneViewer(){
@@ -99,7 +98,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.render();
   }
 
-  updateViewer(){
+  initViewer(){
     this.model = this.dataService.getGsModel(); 
     if(this.model == undefined){
       return this.sceneViewer();
@@ -141,62 +140,103 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.onDocumentMouseDown(e);
     }
   }
-
+  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
+  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
+  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
+  
   onDocumentMouseDown(event){
-    this.INTERSECTEDcolor=this.dataService.getINTERSECTEDColor();
-    this.selecting=this.dataService.selecting;
-    var scenechildren=new THREE.Scene();
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      for(var j=0;j<this.scene.children[1].children[i].children.length;j++){
-        if(this.scene.children[1].children[i].children[j].type==="Mesh"){
-        var children=this.scene.children[1].children[i].children[j];
-        scenechildren.children.push(children);
+    var selectedObj, intersects;
+    var scenechildren=[];
+    var children;
+    for (var i = 0; i<this.scene.children.length; i++) {
+      if(this.scene.children[i].name=="Scene") {
+        children=this.scene.children[i].children;
+        break;
+      }
+      if(i==this.scene.children.length-1) {
+        return;
+      }
+    }
+    
+    for(var i=0;i<children.length;i++){
+      for(var j=0;j<children[i].children.length;j++){
+        if(children[i].children[j].type==="Mesh"){
+          scenechildren.push(children[i].children[j]);
         }
       }
     }
-    var INTERSECTED;
     this.raycaster.setFromCamera(this.mouse,this.camera);
-      var intersects = this.raycaster.intersectObjects(scenechildren.children);
-      if ( intersects.length > 0 ) {
-        if ( INTERSECTED!= intersects[ 0 ].object ) {
-          if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-          INTERSECTED= intersects[ 0 ].object;
-          INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-          var flagInArr = false; 
-          for(var i=0;i<this.selecting.length;i++){
-              if(this.selecting[i].uuid==INTERSECTED.uuid){
-                flagInArr = true;
-                this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
-                this.selecting.splice(i,1);
-                i=i-1;
-              }
-          }
-          if(flagInArr == false){
-            INTERSECTED.material.color.setHex( 0x2E9AFE);
-            this.selecting.push(INTERSECTED);
-            var threesprite=this.sprite("O1", { fontsize: 70} );
-            this.spritey.push(threesprite);
-            var position:THREE.Vector3=this.selecting[this.selecting.length-1].geometry.boundingBox.max;
-            this.spritey[this.spritey.length-1].position.set(position.x,position.y,position.z);
-            this.scene.add(this.spritey[this.spritey.length-1]);
-          }
-        }
+    intersects = this.raycaster.intersectObjects(scenechildren);
+    if ( intersects.length > 0 ) {
+      selectedObj=intersects[ 0 ].object;
+      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
+      if(index<0) {
+        selectedObj.material=this.selMaterial;
+        this.dataService.selecting.push(selectedObj);
       } else {
-        if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-        INTERSECTED = null;
-        for(var i=0;i<this.selecting.length;i++){
-          this.selecting[i].material.color.setHex(this.INTERSECTEDcolor);
-        }
-        for(var j=0;j<this.scene.children.length;j++){
-          if(this.scene.children[j].type==="Sprite"){
-            this.scene.remove(this.scene.children[j]);
-            j=j-1;
+        selectedObj.material=this.basicColHex;
+        this.dataService.selecting.splice(index,1);
+      }
+    } else {
+      for(var i=0;i<this.dataService.selecting.length;i++){
+        this.dataService.selecting[i].material=this.basicColHex;
+      }
+      this.dataService.selecting=[];
+    }
+    this.updateViewer();
+  }
+
+
+  updateViewer() {
+    this.updateSprite();
+  }
+
+  updateSprite() {
+    for (var i = this.spritey.length - 1; i >= 0; i--) {
+      this.scene.remove(this.spritey[i]);
+    }
+    this.spritey=[];
+    for (var i = 0; i < this.dataService.selecting.length; i++) {
+      var obj=this.dataService.selecting[i];
+      var childArray=obj.parent.children;
+      var sprit;
+      var position:THREE.Vector3;
+      console.log(childArray);
+      if(childArray[childArray.length-1].type==this.dataService.visible) {
+        sprit=this.sprite(childArray[childArray.length-1].children[0].name,{fontsize: 70});
+        position=obj.geometry.boundingBox.max;
+        sprit.position.set(position.x,position.y,position.z);
+        this.scene.add(sprit);
+        this.spritey.push(sprit);
+      } else {
+        for (var j = 0; j < childArray.length-1; j++) {
+          if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
+            this.addSprites(childArray[j]);
+            break;
           }
         }
-        this.spritey=[];
-        this.selecting=[];
+        if(j==childArray.length-1) {
+            sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
+            position=obj.geometry.boundingBox.max;
+            sprit.position.set(position.x,position.y,position.z);
+            this.scene.add(sprit);
+            this.spritey.push(sprit);
+        }
       }
-      this.dataService.addselecting(this.selecting);
+    }
+  }
+
+  addSprites(childArray) {
+    var sprit;
+    var position:THREE.Vector3;
+    console.log(childArray);
+    for (var i = 0; i < childArray.children.length; i++) {
+      sprit=this.sprite(childArray.children[i].name,{fontsize: 30});
+      position=childArray.children[i].position;
+      sprit.position.set(position.x,position.y,position.z);
+      this.scene.add(sprit);
+      this.spritey.push(sprit);
+    }
   }
 
   render():void {
@@ -204,32 +244,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     (function render(){
       if(self.Visible=="select"){
       var scenechildren=new THREE.Scene();
-      for(var i=0;i<self.scene.children[1].children.length;i++){
-        for(var j=0;j<self.scene.children[1].children[i].children.length;j++){
-          if(self.scene.children[1].children[i].children[j].type==="Mesh"){
-          var children=self.scene.children[1].children[i].children[j];
-          scenechildren.children.push(children);
+        for(var i=0;i<self.scene.children[1].children.length;i++){
+          for(var j=0;j<self.scene.children[1].children[i].children.length;j++){
+            if(self.scene.children[1].children[i].children[j].type==="Mesh") {
+              var children=self.scene.children[1].children[i].children[j];
+              scenechildren.children.push(children);
+            }
           }
         }
-      }
-      self.raycaster.setFromCamera(self.mouse,self.camera);
-      var intersects = self.raycaster.intersectObjects(scenechildren.children);
-      if ( intersects.length > 0 ) {
-        if ( self.INTERSECTED != intersects[ 0 ].object ) {
-          if ( self.INTERSECTED ) self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
-          self.INTERSECTED = intersects[ 0 ].object;
-          self.INTERSECTED.currentHex = self.INTERSECTED.material.color.getHex();
-          self.dataService.addINTERSECTEDColor(self.INTERSECTED.currentHex);
-          self.INTERSECTED.material.color.setHex( 0xFF0000);
-        }
-      } else {
-        if ( self.INTERSECTED ) {
-          if(self.INTERSECTED.currentHex!=16711680){
-            self.INTERSECTED.material.color.setHex( self.INTERSECTED.currentHex );
-          }
-        }
-        self.INTERSECTED = null;
-      }
       }
       requestAnimationFrame(render);
       self.renderer.render(self.scene, self.camera);
