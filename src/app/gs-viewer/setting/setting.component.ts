@@ -49,7 +49,6 @@ export class SettingComponent implements OnInit {
     // avoid manipulating the scene here
     // shift to dataservice
     this.scene = this.dataService.getScene();
-
     this.alight=[];
     this.alight=this.dataService.getalight();
     this.hue=this.dataService.hue;

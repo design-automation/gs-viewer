@@ -156,10 +156,10 @@ export class DataService {
   //
   // Getter and Setter for Scene
   //
-  addScene(scene: THREE.Scene): void{
-    console.warn("Three Scene is being reset");
-  	this._scene = scene;
-  }
+  // addScene(scene: THREE.Scene): void{
+  //   console.warn("Three Scene is being reset");
+  // 	this._scene = scene;
+  // }
 
   getScene(width?: number, height?: number): THREE.Scene{
     if(width && height){

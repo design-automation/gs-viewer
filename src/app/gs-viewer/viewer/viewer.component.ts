@@ -152,12 +152,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
                  objectData.children[i].children[j]["geometry"].computeBoundingBox();
                  objectData.children[i].children[j]["geometry"].computeBoundingSphere();
               }
+              /// 
               if( chd.children.length > 0){
                 for(let s=0; s < chd.children.length; s++ ){
                     let spr: THREE.Sprite = chd.children[s];
                     //spr.visible = true; 
                     spr.material = this.getMaterial(spr.name);
-                    //this.scene.add(spr);
+                    this.scene.add(spr);
                 }
                 
               }
@@ -205,7 +206,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //
   onDocumentMouseMove(event) {
     event.preventDefault();
-    this.mouse=new THREE.Vector2();
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
     this.mouse.y =-( event.clientY / this.height ) * 2 + 1;
   }
