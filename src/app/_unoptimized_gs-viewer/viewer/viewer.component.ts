@@ -1,5 +1,6 @@
 import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import * as THREE from 'three';
+import * as OrbitControls from 'three-orbit-controls';
 import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
@@ -13,159 +14,119 @@ import {DataSubscriber} from "../data/DataSubscriber";
 })
 export class ViewerComponent extends DataSubscriber implements OnInit {
 
+  OC; 
 
-  _model: gs.IModel;
-
-  scene: THREE.Scene;
-  renderer: THREE.WebGLRenderer;
-  camera: THREE.PerspectiveCamera;
-  controls: THREE.OrbitControls;
-
-  width: number;
-  height: number;
-  
+  scene:THREE.Scene;
+  renderer:THREE.WebGLRenderer;
+  container:any;
+  camera:THREE.PerspectiveCamera;
+  width:any;
+  height:any;
+  light:THREE.DirectionalLight;
+  controls:THREE.OrbitControls;
+  view:any;
   raycaster:THREE.Raycaster;
   mouse:THREE.Vector2;
-
   settingVisible: boolean=false;
   Visible:string="rotate";
-
-  // check what needs to be global and refactor
+  model: gs.IModel;
   geometry:THREE.Geometry;
-  
   INTERSECTED:any;
   INTERSECTEDcolor:any;
-  
   selecting:Array<any>;
-  
+  objectdata:any;
   spritey:Array<any>;
   myElement;
   
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
-    this.myElement = myElement;
-  }
-
-  ngOnInit() {
-
-    let container = this.myElement.nativeElement.children.namedItem("container");
-
-    /// check for container
-    if(!container){
-      console.error("No container in Three Viewer");
-      return;
-    }
-
-    ///
-    let width: number = container.clientWidth;
-    let height: number = container.clientHeight;
-
-    let scene: THREE.Scene = this.dataService.getScene(width, height);
-    let renderer: THREE.WebGLRenderer = this.dataService.getRenderer();
-    let camera: THREE.PerspectiveCamera = this.dataService.getCamera();
-    let controls: THREE.OrbitControls = this.dataService.getControls();
-
-    container.appendChild( renderer.domElement );
-
-    this.scene = scene;
-    this.renderer = renderer;
-    this.camera = camera;
-    this.controls = controls;
-
-    this.width = width;
-    this.height = height;
-
-    this.updateModel();
-
-    // render loop
-    let self = this;
-    function animate() {
-      requestAnimationFrame( animate );
-      self.renderer.render( self.scene, self.camera );
-    };
-    animate();
-
-    // todo: check and refactor what is required?
-    this.selecting = [];
-    this.mouse = new THREE.Vector2();
+    this.scene=this.dataService.scene;
+    this.dataService.addScene(this.scene);
+    this.renderer = new THREE.WebGLRenderer( {antialias: true} );
+    this.dataService.addRender(this.renderer);
+    this.dataService.addAmbientLight();
+    this.geometry = new THREE.Geometry();
+    this.dataService.addGeom(this.geometry);
+    this.mouse=new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
-    this.spritey = [];
-
+    this.selecting=[];
+    this.spritey=[];
+    this.myElement = myElement;
     document.body.style.cursor = " pointer";
-
-    // this.geometry = new THREE.Geometry();
-    // this.dataService.addGeom(this.geometry);
+    this.OC = OrbitControls(THREE);
 
   }
-
-
 
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
   //
-  notify(message: string): void{
+  notify(message): void{
     if(message == "model_update"){
-      this.updateModel();
+      this.initViewer();
     }
   }
 
 
-  /// clears all children from the scene
-  clearScene(): void{
-    /// remove children from scene
-    for(var i=0; i < this.scene.children.length; i++){
-      if( this.scene.children[i].type === "Scene" ){
-         this.scene.remove(this.scene.children[i]);
-      }
-    }
+  ngOnInit() {
+    this.initViewer();
   }
 
+  sceneViewer(){
+    this.scene.background = new THREE.Color( 0xcccccc );
+    this.container= this.myElement.nativeElement.children[0];//document.getElementById( 'container' );
+    this.width=this.container.clientWidth || 600;
+    this.height=this.container.clientHeight;    
+    this.renderer.setPixelRatio( window.devicePixelRatio );
+    this.renderer.setSize( this.width, this.height );
+    this.container.appendChild( this.renderer.domElement );
+    this.camera = new THREE.PerspectiveCamera( 50, this.width / this.height, 0.01, 1000 );
+    this.camera.position.z = 10;
+    this.camera.updateProjectionMatrix();
+    this.camera.lookAt(this.scene.position);
+    this.light = new THREE.DirectionalLight( 0xffffff,0.5);
+    this.light.castShadow = false; 
+    this.controls=new this.OC(this.camera, this.renderer.domElement);
+    this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
+    this.controls.enableKeys=false;
+    var self=this;
+    self.light.position.copy( self.camera.position );
+    self.controls.addEventListener( 'change',  function() {
+      self.light.position.copy( self.camera.position );
+    } );
+    self.light.target.position.set( 0, 0, 0 );
+    this.scene.add( self.light );
+    this.render();
+  }
 
-  //
-  // update mode
-  // todo: optimize
-  // 
-  updateModel(): void{
-
-      this._model = this.dataService.getGsModel(); 
-
-      if( !this._model || !this.scene){
-        console.warn("Model or Scene not defined");
-        return;
+  initViewer(){
+    this.model = this.dataService.getGsModel(); 
+    if(this.model == undefined){
+      return this.sceneViewer();
+    }else{
+      for(var i=0;i<this.scene.children.length;i++){
+        if(this.scene.children[i].type==="Scene"){
+          this.scene.remove(this.scene.children[i]);
+        }
       }
-
-      try{
-        const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
-
-        this.clearScene();
-
-        let loader = new THREE.ObjectLoader();
-        let objectData = loader.parse( scene_data );
-
-        for(var i =0;i< objectData.children.length;i++){
-          if( objectData.children[i].children!==undefined){
-            for(var j=0;j< objectData.children[i].children.length;j++){
-              if( objectData.children[i].children[j].type==="Mesh"){
-                 objectData.children[i].children[j]["geometry"].computeVertexNormals();
-                 objectData.children[i].children[j]["geometry"].computeBoundingBox();
-                 objectData.children[i].children[j]["geometry"].computeBoundingSphere();
-              }
+      const scene_data: gs.IThreeScene = gs.genThreeModel(this.model);
+      let loader = new THREE.ObjectLoader();
+      this.objectdata = loader.parse( scene_data );
+      for(var i =0;i<this.objectdata.children.length;i++){
+        if(this.objectdata.children[i].children!==undefined){
+          for(var j=0;j<this.objectdata.children[i].children.length;j++){
+            if(this.objectdata.children[i].children[j].type==="Mesh"){
+              this.objectdata.children[i].children[j]["geometry"].computeVertexNormals();
+              this.objectdata.children[i].children[j]["geometry"].computeBoundingBox();
+              this.objectdata.children[i].children[j]["geometry"].computeBoundingSphere();
             }
           }
         }
-
-        this.scene.add( objectData );
       }
-      catch(ex){
-        console.error("Error displaying model:", ex);
-      }
-
+      this.scene.add( this.objectdata );
+    }
+    this.sceneViewer();
   }
 
-
-  //
-  //  events
-  //
   onDocumentMouseMove(event) {
     event.preventDefault();
     this.mouse=new THREE.Vector2();
@@ -179,7 +140,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.onDocumentMouseDown(e);
     }
   }
-
+  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
+  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
+  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
   
   onDocumentMouseDown(event){
     var selectedObj, intersects;
@@ -223,14 +186,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.updateViewer();
   }
 
-  // ???
-  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
-  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
-  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
 
-  //
-  //  related to sprites??
-  //
   updateViewer() {
     this.updateSprite();
   }
@@ -283,42 +239,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
-  sprite( message, parameters ){
-
-    if ( parameters === undefined ) parameters = {};
-    var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
-    var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 30;
-    var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 0.1;
-    var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
-    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:0, g:0, b:0, a:1.0 };
-    var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:0, g:0, b:255, a:1.0 };
-
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext('2d');
-
-    context.font = "Bold " + fontsize + "px " + fontface;
-    var metrics = context.measureText( message );
-    var textWidth = metrics.width;
-
-    context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
-    context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
-
-    context.lineWidth = borderThickness;
-
-    context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", 1.0)";
-    context.fillText( message, borderThickness, fontsize + borderThickness);
-
-    var texture = new THREE.Texture(canvas) 
-    texture.needsUpdate = true;
-
-    var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
-    var sprite = new THREE.Sprite( spriteMaterial );
-    return sprite;  
-  }
-
-  //
-  //  used for anything?
-  //
   render():void {
     let self = this;
     (function render(){
@@ -339,24 +259,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.renderer.render( this.scene, this.camera );
   }
 
+  zoom(Visible){
+    document.body.style.cursor = "crosshair";
+    this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
+    this.controls.enabled=true;
+    this.controls.enableZoom=true;
+    this.Visible="zoom";
+  }
 
-  //
-  //  viewer functionality
-  //
-  zoomfit(){
-     
-    // todo: fix
+  zoomfit(Visible){
     document.body.style.cursor = "no-drop";
-
-    // enable zoom; disable everything else
-    this.controls.enabled = true;
-    this.controls.enableZoom = true;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = false;
-
+    this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
+    this.controls.enabled=true;
+    this.controls.enableZoom=true;
     this.Visible="zoomfit";
-    
-    // repeat??
     if(this.selecting.length===0){
       var obj=new THREE.Object3D();
       obj=this.scene;
@@ -406,33 +322,19 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
     }
-
   }
 
-  pan(){
-    
+  pan(Visible){
     this.camera.updateProjectionMatrix();
-
-    this.controls.enabled = true;
-    this.controls.enableZoom = false;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-
-    //todo: remove
     document.body.style.cursor = "-webkit-grab";
+    this.controls.mouseButtons={ORBIT:null,ZOOM:null,PAN:0};
+    this.controls.enabled=true;
+    this.controls.enablePan=true;
     this.Visible="pan";
-
   }
 
-  rotate(){
+  rotate(Visible){
     document.body.style.cursor = " pointer";
-
-    // reset controls
-    this.controls.enabled = true;
-    this.controls.enableZoom = false;
-    this.controls.enableRotate = true;
-    this.controls.enablePan = false;
-
     if(this.selecting.length===0){
       var centerX=0;
       var centerY=0;
@@ -463,24 +365,55 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       centerZ=axisY/this.scene.children[1].children.length;
       //this.controls.target.set(centerX,centerY,centerZ);
     }
-
+    this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
+    this.controls.enabled=true;
+    this.controls.enableRotate=true;
     this.Visible="rotate";
   }
 
-  select(event){
-    event.stopPropagation();
-
-    document.body.style.cursor = "default";
-
-    // reset controls
-    this.controls.enabled = false;
-    this.controls.enableZoom = false;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = false;
-
+  select(event, Visible){
+    document.body.style.cursor ="default";
+    this.controls.enabled=false;
     this.Visible="select";
+    event.stopPropagation();
   }
 
+  setting(event){
+    this.settingVisible=!this.settingVisible;
+    event.stopPropagation();
+  }
 
+  sprite( message, parameters ){
+
+    if ( parameters === undefined ) parameters = {};
+    var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
+    var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 30;
+    var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 0.1;
+    var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:0, g:0, b:0, a:1.0 };
+    var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:0, g:0, b:255, a:1.0 };
+
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+
+    context.font = "Bold " + fontsize + "px " + fontface;
+    var metrics = context.measureText( message );
+    var textWidth = metrics.width;
+
+    context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+    context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+
+    context.lineWidth = borderThickness;
+
+    context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", 1.0)";
+    context.fillText( message, borderThickness, fontsize + borderThickness);
+
+    var texture = new THREE.Texture(canvas) 
+    texture.needsUpdate = true;
+
+    var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
+    var sprite = new THREE.Sprite( spriteMaterial );
+    return sprite;  
+  }
  
 }

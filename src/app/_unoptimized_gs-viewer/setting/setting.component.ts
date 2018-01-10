@@ -56,11 +56,7 @@ export class SettingComponent implements OnInit {
   }
 
   constructor(private dataService: DataService){
-
-    // avoid manipulating the scene here
-    // shift to dataservice
-    this.scene = this.dataService.getScene();
-
+    this.scene=this.dataService.getScene();
     this.alight=[];
     this.alight=this.dataService.getalight();
     this.hue=this.dataService.hue;
@@ -138,7 +134,6 @@ export class SettingComponent implements OnInit {
       ambientLight.color.setHSL( _hue, _saturation,_lightness );
     }
   }
-  
   changeframe(){
    this.frameVisible = !this.frameVisible;
    if(this.frameVisible){

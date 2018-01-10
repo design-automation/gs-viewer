@@ -1,15 +1,31 @@
-import { Injectable } from '@angular/core';
-import * as THREE from 'three';
+import { Injectable, ElementRef } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Subject} from 'rxjs/Subject';
 
+import * as THREE from 'three';
+import * as gs from 'gs-json';
+import * as OrbitControls from 'three-orbit-controls';
+
+
 @Injectable()
 export class DataService {
+  
+  _OC: OrbitControls; 
 
-  _gsModel;
+  // gs-model that needs to be displayed
+  _gsModel: gs.IModel;
 
-  scene:THREE.Scene;
-  _renderer:THREE.WebGLRenderer;
+  // three scene 
+  _scene:  THREE.Scene;
+  _renderer: THREE.WebGLRenderer;
+  _camera: THREE.PerspectiveCamera;
+  _orbitControls: THREE.OrbitControls;
+
+  // width and height
+  // only set once the scene has been called
+  _width: number; 
+  _height: number;
+
   _saturation:any;
   _lightness:any;
   _alight:any;
@@ -34,14 +50,6 @@ export class DataService {
   visible:string;
 
 
-  constructor() { 
-    this._alight=[];
-    if(this.scene===undefined){
-      this.scene=new THREE.Scene();
-    }else{
-      this.scene=this.getScene();
-    }
-  }
 
   // ---- 
   // Subscription Handling
@@ -60,49 +68,127 @@ export class DataService {
   }
 
 
+  constructor() { 
+
+    // intializations
+    // this only runs once
+
+    let default_width: number = 600, default_height: number = 600;
+
+    // scene
+    let scene: THREE.Scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0xcccccc );
+    
+
+    // renderer
+    let renderer: THREE.WebGLRenderer =  new THREE.WebGLRenderer( {antialias: true} );
+    renderer.setPixelRatio( window.devicePixelRatio );
+
+
+    // camera settings
+    let aspect_ratio: number = this._width/this._height
+    let camera = new THREE.PerspectiveCamera( 50, aspect_ratio, 0.01, 1000 );
+    camera.position.z = 10;
+    camera.lookAt( scene.position );
+    camera.updateProjectionMatrix();
+
+    // orbit controls
+    let _OC = OrbitControls(THREE);
+    let controls: THREE.OrbitControls = new _OC( camera, renderer.domElement );
+    controls.mouseButtons = { ORBIT:0, ZOOM:null, PAN:null };
+    controls.enableKeys = false;
+    controls.enabled = true;
+
+    // default directional lighting
+    let directional_light :THREE.DirectionalLight = new THREE.DirectionalLight( 0xffffff,0.5);
+    directional_light.castShadow = false; 
+    directional_light.position.copy( camera.position );
+    directional_light.target.position.set( 0, 0, 0 );
+    
+    scene.add( directional_light );
+
+    // default ambient lighting
+    let default_hue: number = 160;
+    let default_saturation: number = 0;
+    let default_lightness: number = 0.47;
+
+    var hemi_light = new THREE.HemisphereLight( 0xffffff, 0.5 );
+    hemi_light.color.setHSL( default_hue, default_saturation, default_saturation);
+    scene.add( hemi_light );
+
+    // var self=this;
+    // self.;
+    // self._controls.addEventListener( 'change',  function() {
+    //   self.light.position.copy( self._camera.position );
+    // } );
+    // self.light.target.position.set( 0, 0, 0 );
+    // this.scene.add( self.light );
+    
+    this._scene = scene;
+    this._renderer = renderer;
+    this._camera = camera; 
+    this._orbitControls = controls;
+
+    this._hueValue = default_hue; 
+    this._saturationValue = default_saturation;
+    this._lightnessValue = default_lightness;
+
+    // add it to alight - what does alight do?
+    this._alight = [];
+    this._alight.push(hemi_light);
+  }
+
+
+
   //
-  //  Normal functions
+  //  Getter and Setting for gs-model
   //
-  getGsModel(){
+  getGsModel(): gs.IModel{
     return this._gsModel; 
   }
 
-  setGsModel(model){
+  setGsModel(model: gs.IModel){
     this._gsModel = model;
     this.sendMessage("model_update");
   }
 
 
-  
-  addScene(scene): void{
-  	this.scene = scene;
+  //
+  // Getter and Setter for Scene
+  //
+  addScene(scene: THREE.Scene): void{
+    console.warn("Three Scene is being reset");
+  	this._scene = scene;
   }
 
-  getScene(): any{
-  	return this.scene;
-  }
-
-  addRender(renderer): void{
-  	this._renderer = renderer;
-  }
-
-  getRender(): any{
-  	return this._renderer;
-  }
-
-  addAmbientLight() {
-    this._hueValue=160;
-    this._saturationValue=0;
-    this._lightnessValue=0.47;
-    var light = new THREE.HemisphereLight( 0xffffff,0.5);
-    this.scene.add( light );
-    this._alight.push(light);
-    var alight=this._alight;
-    for(var i=0;i<alight.length;i++) {
-      var ambientLight=alight[i];
-      ambientLight.color.setHSL( this._hueValue, this._saturationValue, this._lightnessValue);
+  getScene(width?: number, height?: number): THREE.Scene{
+    if(width && height){
+      this._width = width; 
+      this._height = height;
     }
+
+  	return this._scene;
   }
+
+  getRenderer(): THREE.WebGLRenderer{
+    this._camera.aspect = this._width / this._height;
+    this._camera.updateProjectionMatrix();
+    this._renderer.setSize(this._width, this._height);
+    return this._renderer;
+  }
+
+  getCamera(): THREE.PerspectiveCamera{
+    return this._camera;
+  }
+
+  getControls(): THREE.OrbitControls{
+    return this._orbitControls;
+  }
+
+
+  //
+  //
+  //
   getalight():any{
     return this._alight;
   }
