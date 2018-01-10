@@ -129,7 +129,7 @@ export class SettingComponent implements OnInit {
      for(var n=0;n<this.scene.children.length;n++){
         if(this.scene.children[n].type==="Scene"){
          for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0].material.wireframe=true;
+           this.scene.children[n].children[i].children[0]["material"].wireframe=true;
         }
         break;
       }
@@ -138,7 +138,7 @@ export class SettingComponent implements OnInit {
      for(var n=0;n<this.scene.children.length;n++){
        if(this.scene.children[n].type==="Scene"){
          for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0].material.wireframe=false;
+           this.scene.children[n].children[i].children[0]["material"].wireframe=false;
         }
         break;
       }
