@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Component, OnInit, Injector, ElementRef } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { DataService } from "../data/data.service";
@@ -39,22 +38,21 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
   	this.object(this.Visible);
-    console.log(this.scene);
   }
 
   notify(){ 
-  	this.selecting=this.dataService.selecting;
   	if(this.selectedVisible==true){
   	  this.objectcheck();
   	}
-    for(var i=0;i<this.selecting.length;i++){
+    /*for(var i=0;i<this.dataService.selecting.length;i++){
       for(var j=0;j<this.scene.children[1].children.length;j++){
-        if(this.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
+        if(this.dataService.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
            console.log(this.scene.children[1].children[j].children[0].parent);
            this.selectObj.push(this.scene.children[1].children[j].children[0].parent);
         }
       }
-    }
+    }*/
+    this.dataService.visible=this.Visible;
   	
   }
 
@@ -113,7 +111,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     }
   }
-
 
   edge(Visible){
   	this.Visible="edge";
@@ -225,7 +222,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   objectcheck(){
   	this.attribute=[];
-    console.log(this.selectObj);
     for(var i=0;i<this.selectObj.length;i++){
       for(var j=0;j<this.selectObj[i].children[this.selectObj[i].children.length-1].children.length;j++){
         console.log(this.selectObj[i]);
@@ -238,6 +234,15 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   changeselected(){
   	this.selectedVisible = !this.selectedVisible;
+    this.selectObj=[];
+    for(var i=0;i<this.dataService.selecting.length;i++){
+      for(var j=0;j<this.scene.children[1].children.length;j++){
+        if(this.dataService.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
+           console.log(this.scene.children[1].children[j].children[0].parent);
+           this.selectObj.push(this.scene.children[1].children[j].children[0].parent);
+        }
+      }
+    }
     if(this.selectedVisible){
       if(this.Visible==="point"){
       	this.pointcheck();
