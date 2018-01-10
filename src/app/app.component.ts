@@ -13,7 +13,7 @@ export class AppComponent {
 
 	// dummy gs_data
 	// to pass to the viewer
-	public gs_dummy_data: gs.IModel = gs.genModelTwoBoxesOpen();
+	public gs_dummy_data: gs.IModel = gs.genModelTorus();//gs.genModelTwoBoxesOpen();
     data_boxes ={
         attribs: null,
         geom: {

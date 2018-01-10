@@ -20,7 +20,6 @@ export class SettingComponent implements OnInit {
   saturation:number;
   lightness:number;
   frameVisible:boolean;
-  gridisChecked:boolean;
 
   ngOnInit(){
     if(this.hue == undefined) {
@@ -39,17 +38,25 @@ export class SettingComponent implements OnInit {
       this.lightness=this.dataService.lightness;
     }
     this.gridVisible=this.dataService.grid;
+    if(this.gridVisible==true){
+      document.getElementById("grid").setAttribute('checked', 'checked');
+    }
     this.axisVisible=this.dataService.axis;
+    if(this.axisVisible==true){
+      document.getElementById("axis").setAttribute('checked', 'checked');
+    }
     this.shadowVisible=this.dataService.shadow;
+    if(this.shadowVisible==true){
+      document.getElementById("shadow").setAttribute('checked', 'checked');
+    }
     this.frameVisible=this.dataService.frame;
+    if(this.frameVisible==true){
+      document.getElementById("frame").setAttribute('checked', 'checked');
+    }
   }
 
   constructor(private dataService: DataService){
-
-    // avoid manipulating the scene here
-    // shift to dataservice
-    this.scene = this.dataService.getScene();
-
+    this.scene=this.dataService.getScene();
     this.alight=[];
     this.alight=this.dataService.getalight();
     this.hue=this.dataService.hue;
@@ -127,26 +134,15 @@ export class SettingComponent implements OnInit {
       ambientLight.color.setHSL( _hue, _saturation,_lightness );
     }
   }
-  
   changeframe(){
    this.frameVisible = !this.frameVisible;
    if(this.frameVisible){
-     for(var n=0;n<this.scene.children.length;n++){
-        if(this.scene.children[n].type==="Scene"){
-         for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0]["material"].wireframe=true;
-        }
-        break;
-      }
+     for(var i=0;i<this.scene.children[1].children.length;i++){
+       this.scene.children[1].children[i].children[0]["material"].wireframe=true;
     }
    }else{
-     for(var n=0;n<this.scene.children.length;n++){
-       if(this.scene.children[n].type==="Scene"){
-         for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0]["material"].wireframe=false;
-        }
-        break;
-      }
+     for(var i=0;i<this.scene.children[1].children.length;i++){
+       this.scene.children[1].children[i].children[0]["material"].wireframe=false;
     }
    }
    this.dataService.addframe(this.frameVisible);
