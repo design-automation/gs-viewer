@@ -19,6 +19,7 @@ export class SettingComponent implements OnInit {
   hue:number;
   saturation:number;
   lightness:number;
+  frameVisible:boolean;
 
   ngOnInit(){
     if(this.hue == undefined) {
@@ -47,6 +48,10 @@ export class SettingComponent implements OnInit {
     this.shadowVisible=this.dataService.shadow;
     if(this.shadowVisible==true){
       document.getElementById("shadow").setAttribute('checked', 'checked');
+    }
+    this.frameVisible=this.dataService.frame;
+    if(this.frameVisible==true){
+      document.getElementById("frame").setAttribute('checked', 'checked');
     }
   }
 
@@ -129,6 +134,20 @@ export class SettingComponent implements OnInit {
       ambientLight.color.setHSL( _hue, _saturation,_lightness );
     }
   }
+  changeframe(){
+   this.frameVisible = !this.frameVisible;
+   if(this.frameVisible){
+     for(var i=0;i<this.scene.children[1].children.length;i++){
+       this.scene.children[1].children[i].children[0].material.wireframe=true;
+    }
+   }else{
+     for(var i=0;i<this.scene.children[1].children.length;i++){
+       this.scene.children[1].children[i].children[0].material.wireframe=false;
+    }
+   }
+   this.dataService.addframe(this.frameVisible);
+  }
+
   setting(event){
     event.stopPropagation();
   }
