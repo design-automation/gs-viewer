@@ -27,9 +27,11 @@ export class DataService {
   axis:boolean;
   grid:boolean;
   shadow:boolean;
+  frame:boolean;
   selectcheck:boolean;
   mouse:THREE.Vector2;
   raycaster:THREE.Raycaster;
+  visible:string;
 
 
   constructor() { 
@@ -164,7 +166,18 @@ export class DataService {
   addshadow(shadow){
     this.shadow=shadow;
   }
+  addframe(frame){
+    this.frame=frame;
+  }
   addselect(select){
     this.selectcheck=select;
   }
+  getSelectingIndex(uuid):number {
+   for(var i=0;i<this.selecting.length;i++){
+     if(this.selecting[i].uuid==uuid){
+       return i;
+     }
+   }
+   return -1;
+ }
 }
