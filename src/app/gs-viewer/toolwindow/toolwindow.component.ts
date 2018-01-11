@@ -12,16 +12,14 @@ import {DataSubscriber} from "../data/DataSubscriber";
   styleUrls: ['./toolwindow.component.css']
 })
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
-  Visible:string="Faces";
+  Visible:string="Objs";
   boxes:any;
   model:gs.IModel;
   scene:THREE.Scene;
   attribute:Array<any>;
   selectedVisible:boolean;
-  collection:any;
+  collection:Array<any>;
   myElement;
-  selecting:any;
-  geometry:any;
   num:Array<any>;
   selectObj:Array<any>;
 
@@ -38,7 +36,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
-  	this.face(this.Visible);
+  	this.object(this.Visible);
   }
 
   notify(){ 
@@ -85,6 +83,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       this.attribute.push(attributepoints);
     }
+    this.dataService.visible=this.Visible;
   }
 
   pointcheck(){
@@ -121,7 +120,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.verticecheck();
     }
-
+    this.dataService.visible=this.Visible;
   }
 
   verticecheck(){
@@ -163,6 +162,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.edgecheck();
     }
+    this.dataService.visible=this.Visible;
   }
 
   edgecheck(){
@@ -203,6 +203,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.wirecheck();
     }
+    this.dataService.visible=this.Visible;
   }
 
   wirecheck(){
@@ -242,6 +243,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.facecheck();
     }
+    this.dataService.visible=this.Visible;
   }
   
   facecheck(){
@@ -265,10 +267,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
         for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children[this.scene.children[n].children[i].children.length-1].children.length;j++){
-            var attributeobj:any=[];
-            attributeobj.id=this.scene.children[n].children[i].children[this.scene.children[n].children[i].children.length-1].children[j].name;
-            this.attribute.push(attributeobj);
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            if(this.scene.children[n].children[i].children[j].name==="Objs"){
+              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
+                var attributeface:any=[];
+                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
+                this.attribute.push(attributeface);
+              }
+            }
           }
         }
         break;
@@ -277,16 +283,21 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.objectcheck();
     }
+    this.dataService.visible=this.Visible;
   }
 
   objectcheck(){
   	this.attribute=[];
     for(var i=0;i<this.selectObj.length;i++){
-      for(var j=0;j<this.selectObj[i].children[this.selectObj[i].children.length-1].children.length;j++){
-        var attributeobj:any=[];
-        attributeobj.id=this.selectObj[i].children[this.selectObj[i].children.length-1].children[j].name;
-        this.attribute.push(attributeobj);
-      } 
+      for(var j=0;j<this.selectObj[i].children.length;j++){
+        if(this.selectObj[i].children[j].name==="Objs"){
+          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
+            var attributeface:any=[];
+            attributeface.id=this.selectObj[i].children[j].children[n].name;
+            this.attribute.push(attributeface);
+          }
+        }
+      }
     }
   }
 
