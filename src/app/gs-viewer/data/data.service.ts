@@ -48,8 +48,6 @@ export class DataService {
   mouse:THREE.Vector2;
   raycaster:THREE.Raycaster;
   visible:string;
-  selectedVisible:boolean=false;
-  modified:boolean=false;
 
 
 
