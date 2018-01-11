@@ -95,9 +95,7 @@ export class DataService {
     // orbit controls
     let _OC = OrbitControls(THREE);
     let controls: THREE.OrbitControls = new _OC( camera, renderer.domElement );
-    controls.mouseButtons = { ORBIT:0, ZOOM:null, PAN:null };
     controls.enableKeys = false;
-    controls.enabled = true;
 
     // default directional lighting
     let directional_light :THREE.DirectionalLight = new THREE.DirectionalLight( 0xffffff,0.5);
