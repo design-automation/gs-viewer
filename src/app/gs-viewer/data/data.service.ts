@@ -185,6 +185,8 @@ export class DataService {
 
 
   //
+  //
+  //
   getalight():any{
     return this._alight;
   }
