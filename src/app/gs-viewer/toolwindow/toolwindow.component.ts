@@ -12,18 +12,12 @@ import {DataSubscriber} from "../data/DataSubscriber";
   styleUrls: ['./toolwindow.component.css']
 })
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
-<<<<<<< HEAD
   Visible:string="Faces";
-=======
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   boxes:any;
   model:gs.IModel;
   scene:THREE.Scene;
   attribute:Array<any>;
-<<<<<<< HEAD
   selectedVisible:boolean;
-=======
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   collection:any;
   myElement;
   selecting:any;
@@ -44,7 +38,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
-<<<<<<< HEAD
   	this.face(this.Visible);
   }
 
@@ -83,27 +76,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   point(Visible){
   	this.Visible="Points";
-=======
-  	this.object(this.dataService.visible);
-  }
-
-  notify(){ 
-  	if(this.dataService.selectedVisible==true){
-  	  this.objectcheck();
-  	}
-    /*for(var i=0;i<this.dataService.selecting.length;i++){
-      for(var j=0;j<this.scene.children[1].children.length;j++){
-        if(this.dataService.selecting[i].uuid===this.scene.children[1].children[j].children[0].uuid){
-           console.log(this.scene.children[1].children[j].children[0].parent);
-           this.selectObj.push(this.scene.children[1].children[j].children[0].parent);
-        }
-      }
-    }*/
-  }
-
-  point(Visible){
-  	this.dataService.visible="Points";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   	this.attribute=[];
     for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
       var attributepoints:any=[];
@@ -113,7 +85,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       this.attribute.push(attributepoints);
     }
-    this.dataService.modified=true;
   }
 
   pointcheck(){
@@ -126,15 +97,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       this.attribute.push(attributepoints);
     }
-    this.dataService.modified=true;
   }
 
   vertice(Visible){
-<<<<<<< HEAD
   	this.Visible="Vertices";
-=======
-  	this.dataService.visible="Vertices";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   	this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -152,14 +118,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
-<<<<<<< HEAD
     if(this.selectedVisible==true){
       this.verticecheck();
     }
 
-=======
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
 
   verticecheck(){
@@ -175,19 +137,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-<<<<<<< HEAD
 
   }
 
   edge(Visible){
   	this.Visible="Edges";
-=======
-    this.dataService.modified=true;
-  }
-
-  edge(Visible){
-  	this.dataService.visible="Edges";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -206,13 +160,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
-<<<<<<< HEAD
     if(this.selectedVisible==true){
       this.edgecheck();
     }
-=======
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
 
   edgecheck(){
@@ -229,15 +179,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    this.dataService.modified=true;
   }
 
   wire(Visible){
-<<<<<<< HEAD
   	this.Visible="Wires";
-=======
-  	this.dataService.visible="Wires";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -255,13 +200,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
-<<<<<<< HEAD
     if(this.selectedVisible==true){
       this.wirecheck();
     }
-=======
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
 
   wirecheck(){
@@ -277,15 +218,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    this.dataService.modified=true;
   }
 
   face(Visible){
-<<<<<<< HEAD
   	this.Visible="Faces";
-=======
-  	this.dataService.visible="Faces";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   	this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -303,13 +239,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
-<<<<<<< HEAD
     if(this.selectedVisible==true){
       this.facecheck();
     }
-=======
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
   
   facecheck(){
@@ -325,15 +257,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    this.dataService.modified=true;
   }
 
   object(Visible){
-<<<<<<< HEAD
   	this.Visible="Objs";
-=======
-  	this.dataService.visible="Objects";
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
     this.attribute=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -347,13 +274,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         break;
       }
     }
-<<<<<<< HEAD
     if(this.selectedVisible==true){
       this.objectcheck();
     }
-=======
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
 
   objectcheck(){
@@ -365,11 +288,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         this.attribute.push(attributeobj);
       } 
     }
-    this.dataService.modified=true;
   }
 
   changeselected(){
-<<<<<<< HEAD
   	this.selectedVisible = !this.selectedVisible;
     if(this.selectedVisible){
       if(this.Visible==="Points"){
@@ -388,43 +309,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       	this.facecheck();
       }
       if(this.Visible==="Objs"){
-=======
-  	this.dataService.selectedVisible = !this.dataService.selectedVisible;
-    this.selectObj=[];
-    for(var i=0;i<this.dataService.selecting.length;i++){
-       for(var n=0;n<this.scene.children.length;n++){
-        if(this.scene.children[n].type==="Scene"){
-          for(var j=0;j<this.scene.children[n].children.length;j++){
-            if(this.dataService.selecting[i].uuid===this.scene.children[n].children[j].children[0].uuid){
-               this.selectObj.push(this.scene.children[n].children[j].children[0].parent);
-            }
-          }
-        }
-      }
-    }
-    if(this.dataService.selectedVisible){
-      if(this.dataService.visible==="point"){
-      	this.pointcheck();
-      }
-      if(this.dataService.visible==="vertice"){
-      	this.verticecheck();
-      }
-      if(this.dataService.visible==="edge"){
-        this.edgecheck();
-      }
-      if(this.dataService.visible==="wire"){
-        this.wirecheck();
-      }
-      if(this.dataService.visible==="face"){
-      	this.facecheck();
-      }
-      if(this.dataService.visible==="object"){
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
       	this.objectcheck();
       }
+      
     }
     else{
-<<<<<<< HEAD
       if(this.Visible==="Points"){
       	this.point(this.Visible);
       }
@@ -444,33 +333,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       	this.object(this.Visible);
       }
      
-=======
-      if(this.dataService.visible==="point"){
-      	this.point(this.dataService.visible);
-      }
-      if(this.dataService.visible==="vertice"){
-      	this.vertice(this.dataService.visible);
-      }
-      if(this.dataService.visible==="edge"){
-      	this.edge(this.dataService.visible);
-      }
-      if(this.dataService.visible==="wire"){
-      	this.wire(this.dataService.visible);
-      }
-      if(this.dataService.visible==="face"){
-      	this.face(this.dataService.visible);
-      }
-      if(this.dataService.visible==="object"){
-      	this.object(this.dataService.visible);
-      } 
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
     }
-    this.dataService.modified=true;
   }
 
   Onselect(i){
   	var select;
-<<<<<<< HEAD
     console.log(i);
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
@@ -497,15 +364,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	//   }
   	// }
 
-=======
-  	for(var j=0;j<this.attribute.length;j++){
-  	  if(this.attribute[j].original==i){
-  	  	select=this.attribute[j].mesh;
-  	  	this.dataService.pushselecting(select);
-  	  	select.material.color.setHex(0x2E9AFE);
-  	  }
-  	}
-    this.dataService.modified=true;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   }
+
 }

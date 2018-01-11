@@ -1,20 +1,11 @@
 <div id="toolwindow">
   <div id="toolbar">
-<<<<<<< HEAD
     <button id="point" [class.visible]="Visible === 'Points'" (click)="point(Visible)"><i class="fa fa-dot-circle-o"></i></button>
     <button id="vertice" [class.visible]="Visible === 'Vertices'" (click)="vertice(Visible)">V</button>
     <button id="edge" [class.visible]="Visible === 'Edges'" (click)="edge(Visible)">E</button>
     <button id="wire" [class.visible]="Visible === 'Wires'" (click)="wire(Visible)">W</button>
     <button id="face" [class.visible]="Visible === 'Faces'" (click)="face(Visible)">F</button>
     <button id="object" [class.visible]="Visible === 'Objects'" (click)="object(Visible)"><i class="fa fa-map"></i></button>
-=======
-    <button id="Points" [class.visible]="Visible === 'point'" (click)="point(Visible)"><i class="fa fa-dot-circle-o"></i></button>
-    <button id="Vertices" [class.visible]="Visible === 'vertice'" (click)="vertice(Visible)">V</button>
-    <button id="Edges" [class.visible]="Visible === 'edge'" (click)="edge(Visible)">E</button>
-    <button id="Wires" [class.visible]="Visible === 'wire'" (click)="wire(Visible)">W</button>
-    <button id="Faces" [class.visible]="Visible === 'face'" (click)="face(Visible)">F</button>
-    <button id="Objects" [class.visible]="Visible === 'object'" (click)="object(Visible)"><i class="fa fa-map"></i></button>
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
     <input id="selected" type="checkbox" (click)="changeselected()">
     <label id="selectedname" value="selected">Show selected only</label>
   </div>
