@@ -22,6 +22,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   myElement;
   num:Array<any>;
   selectObj:Array<any>;
+  scenechildren:Array<any>;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -37,6 +38,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
   	this.object(this.Visible);
+    this.Visible=this.dataService.visible;
   }
 
   notify(){ 
@@ -70,6 +72,21 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     }
     this.dataService.visible=this.Visible;
+    //this.scenechildren=this.getscenechildren();
+  }
+
+  getscenechildren():Array<any>{
+    var scenechildren=[];
+    for(var n=0;n<this.scene.children.length;n++){
+      if(this.scene.children[n].type==="Scene"){
+        for(var i=0;i<this.scene.children[n].children.length;i++){
+          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            scenechildren.push(this.scene.children[n].children[i].children[j]);
+          }
+        }
+      }
+    }
+    return scenechildren;
   }
 
   point(Visible){
@@ -101,20 +118,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   vertice(Visible){
   	this.Visible="Vertices";
   	this.attribute=[];
-    for(var n=0;n<this.scene.children.length;n++){
-      if(this.scene.children[n].type==="Scene"){
-        for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            if(this.scene.children[n].children[i].children[j].name==="Vertices"){
-              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
-                var attributeface:any=[];
-                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
-                this.attribute.push(attributeface);
-              }
-            }
-          }
+    this.scenechildren=this.getscenechildren();
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Vertices"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          var attributeface:any=[];
+          attributeface.id=this.scenechildren[i].children[j].name;
+          this.attribute.push(attributeface);
         }
-        break;
       }
     }
     if(this.selectedVisible==true){
@@ -142,21 +153,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   edge(Visible){
   	this.Visible="Edges";
     this.attribute=[];
-    for(var n=0;n<this.scene.children.length;n++){
-      if(this.scene.children[n].type==="Scene"){
-        for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            if(this.scene.children[n].children[i].children[j].name==="Edges"){
-              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
-                var attributeedge:any=[];
-                attributeedge.id=this.scene.children[n].children[i].children[j].children[m].name;
-                this.attribute.push(attributeedge);
-              }
-              break;
-            }
-          }
+    this.scenechildren=this.getscenechildren();
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Edges"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          var attributeface:any=[];
+          attributeface.id=this.scenechildren[i].children[j].name;
+          this.attribute.push(attributeface);
         }
-        break;
       }
     }
     if(this.selectedVisible==true){
@@ -184,20 +188,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   wire(Visible){
   	this.Visible="Wires";
     this.attribute=[];
-    for(var n=0;n<this.scene.children.length;n++){
-      if(this.scene.children[n].type==="Scene"){
-        for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            if(this.scene.children[n].children[i].children[j].name==="Wires"){
-              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
-                var attributeface:any=[];
-                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
-                this.attribute.push(attributeface);
-              }
-            }
-          }
+    this.scenechildren=this.getscenechildren();
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Wires"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          var attributeface:any=[];
+          attributeface.id=this.scenechildren[i].children[j].name;
+          this.attribute.push(attributeface);
         }
-        break;
       }
     }
     if(this.selectedVisible==true){
@@ -224,20 +222,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   face(Visible){
   	this.Visible="Faces";
   	this.attribute=[];
-    for(var n=0;n<this.scene.children.length;n++){
-      if(this.scene.children[n].type==="Scene"){
-        for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            if(this.scene.children[n].children[i].children[j].name==="Faces"){
-              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
-                var attributeface:any=[];
-                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
-                this.attribute.push(attributeface);
-              }
-            }
-          }
+    this.scenechildren=this.getscenechildren();
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Faces"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          var attributeface:any=[];
+          attributeface.id=this.scenechildren[i].children[j].name;
+          this.attribute.push(attributeface);
         }
-        break;
       }
     }
     if(this.selectedVisible==true){
@@ -264,20 +256,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   object(Visible){
   	this.Visible="Objs";
     this.attribute=[];
-    for(var n=0;n<this.scene.children.length;n++){
-      if(this.scene.children[n].type==="Scene"){
-        for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            if(this.scene.children[n].children[i].children[j].name==="Objs"){
-              for(var m=0;m<this.scene.children[n].children[i].children[j].children.length;m++){
-                var attributeface:any=[];
-                attributeface.id=this.scene.children[n].children[i].children[j].children[m].name;
-                this.attribute.push(attributeface);
-              }
-            }
-          }
+    this.scenechildren=this.getscenechildren();
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Objs"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          var attributeface:any=[];
+          attributeface.id=this.scenechildren[i].children[j].name;
+          this.attribute.push(attributeface);
         }
-        break;
       }
     }
     if(this.selectedVisible==true){
