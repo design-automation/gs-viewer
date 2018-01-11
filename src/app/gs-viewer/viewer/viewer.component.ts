@@ -26,7 +26,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   raycaster:THREE.Raycaster;
   mouse:THREE.Vector2;
 
-  Visible:string="Faces";
+  Visible:string="Objs";
 
   // check what needs to be global and refactor
   
@@ -37,6 +37,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   
   myElement;
   
+  mySprites: THREE.Sprite[] = [];
+  scenechildren:Array<any>;
+
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
     this.myElement = myElement;
@@ -77,30 +80,25 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+    this.scenechildren=this.getSceneChildren();
     
     //Material of select and basic;
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
-        this.basicMat=this.scene.children[i].children[0].children[0].material;
+        this.basicMat=this.scene.children[i].children[0].children[0]["material"];
         break;
       }
     }
-    this.selectMat=new THREE.MeshPhongMaterial( { color: 0xaaaaFF,  side:THREE.DoubleSide, wireframe:true} );
+    this.selectMat=new THREE.MeshPhongMaterial( { visible:false} );
     this.mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa, blending:0, flatShading:true, side:THREE.DoubleSide} );
 
-    // todo: make angular based
-    //document.body.style.cursor = " pointer";
-
-    // this.geometry = new THREE.Geometry();
-    // this.dataService.addGeom(this.geometry);
     // render loop
     let self = this;
     function animate() {
-      var scenechildren=self.getSceneChildren();
         self.raycaster.setFromCamera(self.mouse,self.camera);
-        var intersects = self.raycaster.intersectObjects(scenechildren);
-        for (var i = 0; i < scenechildren.length; i++) {
-          var currObj=scenechildren[i];
+        var intersects = self.raycaster.intersectObjects(self.scenechildren);
+        for (var i = 0; i < self.scenechildren.length; i++) {
+          var currObj=self.scenechildren[i];
           if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
             if ( intersects.length > 0 &&  intersects[ 0 ].object.uuid==currObj.uuid) {
               currObj.material=self.mousehovMat;
@@ -109,15 +107,16 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
           }
         }
+        if(self.dataService.selecting.length!=0){
+          self.updateview();
+      }
+
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
     };
     animate();
 
   }
-
-
-
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
   //
@@ -145,42 +144,42 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   // 
   updateModel(): void{
 
-      this._model = this.dataService.getGsModel(); 
+    this._model = this.dataService.getGsModel(); 
 
-      if( !this._model || !this.scene){
-        console.warn("Model or Scene not defined");
-        return;
-      }
+    if( !this._model || !this.scene){
+      console.warn("Model or Scene not defined");
+      return;
+    }
 
-      try{
-        const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
-        
-        this.clearScene();
+    try{
+      const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
+      
+      this.clearScene();
 
-        let loader = new THREE.ObjectLoader();
+      let loader = new THREE.ObjectLoader();
 
-        let objectData = loader.parse( scene_data );
-        for(var i =0;i< objectData.children.length;i++){
-          if( objectData.children[i].children!==undefined){
-            for(var j=0;j< objectData.children[i].children.length;j++){
-              let chd = objectData.children[i].children[j];
-              if( chd.type==="Mesh"){
-                 objectData.children[i].children[j]["geometry"].computeVertexNormals();
-                 objectData.children[i].children[j]["geometry"].computeBoundingBox();
-                 objectData.children[i].children[j]["geometry"].computeBoundingSphere();
+      let objectData = loader.parse( scene_data );
+      for(var i =0;i< objectData.children.length;i++){
+        if( objectData.children[i].children!==undefined){
+          for(var j=0;j< objectData.children[i].children.length;j++){
+            let chd = objectData.children[i].children[j];
+            if( chd.type==="Mesh"){
+               objectData.children[i].children[j]["geometry"].computeVertexNormals();
+               objectData.children[i].children[j]["geometry"].computeBoundingBox();
+               objectData.children[i].children[j]["geometry"].computeBoundingSphere();
+            }
+            /// 
+            if( chd.children.length > 0){
+              for(let s=0; s < chd.children.length; s++ ){
+                let spr: any = chd.children[s];
+                this.mySprites.push(spr);
+                spr.material = this.getMaterial(spr.name);
               }
-              /// 
-               if( chd.children.length > 0){
-                 for(let s=0; s < chd.children.length; s++ ){
-                     let spr: THREE.Sprite = chd.children[s];
-                     spr.material = this.getMaterial(spr.name);
-                 }
-                
-               }
             }
           }
         }
-        this.scene.add(objectData);
+      }
+      this.scene.add(objectData);
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -190,10 +189,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   getMaterial(name: string): THREE.SpriteMaterial{
     var canvas = document.createElement('canvas');
     canvas.width = 256; 
-    canvas.height = 128;
+    canvas.height = 256;
     var context = canvas.getContext('2d');
     context.textAlign = "center";
-    context.fillText( name , 1, 70);
+    context.fillText( name , canvas.width/2, canvas.height/2);
+    context.font ="Bold  100px Arial";
     var texture = new THREE.Texture(canvas) 
     texture.needsUpdate = true;
     var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
@@ -212,9 +212,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   /// selects object from three.js scene
   onDocumentMouseDown(event){
     var selectedObj, intersects;
-    var scenechildren=this.getSceneChildren();
     this.raycaster.setFromCamera(this.mouse,this.camera);
-    intersects = this.raycaster.intersectObjects(scenechildren);
+    intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
       var index=this.dataService.getSelectingIndex(selectedObj.uuid);
@@ -233,45 +232,37 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.dataService.addselecting(select);
 
     }
-    this.updateview();
+    //this.updateview();
   }
 
   updateview(){
     this.Visible=this.dataService.visible;
-    if(this.dataService.selecting.length!=0){
-    var selectscene=this.dataService.selecting[0].parent.parent;
-      for(var i=0;i<selectscene.children.length;i++){
-        for(var j=0;j<selectscene.children[i].children.length;j++){          
-          if(selectscene.children[i].children[j].name==this.Visible){
-            for(var s=0;s<selectscene.children[i].children[j].children.length;s++){
-              let spr: THREE.Sprite = selectscene.children[i].children[j].children[s];
-              console.log(this.mouse, spr.position);
-              if(Math.abs(this.mouse.x - spr.position.x) < 0.3 
-                    && Math.abs(this.mouse.y - spr.position.y) < 0.3){
-                spr.visible = true; 
-              }
+    var intersects = this.raycaster.intersectObjects(this.scenechildren);
+    if ( intersects.length > 0 ) {
+      if(this.dataService.selecting.length!=0){
+        for(var i=0;i<this.mySprites.length;i++){
+          if(this.mySprites[i].parent.name===this.Visible){
+            if(Math.abs(intersects[0].point.x-this.mySprites[i].position.x)<0.05
+              &&Math.abs(intersects[0].point.y-this.mySprites[i].position.y)<0.05
+              &&Math.abs(intersects[0].point.z-this.mySprites[i].position.z)<0.05){ 
+                let spr: THREE.Sprite =this.mySprites[i];
+              spr.visible = true; 
+            }else{
+              let spr: THREE.Sprite =this.mySprites[i];
+              spr.visible = false; 
             }
-            break;
           }
         }
       }
-    }else{
+    }/*else{
       this.Visible=this.dataService.visible;
-      for(var i=0;i<this.dataService.getScene().children.length;i++){
-        if(this.dataService.getScene().children[i].type==="Scene"){
-          for(var j=0;j<this.dataService.getScene().children[i].children.length;j++){
-            for(var n=0;n<this.dataService.getScene().children[i].children[j].children.length;n++){
-              if(this.dataService.getScene().children[i].children[j].children[n].name==this.Visible){
-                for(var s=0;s<this.dataService.getScene().children[i].children[j].children[n].children.length;s++){
-                  let spr: THREE.Sprite =this.dataService.getScene().children[i].children[j].children[n].children[s];
-                  spr.visible = false;
-                 }
-              }
-            }
-          }
+      for(var i=0;i<this.mySprites.length;i++){
+        if(this.mySprites[i].parent.name===this.Visible){
+          let spr: THREE.Sprite =this.mySprites[i];
+          spr.visible = false; 
         }
       }
-    }
+    }*/
   }
 
   getSceneChildren() {
