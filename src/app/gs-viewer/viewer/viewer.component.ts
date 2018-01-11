@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
-
 import {DataSubscriber} from "../data/DataSubscriber";
 
 @Component({
@@ -27,23 +26,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   raycaster:THREE.Raycaster;
   mouse:THREE.Vector2;
 
-  settingVisible: boolean=false;
-<<<<<<< HEAD
-  Visible:string="rotate";
+  Visible:string="Faces";
 
   // check what needs to be global and refactor
-=======
-  activeTool:string="rotate";
-  model: gs.IModel;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
-  geometry:THREE.Geometry;
-  
-  INTERSECTED:any;
-  INTERSECTEDcolor:any;
   
   selecting:Array<any>;
+  basicMat:THREE.MeshPhongMaterial;
+  selectMat:THREE.MeshPhongMaterial;
+  mousehovMat:THREE.MeshPhongMaterial;
   
-  spritey:Array<any>;
   myElement;
   
   constructor(injector: Injector, myElement: ElementRef) { 
@@ -82,25 +73,46 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
     this.updateModel();
 
+    // todo: check and refactor what is required?
+    this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
+    this.mouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
+    
+    //Material of select and basic;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        this.basicMat=this.scene.children[i].children[0].children[0].material;
+        break;
+      }
+    }
+    this.selectMat=new THREE.MeshPhongMaterial( { color: 0xaaaaFF,  side:THREE.DoubleSide, wireframe:true} );
+    this.mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa, blending:0, flatShading:true, side:THREE.DoubleSide} );
+
+    // todo: make angular based
+    //document.body.style.cursor = " pointer";
+
+    // this.geometry = new THREE.Geometry();
+    // this.dataService.addGeom(this.geometry);
     // render loop
     let self = this;
     function animate() {
+      var scenechildren=self.getSceneChildren();
+        self.raycaster.setFromCamera(self.mouse,self.camera);
+        var intersects = self.raycaster.intersectObjects(scenechildren);
+        for (var i = 0; i < scenechildren.length; i++) {
+          var currObj=scenechildren[i];
+          if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
+            if ( intersects.length > 0 &&  intersects[ 0 ].object.uuid==currObj.uuid) {
+              currObj.material=self.mousehovMat;
+            } else {
+              currObj.material=self.basicMat;
+            }
+          }
+        }
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
     };
     animate();
-
-    // todo: check and refactor what is required?
-    this.selecting = [];  // todo: should this be in the data service??
-    this.mouse = new THREE.Vector2();
-    this.raycaster = new THREE.Raycaster();
-    this.spritey = [];
-
-    // todo: make angular based
-    document.body.style.cursor = " pointer";
-
-    // this.geometry = new THREE.Geometry();
-    // this.dataService.addGeom(this.geometry);
 
   }
 
@@ -158,19 +170,16 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
                  objectData.children[i].children[j]["geometry"].computeBoundingSphere();
               }
               /// 
-              if( chd.children.length > 0){
-                for(let s=0; s < chd.children.length; s++ ){
-                    let spr: THREE.Sprite = chd.children[s];
-                    //spr.visible = true; 
-                    spr.material = this.getMaterial(spr.name);
-                    this.scene.add(spr);
-                }
+               if( chd.children.length > 0){
+                 for(let s=0; s < chd.children.length; s++ ){
+                     let spr: THREE.Sprite = chd.children[s];
+                     spr.material = this.getMaterial(spr.name);
+                 }
                 
-              }
+               }
             }
           }
         }
-
         this.scene.add(objectData);
     }
     catch(ex){
@@ -183,25 +192,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     canvas.width = 256; 
     canvas.height = 128;
     var context = canvas.getContext('2d');
-
     context.textAlign = "center";
-
-    // context.font = "Bold " + fontsize + "px " + fontface;
-    // var metrics = context.measureText( message );
-    // var textWidth = metrics.width;
-
-    // context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
-    // context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
-
-    // context.lineWidth = borderThickness;
-
-    // context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", 1.0)";
-    
-    context.fillText( name , 1, 18);
-
+    context.fillText( name , 1, 70);
     var texture = new THREE.Texture(canvas) 
     texture.needsUpdate = true;
-
     var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
     return spriteMaterial;
   }
@@ -215,20 +209,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.mouse.y =-( event.clientY / this.height ) * 2 + 1;
   }
 
-<<<<<<< HEAD
   /// selects object from three.js scene
-=======
-  Mousedown(event){
-    if(this.activeTool=="select"){
-      var e=event;
-      this.onDocumentMouseDown(e);
-    }
-  }
-  selectMat=new THREE.MeshPhongMaterial( { color: 0xaaaaFF, blending:0, flatShading:true, side:THREE.DoubleSide} );
-  basicMat=new THREE.MeshPhongMaterial( { color: 0xFFFFFF, blending:0, flatShading:true, side:THREE.DoubleSide} );
-  mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa, blending:0, flatShading:true, side:THREE.DoubleSide} );
-  
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
   onDocumentMouseDown(event){
     var selectedObj, intersects;
     var scenechildren=this.getSceneChildren();
@@ -239,18 +220,58 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var index=this.dataService.getSelectingIndex(selectedObj.uuid);
       if(index<0) {
         selectedObj.material=this.selectMat;
-        this.dataService.selecting.push(selectedObj);
+        this.dataService.pushselecting(selectedObj);
       } else {
         selectedObj.material=this.basicMat;
-        this.dataService.selecting.splice(index,1);
+        this.dataService.spliceselecting(index,1);
       }
     } else {
       for(var i=0;i<this.dataService.selecting.length;i++){
         this.dataService.selecting[i].material=this.basicMat;
       }
-      this.dataService.selecting=[];
+      var select=[];
+      this.dataService.addselecting(select);
+
     }
-    this.updateViewer();
+    this.updateview();
+  }
+
+  updateview(){
+    this.Visible=this.dataService.visible;
+    if(this.dataService.selecting.length!=0){
+    var selectscene=this.dataService.selecting[0].parent.parent;
+      for(var i=0;i<selectscene.children.length;i++){
+        for(var j=0;j<selectscene.children[i].children.length;j++){          
+          if(selectscene.children[i].children[j].name==this.Visible){
+            for(var s=0;s<selectscene.children[i].children[j].children.length;s++){
+              let spr: THREE.Sprite = selectscene.children[i].children[j].children[s];
+              console.log(this.mouse, spr.position);
+              if(Math.abs(this.mouse.x - spr.position.x) < 0.3 
+                    && Math.abs(this.mouse.y - spr.position.y) < 0.3){
+                spr.visible = true; 
+              }
+            }
+            break;
+          }
+        }
+      }
+    }else{
+      this.Visible=this.dataService.visible;
+      for(var i=0;i<this.dataService.getScene().children.length;i++){
+        if(this.dataService.getScene().children[i].type==="Scene"){
+          for(var j=0;j<this.dataService.getScene().children[i].children.length;j++){
+            for(var n=0;n<this.dataService.getScene().children[i].children[j].children.length;n++){
+              if(this.dataService.getScene().children[i].children[j].children[n].name==this.Visible){
+                for(var s=0;s<this.dataService.getScene().children[i].children[j].children[n].children.length;s++){
+                  let spr: THREE.Sprite =this.dataService.getScene().children[i].children[j].children[n].children[s];
+                  spr.visible = false;
+                 }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   getSceneChildren() {
@@ -265,7 +286,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         return [];
       }
     }
-    
     for(var i=0;i<children.length;i++){
       for(var j=0;j<children[i].children.length;j++){
         if(children[i].children[j].type==="Mesh"){
@@ -273,119 +293,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-<<<<<<< HEAD
-    this.raycaster.setFromCamera(this.mouse,this.camera);
-    intersects = this.raycaster.intersectObjects(scenechildren);
-    if ( intersects.length > 0 ) {
-      selectedObj=intersects[ 0 ].object;
-      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
-      if(index<0) {
-        selectedObj.material=this.selMaterial;
-        //this.dataService.selecting.push(selectedObj);
-        this.dataService.pushselecting(selectedObj);
-      } else {
-        selectedObj.material=this.basicColHex;
-        //this.dataService.selecting.splice(index,1);
-        this.dataService.spliceselecting(index,1);
-      }
-    } else {
-      for(var i=0;i<this.dataService.selecting.length;i++){
-        this.dataService.selecting[i].material=this.basicColHex;
-      }
-      this.dataService.selecting=[];
-    }
-    this.updateViewer();
-  }
-
-  // ???
-  selMaterial=new THREE.MeshBasicMaterial( { color: 0xaaaaFF, side:THREE.DoubleSide} );
-  basicColHex=new THREE.MeshBasicMaterial( { color: 0xFFFFFF, side:THREE.DoubleSide} );
-  mouseHovHex=new THREE.MeshBasicMaterial( { color: 0xFFaaaa, side:THREE.DoubleSide} );
-
-  //
-  //  related to sprites??
-  //
-=======
     return scenechildren;
   }
 
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
-  updateViewer() {
-    this.updateSprite();
-  }
 
-  updateSprite() {
-    for (var i = this.spritey.length - 1; i >= 0; i--) {
-      this.scene.remove(this.spritey[i]);
-    }
-    if(!this.dataService.selectedVisible) {
-      return;
-    }
-    this.spritey=[];
-    for (var i = 0; i < this.dataService.selecting.length; i++) {
-      var obj=this.dataService.selecting[i];
-      var childArray=obj.parent.children;
-      var sprit;
-      var position:THREE.Vector3;
-<<<<<<< HEAD
-      if(childArray[childArray.length-1].type==this.dataService.visible) {
-        sprit=this.sprite(childArray[childArray.length-1].children[0].name,{fontsize: 70});
-        position=obj.geometry.boundingBox.max;
-        sprit.position.set(position.x,position.y,position.z);
-        this.scene.add(sprit);
-        this.spritey.push(sprit);
-      } else {
-        for (var j = 0; j < childArray.length-1; j++) {
-          if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
-            this.addSprites(childArray[j]);
-            break;
-          }
-        }
-        if(j==childArray.length-1) {
-            sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
-            position=obj.geometry.boundingBox.max;
-            sprit.position.set(position.x,position.y,position.z);
-            this.scene.add(sprit);
-            this.spritey.push(sprit);
-=======
-      for (var j = 0; j < childArray.length-1; j++) {
-        if(childArray[j].type=="Group" && this.dataService.visible==childArray[j].name) {
-          this.addSprites(childArray[j]);
-          break;
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
-        }
-      }
-      if(j==childArray.length-1) {
-          sprit=this.sprite(childArray[j].children[0].name,{fontsize: 30});
-          position=obj.geometry.boundingBox.max;
-          sprit.position.set(position.x,position.y,position.z);
-          this.scene.add(sprit);
-          this.spritey.push(sprit);
-      }
-    }
-  }
-
-  addSprites(childArray) {
-    var sprit;
-    var position:THREE.Vector3;
-    console.log(childArray);
-    for (var i = 0; i < childArray.children.length; i++) {
-      sprit=this.sprite(childArray.children[i].name,{fontsize: 30});
-      position=childArray.children[i].position;
-      sprit.position.set(position.x,position.y,position.z);
-      this.scene.add(sprit);
-      this.spritey.push(sprit);
-    }
-  }
-
-<<<<<<< HEAD
-  sprite( message: string, parameters?: any ): THREE.Sprite{
-=======
-  render():void {
+  /*render():void {
     let self = this;
     (function render(){
-      if(self.activeTool=="select"){
         var scenechildren=self.getSceneChildren();
+        console.log(scenechildren);
         self.raycaster.setFromCamera(self.mouse,self.camera);
         var intersects = self.raycaster.intersectObjects(scenechildren);
         for (var i = 0; i < scenechildren.length; i++) {
@@ -398,143 +314,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
           }
         }
-      }
-      if(self.dataService.modified) {
-        self.updateViewer();
-        self.dataService.modified=false;
-      }
       requestAnimationFrame(render);
       self.renderer.render(self.scene, self.camera);
     }());
     this.renderer.render( this.scene, this.camera );
   }
-
-  zoom(Visible){
-    document.body.style.cursor = "crosshair";
-    this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
-    this.controls.enabled=true;
-    this.controls.enableZoom=true;
-    this.activeTool="zoom";
-  }
-
-  zoomfit(Visible){
-    document.body.style.cursor = "no-drop";
-    this.controls.mouseButtons={ORBIT:null,ZOOM:0,PAN:null};
-    this.controls.enabled=true;
-    this.controls.enableZoom=true;
-    this.activeTool="zoomfit";
-    if(this.selecting.length===0){
-      var obj=new THREE.Object3D();
-      obj=this.scene;
-      var boxHelper = new THREE.BoxHelper(obj);
-      var boundingSphere=boxHelper.geometry.boundingSphere;
-      var center = boundingSphere.center;
-      var radius = boundingSphere.radius;
-      var fov=this.camera.fov * ( Math.PI / 180 );
-      var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
-      vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3( Math.abs( radius / Math.sin( fov / 2 )),
-                                     Math.abs( radius / Math.sin( fov / 2 ) ),
-                                     Math.abs( radius / Math.sin( fov / 2 )));
-      vec_centre_to_pos.setLength(tmp_vec.length());
-      var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
-      perspectiveNewPos.addVectors(center, vec_centre_to_pos);
-      var newLookAt = new THREE.Vector3(center.x,center.y,center.z)
-      this.camera.position.copy(perspectiveNewPos);
-      this.camera.lookAt(newLookAt);
-      this.camera.updateProjectionMatrix();
-      this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
-    }else{
-      var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
-      var radius=0;
-      for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
-        radius=Math.max(this.selecting[i].geometry.boundingSphere.radius,radius);
-      }
-      centerX=axisX/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
-      var center = new THREE.Vector3(centerX,centerY,centerZ);
-      var fov=this.camera.fov * ( Math.PI / 180 );
-      var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
-      vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3(Math.abs( radius / Math.sin( fov / 2 )),
-                                    Math.abs( radius / Math.sin( fov / 2 ) ),
-                                    Math.abs( radius / Math.sin( fov / 2 )));
-      vec_centre_to_pos.setLength(tmp_vec.length());
-      var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
-      perspectiveNewPos.addVectors(center, vec_centre_to_pos);
-      var newLookAt = new THREE.Vector3(center.x,center.y,center.z)
-      this.camera.position.copy(perspectiveNewPos);
-      this.camera.lookAt(newLookAt);
-      this.camera.updateProjectionMatrix();
-      this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
-    }
-  }
-
-  pan(Visible){
-    this.camera.updateProjectionMatrix();
-    document.body.style.cursor = "-webkit-grab";
-    this.controls.mouseButtons={ORBIT:null,ZOOM:null,PAN:0};
-    this.controls.enabled=true;
-    this.controls.enablePan=true;
-    this.activeTool="pan";
-  }
-
-  rotate(Visible){
-    document.body.style.cursor = " pointer";
-    if(this.selecting.length===0){
-      var centerX=0;
-      var centerY=0;
-      var centerZ=0;
-      for(var i=0;i<this.scene.children[1].children.length;i++){
-        centerX+=this.scene.children[1].children[i].children[0]["geometry"].boundingSphere.center.x;
-        centerY+=this.scene.children[1].children[i].children[0]["geometry"].boundingSphere.center.y;
-        centerZ+=this.scene.children[1].children[i].children[0]["geometry"].boundingSphere.center.z;
-      }
-      centerX=centerX/this.scene.children[1].children.length;
-      centerY=centerY/this.scene.children[1].children.length;
-      centerZ=centerZ/this.scene.children[1].children.length;
-      //this.controls.target.set(centerX,centerY,centerZ);
-    }else{
-      var axisX=0;
-      var axisY=0;
-      var axisZ=0;
-      var centerX=0;
-      var centerY=0;
-      var centerZ=0;
-      for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
-      }
-      centerX=axisX/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
-      centerZ=axisY/this.scene.children[1].children.length;
-      //this.controls.target.set(centerX,centerY,centerZ);
-    }
-    this.controls.mouseButtons={ORBIT:0,ZOOM:null,PAN:null};
-    this.controls.enabled=true;
-    this.controls.enableRotate=true;
-    this.activeTool="rotate";
-  }
-
-  select(event, Visible){
-    document.body.style.cursor ="default";
-    this.controls.enabled=false;
-    this.activeTool="select";
-    event.stopPropagation();
-  }
-
-  setting(event){
-    this.settingVisible=!this.settingVisible;
-    event.stopPropagation();
-  }
-
-  sprite( message, parameters ){
->>>>>>> 337e6e0fedfe5dfd6d8c932e4f6185e98194f3ca
+*/
+  /*sprite( message: string, parameters?: any ): THREE.Sprite{
 
     if ( parameters === undefined ) parameters = {};
     var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
@@ -565,7 +351,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
     var sprite = new THREE.Sprite( spriteMaterial );
     return sprite;  
-  }
+  }*/
 
   //
   //  viewer functionality

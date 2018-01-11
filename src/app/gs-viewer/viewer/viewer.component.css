@@ -7,7 +7,7 @@
   color: white;
 }
 
-#rotating{
+/*#rotating{
   width: 30px;
   height: 25px;
   font-size:15px;
@@ -65,7 +65,7 @@
   margin-top: 100px;
   background-color:transparent;
   border:0;
-}
+}*/
 
 #setting{
   width: 30px;
@@ -74,7 +74,7 @@
   right:0px; 
   text-align:center;
   position: absolute;
-  margin-top: 125px;
+  top: 10px;
   background-color:transparent;
   border:0;
 }
