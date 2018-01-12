@@ -72,7 +72,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     }
     this.dataService.visible=this.Visible;
-    //this.scenechildren=this.getscenechildren();
   }
 
   getscenechildren():Array<any>{
@@ -89,45 +88,79 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     return scenechildren;
   }
 
+  getpoints():Array<any>{
+    var attrubtepoints=[];
+    for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
+      var attributepoint:any=[];
+      attributepoint.id=this.model.getGeom().getAllPoints()[i].getID();
+      attributepoint.x=this.model.getGeom().getAllPoints()[i].getPosition()[0];
+      attributepoint.y=this.model.getGeom().getAllPoints()[i].getPosition()[1];
+      attributepoint.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
+      attrubtepoints.push(attributepoint);
+    }
+    return attrubtepoints;
+  }
+  getvertices(){
+    var points:Array<any>=this.getpoints();
+    var attributes=[];
+    console.log(this.scenechildren[0].parent);
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name==="Vertices"){
+        for(var j=0;j<this.scenechildren[i].children.length;j++){
+          for(var n=0;n<points.length;n++){
+            if(points[n].x===this.scenechildren[i].children[j].position.x&&
+              points[n].y===this.scenechildren[i].children[j].position.y&&
+              points[n].z===this.scenechildren[i].children[j].position.z){
+              var attributevertice:any=[];
+              attributevertice.id=this.scenechildren[i].children[j].name;
+              attributevertice.pointid=points[n].id;
+              attributes.push(attributevertice);
+            }
+          }
+        }
+      }
+    }
+    return attributes;
+  }
+  getverticescheck(){
+    var points:Array<any>=this.getpoints();
+    var attributes=[];
+    for(var i=0;i<this.selectObj.length;i++){
+      for(var j=0;j<this.selectObj[i].children.length;j++){
+        if(this.selectObj[i].children[j].name==="Vertices"){
+          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
+            for(var m=0;m<points.length;m++){
+              if(points[m].x===this.selectObj[i].children[j].children[n].position.x&&
+                points[m].y===this.selectObj[i].children[j].children[n].position.y&&
+                points[m].z===this.selectObj[i].children[j].children[n].position.z){
+                var attributevertice:any=[];
+                attributevertice.id=this.selectObj[i].children[j].children[n].name;
+                attributevertice.pointid=points[m].id
+                attributes.push(attributevertice);
+              }
+            }
+          }
+        }
+      }
+    }
+    return attributes;
+  }
+
   point(Visible){
   	this.Visible="Points";
   	this.attribute=[];
-    for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
-      var attributepoints:any=[];
-      attributepoints.id=this.model.getGeom().getAllPoints()[i].getID();
-      attributepoints.x=this.model.getGeom().getAllPoints()[i].getPosition()[0];
-      attributepoints.y=this.model.getGeom().getAllPoints()[i].getPosition()[1];
-      attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
-      this.attribute.push(attributepoints);
-    }
+    this.attribute=this.getpoints();
     this.dataService.visible=this.Visible;
   }
 
   pointcheck(){
     this.attribute=[];
-    for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
-      var attributepoints:any=[];
-      attributepoints.id=this.model.getGeom().getAllPoints()[i].getID();
-      attributepoints.x=this.model.getGeom().getAllPoints()[i].getPosition()[0];
-      attributepoints.y=this.model.getGeom().getAllPoints()[i].getPosition()[1];
-      attributepoints.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
-      this.attribute.push(attributepoints);
-    }
+    this.attribute=this.getpoints();
   }
 
   vertice(Visible){
   	this.Visible="Vertices";
-  	this.attribute=[];
-    this.scenechildren=this.getscenechildren();
-    for(var i=0;i<this.scenechildren.length;i++){
-      if(this.scenechildren[i].name==="Vertices"){
-        for(var j=0;j<this.scenechildren[i].children.length;j++){
-          var attributeface:any=[];
-          attributeface.id=this.scenechildren[i].children[j].name;
-          this.attribute.push(attributeface);
-        }
-      }
-    }
+  	this.attribute=this.getvertices();
     if(this.selectedVisible==true){
       this.verticecheck();
     }
@@ -136,18 +169,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   verticecheck(){
   	this.attribute=[];
-    for(var i=0;i<this.selectObj.length;i++){
-      for(var j=0;j<this.selectObj[i].children.length;j++){
-        if(this.selectObj[i].children[j].name==="Vertices"){
-          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
-            var attributevertice:any=[];
-            attributevertice.id=this.selectObj[i].children[j].children[n].name;
-            this.attribute.push(attributevertice);
-          }
-        }
-      }
-    }
-
+    this.attribute=this.getverticescheck();
   }
 
   edge(Visible){

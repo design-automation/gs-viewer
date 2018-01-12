@@ -29,14 +29,16 @@
       </table>
     </div>
     <div *ngIf="Visible === 'Vertices'">
-      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" width="40%">
+      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" width="50%">
         <tr>
-          <td  align=center >Vertices Lable</td>
+          <td  align=center width="25%">Vertices Lable</td>
+          <td  align=center width="25%">Points ID</td>
         </tr>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="40%">
+      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="50%">
         <tr>
-          <button id="numberbutton">{{datascale.id}}</button>
+          <button id="numberbutton" >{{datascale.id}}</button>
+          <td  align=center  width="50%">{{datascale.pointid}}</td>
         </tr>
       </table>
     </div>
