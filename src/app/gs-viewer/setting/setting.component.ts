@@ -60,14 +60,21 @@ export class SettingComponent implements OnInit {
     this.gridVisible = !this.gridVisible;
     var maxX=2;
     var maxY=2;
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      maxX=Math.max(maxX,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.x));
-      maxY=Math.max(maxY,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.y));
+    for(var j=0;j<this.scene.children.length;j++){
+      if(this.scene.children[j].type==="Scene"){
+        console.log(this.scene.children[j]);
+        for(var i=0;i<this.scene.children[j].children.length;i++){
+          maxX=Math.max(maxX,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.x));
+          maxY=Math.max(maxY,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.y));
+        }
+      }
     }
     var max=Math.ceil(Math.max(maxX,maxY)*1.3)*2;
     if(this.gridVisible){
       var gridhelper=new THREE.GridHelper( max, max );
       gridhelper.name="GridHelper";
+      var vector=new THREE.Vector3(0,1,0);
+      gridhelper.lookAt(vector);
       this.scene.add( gridhelper);
     }
     else{
@@ -81,10 +88,15 @@ export class SettingComponent implements OnInit {
     var maxX=2;
     var maxY=2;
     var maxZ=2;
-    for(var i=0;i<this.scene.children[1].children.length;i++){
-      maxX=Math.max(maxX,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.x));
-      maxY=Math.max(maxY,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.y));
-      maxZ=Math.max(maxZ,Math.abs(this.scene.children[1].children[i].children[0]["geometry"].boundingBox.max.z));
+    for(var j=0;j<this.scene.children.length;j++){
+      if(this.scene.children[j].type==="Scene"){
+        for(var i=0;i<this.scene.children[j].children.length;i++){
+          console.log(this.scene.children[j].children[i].children[0]);
+          maxX=Math.max(maxX,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.x));
+          maxY=Math.max(maxY,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.y));
+          maxZ=Math.max(maxZ,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.z));
+        }
+      }
     }
     var max=Math.ceil(Math.max(maxX,maxY,maxZ)*1.2);
     if(this.axisVisible){
@@ -130,21 +142,23 @@ export class SettingComponent implements OnInit {
   changeframe(){
    this.frameVisible = !this.frameVisible;
    if(this.frameVisible){
-     for(var n=0;n<this.scene.children.length;n++){
-        if(this.scene.children[n].type==="Scene"){
-         for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0]["material"].wireframe=true;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].children[0].type==="Mesh"){
+            this.scene.children[i].children[j].children[0].visible=false;
+          }
         }
-        break;
       }
     }
    }else{
-     for(var n=0;n<this.scene.children.length;n++){
-       if(this.scene.children[n].type==="Scene"){
-         for(var i=0;i<this.scene.children[n].children.length;i++){
-           this.scene.children[n].children[i].children[0]["material"].wireframe=false;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].children[0].type==="Mesh"){
+            this.scene.children[i].children[j].children[0].visible=true;
+          }
         }
-        break;
       }
     }
    }
