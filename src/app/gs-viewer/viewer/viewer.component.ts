@@ -352,7 +352,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
-<<<<<<< HEAD
+
   /*getSceneChildren() {
     var scenechildren=[];
     var children;
@@ -394,7 +394,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     return scenechildren;
   }
-=======
+
   // getSceneChildren() {
   //   var scenechildren=[];
   //   var children;
