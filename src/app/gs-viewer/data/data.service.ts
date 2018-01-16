@@ -49,6 +49,7 @@ export class DataService {
   raycaster:THREE.Raycaster;
   visible:string;
   sprite:THREE.Sprite[]=[];
+  selectedFaces:Array<any> = [];
 
 
 
@@ -268,6 +269,14 @@ export class DataService {
   getSelectingIndex(uuid):number {
    for(var i=0;i<this.selecting.length;i++){
      if(this.selecting[i].uuid==uuid){
+       return i;
+     }
+   }
+   return -1;
+ }
+  getFaceIndex(name):number {
+   for(var i=0;i<this.selectedFaces.length;i++){
+     if(this.selectedFaces[i].name==name){
        return i;
      }
    }
