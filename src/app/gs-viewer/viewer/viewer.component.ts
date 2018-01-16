@@ -34,12 +34,16 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   basicMat:THREE.MeshPhongMaterial;
   selectMat:THREE.MeshPhongMaterial;
   mousehovMat:THREE.MeshPhongMaterial;
+  scene_and_maps: {
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>} ;
   
   myElement;
   
   mySprites: THREE.Sprite[] = [];
   scenechildren:Array<any>;
-  faceBoundary:THREE.Line;
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
@@ -81,6 +85,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+    this.scenechildren=this.getSceneChildren();
     
     console.log(this.scene);
     //Material of select and basic;
@@ -108,7 +113,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     let self = this;
     function animate() {
         self.raycaster.setFromCamera(self.mouse,self.camera);
-        var intersects = self.raycaster.intersectObjects(self.scenechildren, true);
+        var intersects = self.raycaster.intersectObjects(self.scenechildren);
         for (var i = 0; i < self.scenechildren.length; i++) {
           var currObj=self.scenechildren[i];
           if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
@@ -119,7 +124,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
           }
         }
-        self.updateview();
+        if(self.dataService.selecting.length!=0){
+          self.updateview();
+      }
 
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
@@ -134,6 +141,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     if(message == "model_update"){
       this.updateModel();
     }
+    
   }
 
 
@@ -147,46 +155,43 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
+
   //
   // update mode
   // todo: optimize
   // 
   updateModel(): void{
+
     this._model = this.dataService.getGsModel(); 
+
     if( !this._model || !this.scene){
       console.warn("Model or Scene not defined");
       return;
     }
+
     try{
-      const scene_and_maps: {
-          scene: gs.IThreeScene, 
-          faces_map: Map<number, gs.ITopoPathData>, 
-          wires_map: Map<number, gs.ITopoPathData>, 
-          edges_map: Map<number, gs.ITopoPathData>} 
-        = gs.genThreeOptModelAndMaps( this._model );
-        console.log(scene_and_maps);
+      this.scene_and_maps= gs.genThreeOptModelAndMaps( this._model );
 
-      const scene_data = scene_and_maps.scene;
-      //this.scenechildren=[];
-      //const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
-
+      const scene_data = this.scene_and_maps.scene;
       //[three_mode, egde_map, tri_map] = genThreeModelandMaps()
       //[three_mode, label_data] = gs.getThreeWire(labels)
       //gs.getThreeFace(label)
       //gs.getThreeObj
 
+      
       this.clearScene();
+
       let loader = new THREE.ObjectLoader();
+
       let objectData = loader.parse( scene_data );
       for(var i =0;i< objectData.children.length;i++){
         if( objectData.children[i].children!==undefined){
           for(var j=0;j< objectData.children[i].children.length;j++){
             let chd = objectData.children[i].children[j];
-            if( chd.type==="Mesh"){
-               chd["geometry"].computeVertexNormals();
-               chd["geometry"].computeBoundingBox();
-               chd["geometry"].computeBoundingSphere();
-               this.scenechildren.push(chd);
+            if( chd.type==="Mesh"||chd.type==="LineLoop"||chd.type==="LineSegments"||chd.type==="Line"){
+               objectData.children[i].children[j]["geometry"].computeVertexNormals();
+               objectData.children[i].children[j]["geometry"].computeBoundingBox();
+               objectData.children[i].children[j]["geometry"].computeBoundingSphere();
             }
             /// 
             if( chd.children.length > 0){
@@ -200,7 +205,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
       this.scene.add(objectData);
-      this.createNewFaceBoundary();
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -233,38 +237,36 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   /// selects object from three.js scene
   onDocumentMouseDown(event){
     event.preventDefault();
-    var selectedObj;
-    var intersects=this.getInteresects();
+    var selectedObj, intersects;
     this.raycaster.setFromCamera(this.mouse,this.camera);
-    intersects = this.raycaster.intersectObjects(this.scenechildren, true);
+    intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
-      if(this.dataService.visible=="Faces") {
-        var index=this.dataService.getFaceIndex(intersects[ 0 ].faceIndex);
-        if(index>=0) {
-          this.scene.remove(this.dataService.selectedFaces[index]);
-          this.dataService.selectedFaces.splice(index,1);
-        } else {
-          this.updateFaceBoundary(intersects[0]);
-          this.faceBoundary.name=intersects[0].faceIndex;
-          this.faceBoundary.material=this.selectedMat;
-          this.dataService.selectedFaces.push(this.faceBoundary);
-          this.createNewFaceBoundary();
-        }
+      selectedObj=intersects[ 0 ].object;
+      console.log(intersects[ 0 ].faceIndex);
+      const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
+      console.log(path);
+      const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
+      const label: string = face.getLabel();
+      console.log(label);
+      const label_xyz: gs.XYZ = face.getLabelCentroid();
+      console.log(label_xyz);
+      const verts: gs.IVertex[] = face.getVertices();
+      const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+      // create threejs geom here
+      console.log(verts_xyz);
+
+      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
+      if(index<0) {
+        selectedObj.material=this.selectMat;
+        this.dataService.pushselecting(selectedObj);
       } else {
-        selectedObj=intersects[ 0 ].object;
-        var index=this.dataService.getSelectingIndex(selectedObj.uuid);
-        if(index<0) {
-          selectedObj.material=this.selectMat;
-          this.dataService.pushselecting(selectedObj);
-        } else {
-          selectedObj.material=this.basicMat;
-          this.dataService.spliceselecting(index,1);
-          for(var i=0;i<this.dataService.sprite.length;i++){
-            this.dataService.sprite[i].visible=false;
-          }
-          var sprite=[];
-          this.dataService.pushsprite(sprite);
+        selectedObj.material=this.basicMat;
+        this.dataService.spliceselecting(index,1);
+        for(var i=0;i<this.dataService.sprite.length;i++){
+        this.dataService.sprite[i].visible=false;
         }
+        var sprite=[];
+        this.dataService.pushsprite(sprite);
       }
     } else {
       for(var i=0;i<this.dataService.selecting.length;i++){
@@ -281,46 +283,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     //this.updateview();
   }
 
-  selectedMat:any=new THREE.LineBasicMaterial( { color: 0x0000ff, linewidth: 2, transparent: true } );
-  mouseHovMat:any=new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2, transparent: true } );
-  createNewFaceBoundary() {
-    var geometry = new THREE.BufferGeometry();
-    geometry.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array( 4 * 3 ), 3 ) );
-    var material = this.mouseHovMat;
-    this.faceBoundary=new THREE.Line( geometry, material );
-    this.scene.add( this.faceBoundary );
-  }
-
-  updateFaceBoundary(obj) {
-    var face=obj.face;
-    var linePosition = this.faceBoundary.geometry.attributes.position;
-    var meshPosition = obj.object.geometry.attributes.position;
-    linePosition.copyAt( 0, meshPosition, face.a );
-    linePosition.copyAt( 1, meshPosition, face.b );
-    linePosition.copyAt( 2, meshPosition, face.c );
-    linePosition.copyAt( 3, meshPosition, face.a );
-    obj.object.updateMatrix();
-    this.faceBoundary.geometry.applyMatrix( obj.object.matrix );
-    this.faceBoundary.visible = true;
-  }
-
-  getInteresects() {
-    var intersects=[];
-    this.raycaster.setFromCamera(this.mouse,this.camera);
-    var objsArray = this.raycaster.intersectObjects(this.scenechildren[0], true);
-    for(var i=0;i<objsArray.length;i++) {
-      intersects[i]
-    }
-    return intersects;
-  }
-
   updateview(){
     this.Visible=this.dataService.visible;
-    var intersects = this.raycaster.intersectObjects(this.scenechildren, true);
+    var intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
-      if(this.dataService.visible=="Faces") {
-        this.updateFaceBoundary(intersects[0]);
-      } 
       if(this.dataService.selecting.length!=0){
         for(var i=0;i<this.mySprites.length;i++){
           if(this.mySprites[i].parent.name===this.Visible){
@@ -351,7 +317,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       spr.visible = true;
     }
   }
-
 
   /*getSceneChildren() {
     var scenechildren=[];
@@ -394,29 +359,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     return scenechildren;
   }
-
-  // getSceneChildren() {
-  //   var scenechildren=[];
-  //   var children;
-  //   for (var i = 0; i<this.scene.children.length; i++) {
-  //     if(this.scene.children[i].name=="Scene") {
-  //       children=this.scene.children[i].children;
-  //       break;
-  //     }
-  //     if(i==this.scene.children.length-1) {
-  //       return [];
-  //     }
-  //   }
-  //   for(var i=0;i<children.length;i++){
-  //     for(var j=0;j<children[i].children.length;j++){
-  //       if(children[i].children[j].type==="Mesh"){
-  //         scenechildren.push(children[i].children[j]);
-  //       }
-  //     }
-  //   }
-  //   return scenechildren;
-  // }
-
 
 
   zoomfit(){
@@ -474,6 +416,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
     }*/
   }
+
+
   /*render():void {
     let self = this;
     (function render(){
