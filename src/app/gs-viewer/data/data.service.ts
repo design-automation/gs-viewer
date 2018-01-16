@@ -48,6 +48,7 @@ export class DataService {
   mouse:THREE.Vector2;
   raycaster:THREE.Raycaster;
   visible:string;
+  sprite:THREE.Sprite[]=[];
 
 
 
@@ -73,7 +74,7 @@ export class DataService {
     // intializations
     // this only runs once
 
-    let default_width: number = 600, default_height: number = 600;
+    let default_width: number = 1510, default_height: number = 720;
 
     // scene
     let scene: THREE.Scene = new THREE.Scene();
@@ -88,7 +89,8 @@ export class DataService {
     // camera settings
     let aspect_ratio: number = this._width/this._height
     let camera = new THREE.PerspectiveCamera( 50, aspect_ratio, 0.01, 1000 );
-    camera.position.z = 10;
+    camera.position.y=10;
+    camera.up.set(0,0,1);
     camera.lookAt( scene.position );
     camera.updateProjectionMatrix();
 
@@ -101,6 +103,9 @@ export class DataService {
     let directional_light :THREE.DirectionalLight = new THREE.DirectionalLight( 0xffffff,0.5);
     directional_light.castShadow = false; 
     directional_light.position.copy( camera.position );
+    controls.addEventListener('change',function(){
+      directional_light.position.copy(camera.position);
+    });
     directional_light.target.position.set( 0, 0, 0 );
     
     scene.add( directional_light );
@@ -267,5 +272,12 @@ export class DataService {
      }
    }
    return -1;
+ }
+ addsprite(sprite){
+   this.sprite.push(sprite);
+   this.sendMessage();
+ }
+ pushsprite(sprite){
+   this.sprite=sprite;
  }
 }
