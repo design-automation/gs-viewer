@@ -115,7 +115,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       self.renderer.render( self.scene, self.camera );
     };
     animate();
-
+    this.zoomfit();
   }
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
@@ -124,6 +124,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     if(message == "model_update"){
       this.updateModel();
     }
+    
   }
 
 
@@ -153,6 +154,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
     try{
       const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
+
+      //[three_mode, egde_map, tri_map] = genThreeModelandMaps()
+      //[three_mode, label_data] = gs.getThreeWire(labels)
+      //gs.getThreeFace(label)
+      //gs.getThreeObj
+
       
       this.clearScene();
 
@@ -163,7 +170,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         if( objectData.children[i].children!==undefined){
           for(var j=0;j< objectData.children[i].children.length;j++){
             let chd = objectData.children[i].children[j];
-            if( chd.type==="Mesh"){
+            if( chd.type==="Mesh"||chd.type==="LineLoop"||chd.type==="LineSegments"||chd.type==="Line"){
                objectData.children[i].children[j]["geometry"].computeVertexNormals();
                objectData.children[i].children[j]["geometry"].computeBoundingBox();
                objectData.children[i].children[j]["geometry"].computeBoundingSphere();
@@ -211,11 +218,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   /// selects object from three.js scene
   onDocumentMouseDown(event){
+    event.preventDefault();
     var selectedObj, intersects;
     this.raycaster.setFromCamera(this.mouse,this.camera);
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
+      console.log(intersects);
       var index=this.dataService.getSelectingIndex(selectedObj.uuid);
       if(index<0) {
         selectedObj.material=this.selectMat;
@@ -223,14 +232,23 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       } else {
         selectedObj.material=this.basicMat;
         this.dataService.spliceselecting(index,1);
+        for(var i=0;i<this.dataService.sprite.length;i++){
+        this.dataService.sprite[i].visible=false;
+        }
+        var sprite=[];
+        this.dataService.pushsprite(sprite);
       }
     } else {
       for(var i=0;i<this.dataService.selecting.length;i++){
         this.dataService.selecting[i].material=this.basicMat;
       }
+      for(var i=0;i<this.dataService.sprite.length;i++){
+        this.dataService.sprite[i].visible=false;
+      }
+      var sprite=[];
+      this.dataService.pushsprite(sprite);
       var select=[];
       this.dataService.addselecting(select);
-
     }
     //this.updateview();
   }
@@ -242,13 +260,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(this.dataService.selecting.length!=0){
         for(var i=0;i<this.mySprites.length;i++){
           if(this.mySprites[i].parent.name===this.Visible){
+            let spr: THREE.Sprite =this.mySprites[i];
             if(Math.abs(intersects[0].point.x-this.mySprites[i].position.x)<0.05
               &&Math.abs(intersects[0].point.y-this.mySprites[i].position.y)<0.05
-              &&Math.abs(intersects[0].point.z-this.mySprites[i].position.z)<0.05){ 
-                let spr: THREE.Sprite =this.mySprites[i];
+              &&Math.abs(intersects[0].point.z-this.mySprites[i].position.z)<0.05){
+              //let spr: THREE.Sprite =this.mySprites[i];
               spr.visible = true; 
             }else{
-              let spr: THREE.Sprite =this.mySprites[i];
+              //let spr: THREE.Sprite =this.mySprites[i];
               spr.visible = false; 
             }
           }
@@ -263,6 +282,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
     }*/
+    for(var i=0;i<this.dataService.sprite.length;i++){
+      let spr: THREE.Sprite =this.dataService.sprite[i];
+      spr.visible = true;
+    }
   }
 
   getSceneChildren() {
@@ -279,12 +302,68 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     for(var i=0;i<children.length;i++){
       for(var j=0;j<children[i].children.length;j++){
-        if(children[i].children[j].type==="Mesh"){
+        if(children[i].children[j].type==="Mesh"||children[i].children[j].type==="Line"){
           scenechildren.push(children[i].children[j]);
         }
       }
     }
     return scenechildren;
+  }
+
+  zoomfit(){
+    //if(this.selecting.length===0){
+      var obj=new THREE.Object3D();
+      obj=this.scene;
+      var boxHelper = new THREE.BoxHelper(obj);
+      boxHelper["geometry"].computeBoundingBox();
+      boxHelper["geometry"].computeBoundingSphere();
+      var boundingSphere=boxHelper["geometry"].boundingSphere;
+      var center = boundingSphere.center;
+      var radius = boundingSphere.radius;
+      var fov=this.camera.fov * ( Math.PI / 180 );
+      var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
+      vec_centre_to_pos.subVectors(this.camera.position, center);
+      var tmp_vec=new THREE.Vector3( center.x+Math.abs( radius / Math.sin( fov / 2 )),
+                                     center.y+Math.abs( radius / Math.sin( fov / 2 ) ),
+                                     center.z+Math.abs( radius / Math.sin( fov / 2 )));
+      vec_centre_to_pos.setLength(tmp_vec.length());
+      var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
+      perspectiveNewPos.addVectors(center, vec_centre_to_pos);
+      var newLookAt = new THREE.Vector3(center.x,center.y,center.z)
+      this.camera.position.copy(perspectiveNewPos);
+      this.camera.lookAt(newLookAt);
+      this.camera.updateProjectionMatrix();
+      this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
+    /*}else{
+      event.stopPropagation();
+      var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
+      var radius=0;
+      for(var i=0;i<this.selecting.length;i++){
+        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
+        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
+        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
+        radius=Math.max(this.selecting[i].geometry.boundingSphere.radius,radius);
+      }
+      console.log(this.selecting);
+      centerX=axisX/this.scene.children[1].children.length;
+      centerY=axisY/this.scene.children[1].children.length;
+      centerY=axisY/this.scene.children[1].children.length;
+      var center = new THREE.Vector3(centerX,centerY,centerZ);
+      var fov=this.camera.fov * ( Math.PI / 180 );
+      var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
+      vec_centre_to_pos.subVectors(this.camera.position, center);
+      var tmp_vec=new THREE.Vector3(center.x+Math.abs( radius / Math.sin( fov / 2 )),
+                                    center.y+Math.abs( radius / Math.sin( fov / 2 ) ),
+                                    center.z+Math.abs( radius / Math.sin( fov / 2 )));
+      vec_centre_to_pos.setLength(tmp_vec.length());
+      var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
+      perspectiveNewPos.addVectors(center, vec_centre_to_pos);
+      var newLookAt = new THREE.Vector3(center.x,center.y,center.z)
+      this.camera.position.copy(perspectiveNewPos);
+      this.camera.lookAt(newLookAt);
+      this.camera.updateProjectionMatrix();
+      this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
+    }*/
   }
 
 
