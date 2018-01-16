@@ -82,10 +82,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.raycaster = new THREE.Raycaster();
     this.scenechildren=this.getSceneChildren();
     
+    console.log(this.scene);
     //Material of select and basic;
-    for(var i=0;i<this.scene.children.length;i++){
+    /*for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
         this.basicMat=this.scene.children[i].children[0].children[0]["material"];
+        break;
+      }
+    }*/
+    ///One Mesh
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].type=="Mesh"){
+            this.basicMat=this.scene.children[i].children[j]["material"];
+          }
+        }
         break;
       }
     }
@@ -153,8 +165,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
 
     try{
-      const scene_data: gs.IThreeScene = gs.genThreeModel( this._model );
+      const scene_and_maps: {
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>} 
+        = gs.genThreeOptModelAndMaps( this._model );
+        console.log(scene_and_maps);
 
+      const scene_data = scene_and_maps.scene;
       //[three_mode, egde_map, tri_map] = genThreeModelandMaps()
       //[three_mode, label_data] = gs.getThreeWire(labels)
       //gs.getThreeFace(label)
@@ -288,7 +307,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
-  getSceneChildren() {
+  /*getSceneChildren() {
     var scenechildren=[];
     var children;
     for (var i = 0; i<this.scene.children.length; i++) {
@@ -302,13 +321,34 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     for(var i=0;i<children.length;i++){
       for(var j=0;j<children[i].children.length;j++){
-        if(children[i].children[j].type==="Mesh"||children[i].children[j].type==="Line"){
+        if(children[i].children[j].type==="Mesh"||children[i].children[j].type==="LineSegments"||children[i].children[j].type==="LineLoop"){
           scenechildren.push(children[i].children[j]);
         }
       }
     }
     return scenechildren;
+  }*/
+  //One Mesh
+  getSceneChildren() {
+    var scenechildren=[];
+    var children;
+    for (var i = 0; i<this.scene.children.length; i++) {
+      if(this.scene.children[i].name=="Scene") {
+        children=this.scene.children[i].children;
+        break;
+      }
+      if(i==this.scene.children.length-1) {
+        return [];
+      }
+    }
+    for(var i=0;i<children.length;i++){
+        if(children[i].type==="Mesh"||children[i].type==="LineSegments"||children[i].type==="LineLoop"){
+          scenechildren.push(children[i]);
+        }
+      }
+    return scenechildren;
   }
+
 
   zoomfit(){
     //if(this.selecting.length===0){
