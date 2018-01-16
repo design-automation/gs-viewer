@@ -58,3 +58,8 @@
 .selectid{
   background-color:#66CCFF;
 }
+#select{
+  position: relative;
+  float:right;
+  margin-right: 30px;
+}

@@ -23,6 +23,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   num:Array<any>;
   selectObj:Array<any>;
   scenechildren:Array<any>;
+  ID:string;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -55,21 +56,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     }
     if(this.selectedVisible==true){
-      if(this.Visible==="Objs"){
-        this.objectcheck();
-      }
-      if(this.Visible==="Faces"){
-        this.facecheck();
-      }
-      if(this.Visible==="Wires"){
-        this.wirecheck();
-      }
-      if(this.Visible==="Edges"){
-        this.edgecheck();
-      }
-      if(this.Visible==="Vertices"){
-        this.verticecheck();
-      }
+      if(this.Visible==="Objs") this.objectcheck();
+      if(this.Visible==="Faces") this.facecheck();
+      if(this.Visible==="Wires") this.wirecheck();
+      if(this.Visible==="Edges") this.edgecheck();
+      if(this.Visible==="Vertices") this.verticecheck();
     }
     this.dataService.visible=this.Visible;
   }
@@ -87,6 +78,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     }
     return scenechildren;
   }
+  clearsprite(){
+    this.dataService.visible=this.Visible;
+    for(var i=0;i<this.dataService.sprite.length;i++){
+      this.dataService.sprite[i].visible=false;
+    }
+    var sprite=[];
+    this.dataService.pushsprite(sprite);
+  }
 
   getpoints():Array<any>{
     var attrubtepoints=[];
@@ -98,12 +97,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       attributepoint.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
       attrubtepoints.push(attributepoint);
     }
+
     return attrubtepoints;
+
   }
   getvertices(){
     var points:Array<any>=this.getpoints();
     var attributes=[];
-    console.log(this.scenechildren[0].parent);
     for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name==="Vertices"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -151,6 +151,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   	this.attribute=[];
     this.attribute=this.getpoints();
     this.dataService.visible=this.Visible;
+    this.clearsprite();
   }
 
   pointcheck(){
@@ -165,6 +166,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.verticecheck();
     }
     this.dataService.visible=this.Visible;
+    this.clearsprite();
   }
 
   verticecheck(){
@@ -189,6 +191,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.edgecheck();
     }
     this.dataService.visible=this.Visible;
+    this.clearsprite();
   }
 
   edgecheck(){
@@ -224,6 +227,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.wirecheck();
     }
     this.dataService.visible=this.Visible;
+    this.clearsprite();
   }
 
   wirecheck(){
@@ -257,7 +261,23 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.facecheck();
     }
-    this.dataService.visible=this.Visible;
+    this.clearsprite();
+  }
+
+  clicktoshow(id){
+    this.ID=id;
+    for(var i=0;i<this.scenechildren.length;i++){
+      if(this.scenechildren[i].name===this.Visible){
+        if(this.selectObj.length!==0){
+          for(var j=0;j<this.scenechildren[i].children.length;j++){
+            if(this.scenechildren[i].children[j].name===id){
+              this.scenechildren[i].children[j].visible=true;
+              this.dataService.addsprite(this.scenechildren[i].children[j]);
+            }
+          }
+        }
+      }
+    }
   }
   
   facecheck(){
@@ -292,6 +312,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.objectcheck();
     }
     this.dataService.visible=this.Visible;
+    this.clearsprite();
   }
 
   objectcheck(){
@@ -312,46 +333,20 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   changeselected(){
   	this.selectedVisible = !this.selectedVisible;
     if(this.selectedVisible){
-      if(this.Visible==="Points"){
-      	this.pointcheck();
-      }
-      if(this.Visible==="Vertices"){
-      	this.verticecheck();
-      }
-      if(this.Visible==="Edges"){
-        this.edgecheck();
-      }
-      if(this.Visible==="Wires"){
-        this.wirecheck();
-      }
-      if(this.Visible==="Faces"){
-      	this.facecheck();
-      }
-      if(this.Visible==="Objs"){
-      	this.objectcheck();
-      }
-      
+      if(this.Visible==="Points") this.pointcheck();
+      if(this.Visible==="Vertices") this.verticecheck();
+      if(this.Visible==="Edges") this.edgecheck();
+      if(this.Visible==="Wires") this.wirecheck();
+      if(this.Visible==="Faces") this.facecheck();
+      if(this.Visible==="Objs") this.objectcheck();
     }
     else{
-      if(this.Visible==="Points"){
-      	this.point(this.Visible);
-      }
-      if(this.Visible==="Vertices"){
-      	this.vertice(this.Visible);
-      }
-      if(this.Visible==="Edges"){
-      	this.edge(this.Visible);
-      }
-      if(this.Visible==="Wires"){
-      	this.wire(this.Visible);
-      }
-      if(this.Visible==="Faces"){
-      	this.face(this.Visible);
-      }
-      if(this.Visible==="Objs"){
-      	this.object(this.Visible);
-      }
-     
+      if(this.Visible==="Points") this.point(this.Visible);
+      if(this.Visible==="Vertices") this.vertice(this.Visible);
+      if(this.Visible==="Edges") this.edge(this.Visible);
+      if(this.Visible==="Wires") this.wire(this.Visible);
+      if(this.Visible==="Faces") this.face(this.Visible);
+      if(this.Visible==="Objs") this.object(this.Visible);
     }
   }
 
