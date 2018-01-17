@@ -44,7 +44,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   
   mySprites: THREE.Sprite[] = [];
   scenechildren:Array<any>;
-
+  textlabels: Array<any>=[];
+  starsGeometry:THREE.Geometry = new THREE.Geometry();
+  
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
     this.myElement = myElement;
@@ -78,6 +80,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
     this.width = width;
     this.height = height;
+
+    //initializing for text labels
+    let starsMaterial:THREE.PointsMaterial = new THREE.PointsMaterial( { color: 0x888888 } );
+    let starField:THREE.Points = new THREE.Points( this.starsGeometry, starsMaterial );
+    this.scene.add( starField );
 
     this.updateModel();
 
@@ -123,6 +130,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               currObj.material=self.basicMat;
             }
           }
+        }
+        for(var i=0; i<self.textlabels.length; i++) {
+          self.textlabels[i].updatePosition();
         }
         if(self.dataService.selecting.length!=0){
           self.updateview();
@@ -242,14 +252,18 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
-      console.log(intersects[ 0 ].faceIndex);
+      console.log("ALL;");
+      console.log(intersects[ 0 ]);
       const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
       console.log(path);
       const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
       const label: string = face.getLabel();
       console.log(label);
       const label_xyz: gs.XYZ = face.getLabelCentroid();
+      console.log(face);
       console.log(label_xyz);
+      this.addTextLabel(label,label_xyz, intersects[ 0 ].faceIndex);
+      
       const verts: gs.IVertex[] = face.getVertices();
       const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
       // create threejs geom here
@@ -317,6 +331,90 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       spr.visible = true;
     }
   }
+  
+  addTextLabel(label, label_xyz, id) {
+    let container = this.myElement.nativeElement.children.namedItem("container");
+    let star = this.creatStarGeometry(label_xyz);
+    let textLabel=this.createTextLabel(label, star, id);
+    this.starsGeometry.vertices.push( star );
+    this.textlabels.push(textLabel);
+    container.appendChild(textLabel.element);
+  }
+
+  removeTextLabel(id) {
+    let i=0;
+    for(i=0; i<this.textlabels.length; i++) {
+      if(this.textlabels[i].id==id) {
+        let container = this.myElement.nativeElement.children.namedItem("container");
+        container.removeChild(this.textlabels[i].element);
+        let index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
+        if(index !== -1) {
+          this.starsGeometry.vertices.splice(index, 1);
+        }
+        break;
+      }
+    }
+    if(i<this.textlabels.length) {
+      this.textlabels.splice(i, 1);
+    }
+  }
+
+  creatStarGeometry(label_xyz) {
+    let star = new THREE.Vector3();
+    star.x = label_xyz[0];
+    star.y = label_xyz[1];
+    star.z = label_xyz[2];
+    return star;
+  }
+
+  createTextLabel(label, star, id) {
+    let div = this.createLabelDiv();
+    var self=this;
+    let textLabel= {
+      id: id,
+      element: div,
+      parent: false,
+      position: new THREE.Vector3(0,0,0),
+      setHTML: function(html) {
+        this.element.innerHTML = html;
+      },
+      setParent: function(threejsobj) {
+        this.parent = threejsobj;
+      },
+      updatePosition: function() {
+        if(parent) {
+          this.position.copy(this.parent);
+        }
+        
+        var coords2d = this.get2DCoords(this.position, self.camera);
+        this.element.style.left = coords2d.x + 'px';
+        this.element.style.top = coords2d.y + 'px';
+      },
+      get2DCoords: function(position, camera) {
+        var vector = position.project(camera);
+        vector.x = (vector.x + 1)/2 * self.width;
+        vector.y = -(vector.y - 1)/2 * self.height;
+        return vector;
+      }
+    };
+    textLabel.setHTML(label);
+    textLabel.setParent(star);
+    return textLabel;
+  }
+
+  createLabelDiv() {
+    var div=document.createElement("div");
+    div.style.color= '#00f';
+    div.style.fontFamily= '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
+    div.style.margin='-5px 0 0 15px';
+    div.style.pointerEvents='none';
+    div.style.position = 'absolute';
+    div.style.width = '100';
+    div.style.height = '100';
+    div.style.top = '-1000';
+    div.style.left = '-1000';
+    return div;
+   }
 
   /*getSceneChildren() {
     var scenechildren=[];
