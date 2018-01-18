@@ -44,6 +44,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   
   mySprites: THREE.Sprite[] = [];
   scenechildren:Array<any>;
+  textlabels: Array<any>=[];
+  starsGeometry:THREE.Geometry = new THREE.Geometry();
+  scenechild:THREE.Scene;
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
@@ -85,9 +88,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
-    this.scenechildren=this.getSceneChildren();
-    
-    console.log(this.scene);
+    this.scenechildren=this.dataService.getscenechild();
+    this.scenechild=new THREE.Scene();
+    //console.log(this.scene);
     //Material of select and basic;
     /*for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
@@ -123,6 +126,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               currObj.material=self.basicMat;
             }
           }
+        }
+        for(var i=0; i<self.textlabels.length; i++) {
+          self.textlabels[i].updatePosition();
         }
         if(self.dataService.selecting.length!=0){
           self.updateview();
@@ -170,7 +176,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
 
     try{
-      this.scene_and_maps= gs.genThreeOptModelAndMaps( this._model );
+      //this.scene_and_maps= gs.genThreeOptModelAndMaps( this._model );
+      this.scene_and_maps= this.dataService.updateModel();
 
       const scene_data = this.scene_and_maps.scene;
       //[three_mode, egde_map, tri_map] = genThreeModelandMaps()
@@ -184,7 +191,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       let loader = new THREE.ObjectLoader();
 
       let objectData = loader.parse( scene_data );
-      for(var i =0;i< objectData.children.length;i++){
+      /*for(var i =0;i< objectData.children.length;i++){
         if( objectData.children[i].children!==undefined){
           for(var j=0;j< objectData.children[i].children.length;j++){
             let chd = objectData.children[i].children[j];
@@ -203,7 +210,18 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
           }
         }
-      }
+      }*/
+      //One Mesh
+        if( objectData.children!==undefined){
+          for(var i=0;i< objectData.children.length;i++){
+            let chd = objectData.children[i];
+            if( chd.type==="Mesh"||chd.type==="LineLoop"||chd.type==="LineSegments"||chd.type==="Line"){
+              chd["geometry"].computeVertexNormals();
+              chd["geometry"].computeBoundingBox();
+              chd["geometry"].computeBoundingSphere();
+            }
+          }
+        }
       this.scene.add(objectData);
     }
     catch(ex){
@@ -238,35 +256,55 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   onDocumentMouseDown(event){
     event.preventDefault();
     var selectedObj, intersects;
+    var select:boolean=false;
+    this.scenechildren=this.dataService.getscenechild();
+    console.log(this.scenechild);
     this.raycaster.setFromCamera(this.mouse,this.camera);
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
-      console.log(intersects[ 0 ].faceIndex);
       const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
-      console.log(path);
       const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
       const label: string = face.getLabel();
-      console.log(label);
       const label_xyz: gs.XYZ = face.getLabelCentroid();
-      console.log(label_xyz);
       const verts: gs.IVertex[] = face.getVertices();
       const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
-      // create threejs geom here
-      console.log(verts_xyz);
-
-      var index=this.dataService.getSelectingIndex(selectedObj.uuid);
-      if(index<0) {
-        selectedObj.material=this.selectMat;
-        this.dataService.pushselecting(selectedObj);
-      } else {
-        selectedObj.material=this.basicMat;
-        this.dataService.spliceselecting(index,1);
-        for(var i=0;i<this.dataService.sprite.length;i++){
-        this.dataService.sprite[i].visible=false;
+      if(this.textlabels.length===0) {
+        var geometry=new THREE.Geometry();
+        for(var i=0;i<verts_xyz.length;i++){
+          geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
         }
-        var sprite=[];
-        this.dataService.pushsprite(sprite);
+        geometry.faces.push(new THREE.Face3(0,2,1));
+        geometry.faces.push(new THREE.Face3(0,3,2));
+        var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x000000} ));
+        mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+        this.scene.add(mesh);
+        this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+      }else{
+        for(var j=0;j<this.scene.children.length;j++){
+          if(Math.floor(intersects[ 0 ].faceIndex/2)===this.scene.children[j].userData.id){
+            select=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
+        for(var j=0;j<this.textlabels.length;j++){
+          if(Math.floor(intersects[ 0 ].faceIndex/2)===this.textlabels[j]["id"]){
+            select=true;
+            this.removeTextLabel(this.textlabels[j]["id"]);
+          }
+        }
+        if(select==false){
+          var geometry=new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          geometry.faces.push(new THREE.Face3(0,2,1));
+          geometry.faces.push(new THREE.Face3(0,3,2));
+          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x000000} ));
+          mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+          this.scene.add(mesh);
+          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+        }
       }
     } else {
       for(var i=0;i<this.dataService.selecting.length;i++){
@@ -275,10 +313,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       for(var i=0;i<this.dataService.sprite.length;i++){
         this.dataService.sprite[i].visible=false;
       }
+      for(var i=0;i<this.scene.children.length;i++){
+        if(this.scene.children[i].type=="Mesh"){
+          this.scene.remove(this.scene.children[i]);
+          i=i-1;
+        }
+      }
+      for(var i=0;i<this.textlabels.length;i++){
+        this.removeTextLabel(this.textlabels[i]["id"]);
+        i=i-1;
+      }
       var sprite=[];
       this.dataService.pushsprite(sprite);
-      var select=[];
-      this.dataService.addselecting(select);
+      //var select=[];
+      //this.dataService.addselecting(select);
     }
     //this.updateview();
   }
@@ -318,6 +366,93 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
+  //To add text labels just provide label text, label position[x,y,z] and its id
+  addTextLabel(label, label_xyz, id) {
+    let container = this.myElement.nativeElement.children.namedItem("container");
+    let star = this.creatStarGeometry(label_xyz);
+    let textLabel=this.createTextLabel(label, star, id);
+    this.starsGeometry.vertices.push( star );
+    this.textlabels.push(textLabel);
+    container.appendChild(textLabel.element);
+  }
+
+  //To remove text labels just provide its id
+  removeTextLabel(id) {
+    let i=0;
+    for(i=0; i<this.textlabels.length; i++) {
+      if(this.textlabels[i].id==id) {
+        let container = this.myElement.nativeElement.children.namedItem("container");
+        container.removeChild(this.textlabels[i].element);
+        let index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
+        if(index !== -1) {
+          this.starsGeometry.vertices.splice(index, 1);
+        }
+        break;
+      }
+    }
+    if(i<this.textlabels.length) {
+      this.textlabels.splice(i, 1);
+    }
+  }
+
+  creatStarGeometry(label_xyz) {
+    let star = new THREE.Vector3();
+    star.x = label_xyz[0];
+    star.y = label_xyz[1];
+    star.z = label_xyz[2];
+    return star;
+  }
+
+  createTextLabel(label, star, id) {
+    let div = this.createLabelDiv();
+    var self=this;
+    let textLabel= {
+      id: id,
+      element: div,
+      parent: false,
+      position: new THREE.Vector3(0,0,0),
+      setHTML: function(html) {
+        this.element.innerHTML = html;
+      },
+      setParent: function(threejsobj) {
+        this.parent = threejsobj;
+      },
+      updatePosition: function() {
+        if(parent) {
+          this.position.copy(this.parent);
+        }
+        
+        var coords2d = this.get2DCoords(this.position, self.camera);
+        this.element.style.left = coords2d.x + 'px';
+        this.element.style.top = coords2d.y + 'px';
+      },
+      get2DCoords: function(position, camera) {
+        var vector = position.project(camera);
+        vector.x = (vector.x + 1)/2 * self.width;
+        vector.y = -(vector.y - 1)/2 * self.height;
+        return vector;
+      }
+    };
+    textLabel.setHTML(label);
+    textLabel.setParent(star);
+    return textLabel;
+  }
+
+  createLabelDiv() {
+    var div=document.createElement("div");
+    div.style.color= '#00f';
+    div.style.fontFamily= '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
+    div.style.margin='-5px 0 0 15px';
+    div.style.pointerEvents='none';
+    div.style.position = 'absolute';
+    div.style.width = '100';
+    div.style.height = '100';
+    div.style.top = '-1000';
+    div.style.left = '-1000';
+    return div;
+   }
+
+
   /*getSceneChildren() {
     var scenechildren=[];
     var children;
@@ -340,7 +475,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     return scenechildren;
   }*/
   //One Mesh
-  getSceneChildren() {
+  /*getSceneChildren() {
     var scenechildren=[];
     var children;
     for (var i = 0; i<this.scene.children.length; i++) {
@@ -358,13 +493,17 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
     return scenechildren;
-  }
+  }*/
 
 
   zoomfit(){
     //if(this.selecting.length===0){
-      var obj=new THREE.Object3D();
-      obj=this.scene;
+      const obj=new THREE.Object3D();
+      for(var i=0;i<this.scene.children.length;i++){
+        if(this.scene.children[i].name!=="GridHelper"){
+          obj.children.push(this.scene.children[i]);
+        }
+      }
       var boxHelper = new THREE.BoxHelper(obj);
       boxHelper["geometry"].computeBoundingBox();
       boxHelper["geometry"].computeBoundingSphere();
