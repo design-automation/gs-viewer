@@ -34,6 +34,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   basicMat:THREE.MeshPhongMaterial;
   selectMat:THREE.MeshPhongMaterial;
   mousehovMat:THREE.MeshPhongMaterial;
+  basiclineMat:THREE.LineBasicMaterial;
+  selectlineMat:THREE.LineBasicMaterial;
+  mousehovlineMat:THREE.LineBasicMaterial;
+  basicwireMat:THREE.LineBasicMaterial;
+  selectwireMat:THREE.LineBasicMaterial;
+  mousehovwireMat:THREE.LineBasicMaterial;
   scene_and_maps: {
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
@@ -47,6 +53,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   textlabels: Array<any>=[];
   starsGeometry:THREE.Geometry = new THREE.Geometry();
   scenechild:THREE.Scene;
+  mDownTime: number;
+  mUpTime: number;
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
@@ -83,6 +91,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.height = height;
 
     this.updateModel();
+    console.log(this.scene);
 
     // todo: check and refactor what is required?
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
@@ -90,6 +99,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.raycaster = new THREE.Raycaster();
     this.scenechildren=this.dataService.getscenechild();
     this.scenechild=new THREE.Scene();
+
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        if(this.scene.children[i].children[0].type==="Mesh"){
+          this.scene.children[i].children[0]["material"].opacity=this.dataService.opacity;
+        }
+      }
+    }
     //console.log(this.scene);
     //Material of select and basic;
     /*for(var i=0;i<this.scene.children.length;i++){
@@ -102,38 +119,68 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
         for(var j=0;j<this.scene.children[i].children.length;j++){
-          if(this.scene.children[i].children[j].type=="Mesh"){
+          if(this.scene.children[i].children[j].name=="All faces"){
             this.basicMat=this.scene.children[i].children[j]["material"];
+            this.scene.children[i].children[j]["material"].blending=1;
           }
         }
         break;
       }
     }
-    this.selectMat=new THREE.MeshPhongMaterial( { visible:false} );
-    this.mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa, blending:0, flatShading:true, side:THREE.DoubleSide} );
+    //this.selectMat=new THREE.MeshPhongMaterial( { visible:false} );
+    this.mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa,flatShading:true, side:THREE.DoubleSide} );
 
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].name=="All edges"){
+            this.basiclineMat=this.scene.children[i].children[j]["material"];
+          }
+        }
+        break;
+      }
+    }
+    //this.selectlineMat=new THREE.LineBasicMaterial( {  color:0x668cff,side:THREE.DoubleSide} );
+    this.mousehovlineMat=new THREE.LineBasicMaterial( { color: 0xFFaaaa, flatShading:true, side:THREE.DoubleSide} );
+
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].name=="All wires"){
+            this.basicwireMat=this.scene.children[i].children[j]["material"];
+          }
+        }
+        break;
+      }
+    }
+    //this.selectlineMat=new THREE.LineBasicMaterial( {  color:0x668cff,side:THREE.DoubleSide} );
+    this.mousehovwireMat=new THREE.LineBasicMaterial( { color: 0xFFaaaa,flatShading:true, side:THREE.DoubleSide} );
     // render loop
     let self = this;
     function animate() {
-        self.raycaster.setFromCamera(self.mouse,self.camera);
-        var intersects = self.raycaster.intersectObjects(self.scenechildren);
-        for (var i = 0; i < self.scenechildren.length; i++) {
-          var currObj=self.scenechildren[i];
-          if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
-            if ( intersects.length > 0 &&  intersects[ 0 ].object.uuid==currObj.uuid) {
-              currObj.material=self.mousehovMat;
-            } else {
-              currObj.material=self.basicMat;
-            }
+      self.raycaster.setFromCamera(self.mouse,self.camera);
+      self.scenechildren=self.dataService.getscenechild();
+      var intersects = self.raycaster.intersectObjects(self.scenechildren);
+      for (var i = 0; i < self.scenechildren.length; i++) {
+        var currObj=self.scenechildren[i];
+        if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
+          if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
+            if(currObj.name==="All faces") currObj.material=self.mousehovMat;
+            if(currObj.name==="All edges")  currObj.material=self.mousehovlineMat;
+            if(currObj.name==="All wires")  currObj.material=self.mousehovwireMat;
+          } else {
+            if(currObj.name==="All faces") currObj.material=self.basicMat;
+            if(currObj.name==="All edges")  currObj.material=self.basiclineMat;
+            if(currObj.name==="All wires")  currObj.material=self.basicwireMat;
           }
         }
-        for(var i=0; i<self.textlabels.length; i++) {
-          self.textlabels[i].updatePosition();
-        }
-        if(self.dataService.selecting.length!=0){
-          self.updateview();
       }
-
+      for(var i=0; i<self.textlabels.length; i++) {
+        self.textlabels[i].updatePosition();
+      }
+      if(self.dataService.selecting.length!=0){
+        self.updateview();
+      }
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
     };
@@ -215,6 +262,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         if( objectData.children!==undefined){
           for(var i=0;i< objectData.children.length;i++){
             let chd = objectData.children[i];
+            chd["material"].needsUpdate=true;
+            chd["material"].transparent=true;
             if( chd.type==="Mesh"||chd.type==="LineLoop"||chd.type==="LineSegments"||chd.type==="Line"){
               chd["geometry"].computeVertexNormals();
               chd["geometry"].computeBoundingBox();
@@ -246,6 +295,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   //
   //  events
   //
+  
+  mousedown($event): void{
+      this.mDownTime = (new Date()).getTime();
+  }
+
+  mouseup($event): void{
+     this.mUpTime = (new Date()).getTime();
+  }
+
   onDocumentMouseMove(event) {
     event.preventDefault();
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
@@ -254,67 +312,167 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   /// selects object from three.js scene
   onDocumentMouseDown(event){
+    let threshold: number = 100;
+    if( Math.abs(this.mDownTime - this.mUpTime) > threshold ){
+        this.mDownTime = 0;
+        this.mUpTime = 0;
+        return;
+    }
     event.preventDefault();
     var selectedObj, intersects;
     var select:boolean=false;
     this.scenechildren=this.dataService.getscenechild();
-    console.log(this.scenechild);
     this.raycaster.setFromCamera(this.mouse,this.camera);
+    this.raycaster.linePrecision = 0.5;
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
-      const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
-      const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
-      const label: string = face.getLabel();
-      const label_xyz: gs.XYZ = face.getLabelCentroid();
-      const verts: gs.IVertex[] = face.getVertices();
-      const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
-      if(this.textlabels.length===0) {
-        var geometry=new THREE.Geometry();
-        for(var i=0;i<verts_xyz.length;i++){
-          geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
-        }
-        geometry.faces.push(new THREE.Face3(0,2,1));
-        geometry.faces.push(new THREE.Face3(0,3,2));
-        var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x000000} ));
-        mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
-        this.scene.add(mesh);
-        this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
-      }else{
-        for(var j=0;j<this.scene.children.length;j++){
-          if(Math.floor(intersects[ 0 ].faceIndex/2)===this.scene.children[j].userData.id){
-            select=true;
-            this.scene.remove(this.scene.children[j]);
-          }
-        }
-        for(var j=0;j<this.textlabels.length;j++){
-          if(Math.floor(intersects[ 0 ].faceIndex/2)===this.textlabels[j]["id"]){
-            select=true;
-            this.removeTextLabel(this.textlabels[j]["id"]);
-          }
-        }
-        if(select==false){
+      if(this.scenechildren[0].name=="All faces"){
+        const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
+        const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
+        const label: string = face.getLabel();
+        const label_xyz: gs.XYZ = face.getLabelCentroid();
+        const verts: gs.IVertex[] = face.getVertices();
+        const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+        if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
           geometry.faces.push(new THREE.Face3(0,2,1));
           geometry.faces.push(new THREE.Face3(0,3,2));
-          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x000000} ));
+          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x668cff,side:THREE.DoubleSide} ));
           mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+          mesh["geometry"].computeVertexNormals();
           this.scene.add(mesh);
           this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+        }else{
+          for(var j=0;j<this.scene.children.length;j++){
+
+            if(Math.floor(intersects[ 0 ].faceIndex/2)===this.scene.children[j].userData.id){
+              select=true;
+              this.scene.remove(this.scene.children[j]);
+            }
+          }
+          for(var j=0;j<this.textlabels.length;j++){
+            if(Math.floor(intersects[ 0 ].faceIndex/2)===this.textlabels[j]["id"]){
+              select=true;
+              this.removeTextLabel(this.textlabels[j]["id"]);
+            }
+          }
+          if(select==false){
+            var geometry=new THREE.Geometry();
+            for(var i=0;i<verts_xyz.length;i++){
+              geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+            }
+            geometry.faces.push(new THREE.Face3(0,2,1));
+            geometry.faces.push(new THREE.Face3(0,3,2));
+            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x668cff,side:THREE.DoubleSide} ));
+            mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+            mesh["geometry"].computeVertexNormals();
+            this.scene.add(mesh);
+            console.log(this.scene);
+            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+          }
         }
       }
-    } else {
-      for(var i=0;i<this.dataService.selecting.length;i++){
-        this.dataService.selecting[i].material=this.basicMat;
+      if(this.scenechildren[0].name=="All wires"){
+        const path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(Math.floor(intersects[ 0 ].index/2));
+        const wire: gs.IWire = this._model.getGeom().getTopo(path) as gs.IWire;
+        const label: string = wire.getLabel();
+        const label_xyz: gs.XYZ = wire.getLabelCentroid();
+        const verts: gs.IVertex[] = wire.getVertices();
+        const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+        if (wire.isClosed()) {verts_xyz.push(verts_xyz[0]);}
+        if(this.textlabels.length===0) {
+          var geometry=new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+          const line = new THREE.Line( geometry, material);
+          line.userData.id=Math.floor(intersects[ 0 ].index/2);
+          line["material"].needsUpdate=true;
+          this.scene.add(line);
+          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+        }else{
+          for(var j=0;j<this.scene.children.length;j++){
+            if(Math.floor(intersects[ 0 ].index/2)===this.scene.children[j].userData.id){
+              select=true;
+              this.scene.remove(this.scene.children[j]);
+            }
+          }
+          for(var j=0;j<this.textlabels.length;j++){
+            if(Math.floor(intersects[ 0 ].index/2)===this.textlabels[j]["id"]){
+              select=true;
+              this.removeTextLabel(this.textlabels[j]["id"]);
+            }
+          }
+          if(select==false){
+            var geometry=new THREE.Geometry();
+            for(var i=0;i<verts_xyz.length;i++){
+              geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+            }
+            var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+            const line = new THREE.Line( geometry, material);
+            line.userData.id=Math.floor(intersects[ 0 ].index/2);
+            line["material"].needsUpdate=true;
+            this.scene.add(line);
+            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+          }
+        }
       }
+      if(this.scenechildren[0].name=="All edges"){
+        const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(Math.floor(intersects[ 0 ].index/2));
+        const edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
+        const label: string = edge.getLabel();
+        const label_xyz: gs.XYZ = edge.getLabelCentroid();
+        const verts: gs.IVertex[] = edge.getVertices();
+        const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+        if(this.textlabels.length===0) {
+          var geometry=new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+          const line = new THREE.Line( geometry, material);
+          line.userData.id=Math.floor(intersects[ 0 ].index/2);
+          line["material"].needsUpdate=true;
+          this.scene.add(line);
+          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+        }else{
+          for(var j=0;j<this.scene.children.length;j++){
+            if(Math.floor(intersects[ 0 ].index/2)===this.scene.children[j].userData.id){
+              select=true;
+              this.scene.remove(this.scene.children[j]);
+            }
+          }
+          for(var j=0;j<this.textlabels.length;j++){
+            if(Math.floor(intersects[ 0 ].index/2)===this.textlabels[j]["id"]){
+              select=true;
+              this.removeTextLabel(this.textlabels[j]["id"]);
+            }
+          }
+          if(select==false){
+            var geometry=new THREE.Geometry();
+            for(var i=0;i<verts_xyz.length;i++){
+              geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+            }
+            var material= new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+            const line = new THREE.Line( geometry, material );
+            line.userData.id=Math.floor(intersects[ 0 ].index/2);
+            this.scene.add(line);
+            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+          }
+        }
+      }
+      
+    } else {
       for(var i=0;i<this.dataService.sprite.length;i++){
         this.dataService.sprite[i].visible=false;
       }
       for(var i=0;i<this.scene.children.length;i++){
-        if(this.scene.children[i].type=="Mesh"){
+        if(this.scene.children[i].type=="Mesh"||this.scene.children[i].type=="Line"){
           this.scene.remove(this.scene.children[i]);
           i=i-1;
         }
@@ -323,8 +481,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.removeTextLabel(this.textlabels[i]["id"]);
         i=i-1;
       }
-      var sprite=[];
-      this.dataService.pushsprite(sprite);
+      //var sprite=[];
+      //this.dataService.pushsprite(sprite);
       //var select=[];
       //this.dataService.addselecting(select);
     }
@@ -449,6 +607,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     div.style.height = '100';
     div.style.top = '-1000';
     div.style.left = '-1000';
+    div.style.textShadow="0px 0px 3px white";
+    div.style.color="black";
     return div;
    }
 

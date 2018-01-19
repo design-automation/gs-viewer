@@ -1,5 +1,7 @@
 <div id="container"  
-		(mousemove)="onDocumentMouseMove($event)" 
+    (mousemove)="onDocumentMouseMove($event)" 
+    (mousedown)="mousedown($event)"
+    (mouseup)="mouseup($event)"
 		(click)="onDocumentMouseDown($event)">
 	
   		<!-- <button id="rotating" 
