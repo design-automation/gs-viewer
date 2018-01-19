@@ -24,6 +24,15 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   selectObj:Array<any>;
   scenechildren:Array<any>;
   ID:string;
+  scene_and_maps: {
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>} ;
+  children:Array<any>;
+  FaceColor:THREE.Color;
+  WireColor:THREE.Color;
+  EdgeColor:THREE.Color;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -40,6 +49,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.model= this.dataService.getGsModel(); 
   	this.object(this.Visible);
     this.Visible=this.dataService.visible;
+    this.scene_and_maps= this.dataService.updateModel();
+    this.getoject();
+    this.getcolor();
+    this.faceselect();
   }
 
   notify(){ 
@@ -47,10 +60,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<this.dataService.selecting.length;i++){
        for(var n=0;n<this.scene.children.length;n++){
         if(this.scene.children[n].type==="Scene"){
-          for(var j=0;j<this.scene.children[n].children.length;j++){
-            if(this.dataService.selecting[i].uuid===this.scene.children[n].children[j].children[0].uuid){
-               this.selectObj.push(this.scene.children[n].children[j].children[0].parent);
-            }
+          if(this.dataService.selecting[i].uuid===this.scene.children[n].children[0].uuid){
+             this.selectObj.push(this.scene.children[n].children[0].parent);
           }
         }
       }
@@ -62,17 +73,161 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       if(this.Visible==="Edges") this.edgecheck();
       if(this.Visible==="Vertices") this.verticecheck();
     }
-    this.dataService.visible=this.Visible;
+    this.dataService.visible=this.Visible;;
   }
+
+  getvertice(){
+    var attributeedge=[];
+    for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+      const face: gs.IFace = this.model.getGeom().getTopo(this.scene_and_maps.faces_map.get(i)) as gs.IFace;
+      const verts: gs.IVertex[] = face.getVertices();
+       const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+      console.log(verts_xyz);
+    }
+  }
+
+  getedges():Array<any>{
+    var attributeedge=[];
+    for(var i =0;i<this.scene_and_maps.edges_map.size;i++){
+      var attribute:any=[]
+      attribute=this.scene_and_maps.edges_map.get(i);
+      if(attribute["tt"]!=undefined){
+        if(attribute["tt"]==1){
+          var edge:string="o"+attribute["id"]+":"+"f"+attribute["ti"]+":"+"e"+attribute["si"];
+          attributeedge.push(edge);
+        }
+      }
+    }
+    return attributeedge;
+  }
+  getwires():Array<any>{
+    var attributewire=[];
+    for(var i =0;i<this.scene_and_maps.wires_map.size;i++){
+      var attribute:any=[]
+      attribute=this.scene_and_maps.wires_map.get(i);
+      if(attribute["tt"]!=undefined){
+        if(attribute["tt"]==0){
+          var edge:string="o"+attribute["id"]+":"+"w"+attribute["ti"];
+          attributewire.push(edge);
+        }
+      }
+    }
+    return attributewire;
+  }
+
+  getfaces():Array<any>{
+    var attributeface=[];
+    for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+      var attribute:any=[]
+      attribute=this.scene_and_maps.faces_map.get(i);
+      if(attribute["tt"]!=undefined){
+        if(attribute["tt"]==1){
+          var edge:string="o"+attribute["id"]+":"+"f"+attribute["ti"];
+          attributeface.push(edge);
+        }
+      }
+    }
+    return attributeface;
+  }
+
+  getoject():Array<any>{
+    var attributeobject=[];
+    var objectlable=[];
+    /*for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+      var attribute:any=[]
+      attribute=this.scene_and_maps.faces_map.get(i);
+      if(attribute["id"]!=undefined){
+        if(objectlable.length!=0){
+          for(var j=0;j<objectlable.length;j++){
+            if(objectlable[j]!=attribute["id"]){
+              objectlable.push(attribute["id"]);
+            }
+          }
+        }else{objectlable.push(attribute["id"]);}
+      }
+    }
+    for(var n=0;n<objectlable.length;n++){
+      var object:string="o"+objectlable[n];
+      attributeobject.push(object);
+    }*/
+    return attributeobject;
+  }
+
+  getchildren():Array<any>{
+    var children;
+      for (var i = 0; i<this.scene.children.length; i++) {
+        if(this.scene.children[i].name=="Scene") {
+          children=this.scene.children[i].children;
+          break;
+        }
+        if(i==this.scene.children.length-1) {
+          return [];
+        }
+      }
+    return children;
+  }
+  getcolor(){
+    var children=this.getchildren();
+    for(var i=0;i<children.length;i++){
+      if(children[i].name==="All faces"){
+        this.FaceColor=children[i]["material"].color;
+      }
+      if(children[i].name==="All wires"){
+        this.WireColor=children[i]["material"].color;
+      }
+      if(children[i].name==="All edges"){
+        this.EdgeColor=children[i]["material"].color;
+      }
+    }
+  }
+
+
+  faceselect(){
+    var scenechildren=[];
+    var children=this.getchildren();
+    for(var i=0;i<children.length;i++){
+      if(children[i].name==="All faces"){
+        //children[i]["material"].color.set(new THREE.Color(0.8,0,0));
+        scenechildren.push(children[i]);
+      }
+    }
+    this.dataService.addscenechild(scenechildren);
+  }
+
+  wireselect(){
+    var scenechildren=[];
+    var children=this.getchildren();
+    for(var i=0;i<children.length;i++){
+      if(children[i].name==="All wires"){
+        //children[i].material.color=new THREE.Color(0.8,0,0);
+        scenechildren.push(children[i]);
+      }
+    }
+    this.dataService.addscenechild(scenechildren);
+  }
+  edgeselect(){
+    var scenechildren=[];
+    var children=this.getchildren();
+    for(var i=0;i<children.length;i++){
+      if(children[i].name==="All edges"){
+        //children[i].color=new THREE.Color(0.8,0,0);
+        scenechildren.push(children[i]);
+      }
+    }
+    this.dataService.addscenechild(scenechildren);
+  }
+
+
+
 
   getscenechildren():Array<any>{
     var scenechildren=[];
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
         for(var i=0;i<this.scene.children[n].children.length;i++){
-          for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
-            scenechildren.push(this.scene.children[n].children[i].children[j]);
-          }
+          //for(var j=0;j<this.scene.children[n].children[i].children.length;j++){
+            scenechildren.push(this.scene.children[n].children[i]);
+          //}
         }
       }
     }
@@ -105,7 +260,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     var points:Array<any>=this.getpoints();
     var attributes=[];
     for(var i=0;i<this.scenechildren.length;i++){
-      if(this.scenechildren[i].name==="Vertices"){
+      if(this.scenechildren[i].name==="All points"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
           for(var n=0;n<points.length;n++){
             if(points[n].x===this.scenechildren[i].children[j].position.x&&
@@ -177,7 +332,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   edge(Visible){
   	this.Visible="Edges";
     this.attribute=[];
-    this.scenechildren=this.getscenechildren();
+    /*this.scenechildren=this.getscenechildren();
     for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name==="Edges"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -186,7 +341,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           this.attribute.push(attributeface);
         }
       }
-    }
+    }*/
+    this.attribute=this.getedges();
     if(this.selectedVisible==true){
       this.edgecheck();
     }
@@ -213,7 +369,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   wire(Visible){
   	this.Visible="Wires";
     this.attribute=[];
-    this.scenechildren=this.getscenechildren();
+    /*this.scenechildren=this.getscenechildren();
     for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name==="Wires"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -222,7 +378,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           this.attribute.push(attributeface);
         }
       }
-    }
+    }*/
+    this.attribute=this.getwires();
     if(this.selectedVisible==true){
       this.wirecheck();
     }
@@ -248,7 +405,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   face(Visible){
   	this.Visible="Faces";
   	this.attribute=[];
-    this.scenechildren=this.getscenechildren();
+    /*this.scenechildren=this.getscenechildren();
     for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name==="Faces"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -257,7 +414,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           this.attribute.push(attributeface);
         }
       }
-    }
+    }*/
+    this.attribute=this.getfaces();
     if(this.selectedVisible==true){
       this.facecheck();
     }
@@ -298,7 +456,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   object(Visible){
   	this.Visible="Objs";
     this.attribute=[];
-    this.scenechildren=this.getscenechildren();
+    /*this.scenechildren=this.getscenechildren();
     for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name==="Objs"){
         for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -307,7 +465,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           this.attribute.push(attributeface);
         }
       }
-    }
+    }*/
+    //this.attribute=this.getoject();
     if(this.selectedVisible==true){
       this.objectcheck();
     }
@@ -352,16 +511,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   Onselect(i){
   	var select;
-    console.log(i);
     for(var n=0;n<this.scene.children.length;n++){
       if(this.scene.children[n].type==="Scene"){
         console.log(this.scene.children[n].children.length);
         for(var m=0;m<this.scene.children[n].children.length;m++){
           var sprite:Array<any>=this.scene.children[n].children[m].children[this.scene.children[n].children[m].children.length-1].children;
-          console.log(sprite);
           for(var j=0;j<sprite.length;j++){
             if(sprite[j].name===i){
-              console.log(sprite[j].parent.parent);
             }
           }
         }

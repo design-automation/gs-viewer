@@ -9,12 +9,12 @@
     <input id="selected" type="checkbox" (click)="changeselected()">
     <label id="selectedname" value="selected">Show selected only</label>
     <div id="select">
-      <input name="selectedge" type="checkbox" (click)="changeselected()">
+      <input name="select" type="radio" (click)="edgeselect()">
       <label id="selectedges" value="selected">Select Edges</label>
-      <input name="selectnames" type="checkbox" (click)="selectededges()">
+      <input name="select" type="radio" (click)="wireselect()">
       <label id="selectwires" value="selected">Select Wires</label>
-      <input name="selectnames" type="checkbox" (click)="selectededges()">
-      <label id="selectfaces" value="selected">Select Face</label>
+      <input name="select" type="radio" checked (click)="faceselect()">
+      <label id="selectfaces" value="selected" >Select Face</label>
     </div>
   </div>
   <div id="toolview">
@@ -58,7 +58,8 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="40%">
         <tr>
-          <button id="numberbutton"[class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id) >{{datascale.id}}</button>
+          <!-- <button id="numberbutton"[class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id) >{{datascale.id}}</button> -->
+          <button id="numberbutton">{{datascale}}</button>
         </tr>
       </table>
     </div>
@@ -70,7 +71,7 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="40%">
         <tr>
-          <button id="numberbutton" [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id)>{{datascale.id}}</button>
+          <button id="numberbutton" >{{datascale}}</button>
         </tr>
       </table>
     </div>
@@ -82,7 +83,7 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="40%">
         <tr>
-          <button id="numberbutton"  [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id)>{{datascale.id}}</button>
+          <button id="numberbutton" >{{datascale}}</button>
         </tr>
       </table>
     </div>
@@ -94,7 +95,7 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute " width="40%">
         <tr>
-          <button  id="numberbutton" [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id) >{{datascale.id}}</button>
+          <button  id="numberbutton"  >{{datascale}}</button>
         </tr>
       </table>
     </div>
