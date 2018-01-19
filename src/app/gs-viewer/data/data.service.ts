@@ -44,13 +44,22 @@ export class DataService {
   grid:boolean;
   shadow:boolean;
   frame:boolean;
+  opacity:number;
   selectcheck:boolean;
   mouse:THREE.Vector2;
   raycaster:THREE.Raycaster;
   visible:string;
   sprite:THREE.Sprite[]=[];
   selectedFaces:Array<any> = [];
-
+  scene_and_maps: {
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>} ;
+  scenechildren:Array<any>=[];
+  red:number;
+  green:number;
+  blue:number;
 
 
   // ---- 
@@ -155,6 +164,14 @@ export class DataService {
     this._gsModel = model;
     this.sendMessage("model_update");
   }
+  updateModel():any{
+    var scene_and_maps: {
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>}= gs.genThreeOptModelAndMaps( this._gsModel );
+    return scene_and_maps;
+  }
 
 
   //
@@ -203,6 +220,7 @@ export class DataService {
     this._lightnessValue=lightness;
   }
 
+
   gethue(_hue):any{
     this.hue = _hue;
   }
@@ -211,6 +229,23 @@ export class DataService {
   }
   getlightness(_lightness):any{
     this.lightness = _lightness;
+  }
+  getopacity(_opacity):any{
+    this.opacity = _opacity;
+  }
+  addbackvalue(red,green,blue){
+    this.red=red;
+    this.green=green;
+    this.blue=blue;
+  }
+  getred(red):any{
+    this.red=red;
+  }
+  getgreen(green):any{
+    this.green=green;
+  }
+  getblue(blue):any{
+    this.blue=blue;
   }
 
   addGeom(Geom): void{
@@ -289,4 +324,14 @@ export class DataService {
  pushsprite(sprite){
    this.sprite=sprite;
  }
+
+ addscenechild(scenechildren){
+   this.scenechildren=scenechildren;
+   this.sendMessage();
+ }
+ getscenechild(){
+   this.sendMessage();
+   return this.scenechildren;
+ }
+
 }
