@@ -55,10 +55,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   scenechild:THREE.Scene;
   mDownTime: number;
   mUpTime: number;
+  sphere:THREE.Mesh;
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
     this.myElement = myElement;
+    
   }
 
   ngOnInit() {
@@ -91,7 +93,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.height = height;
 
     this.updateModel();
-    console.log(this.scene);
 
     // todo: check and refactor what is required?
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
@@ -100,13 +101,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scenechildren=this.dataService.getscenechild();
     this.scenechild=new THREE.Scene();
 
-    for(var i=0;i<this.scene.children.length;i++){
+    var geometry = new THREE.SphereGeometry( 0.05 );
+    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    this.sphere = new THREE.Mesh( geometry, material );
+    this.sphere.visible = false;
+    this.sphere.name="sphereInter"
+    this.scene.add( this.sphere );
+
+    /*for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
         if(this.scene.children[i].children[0].type==="Mesh"){
           this.scene.children[i].children[0]["material"].opacity=this.dataService.opacity;
         }
       }
-    }
+    }*/
     //console.log(this.scene);
     //Material of select and basic;
     /*for(var i=0;i<this.scene.children.length;i++){
@@ -123,55 +131,42 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             this.basicMat=this.scene.children[i].children[j]["material"];
             this.scene.children[i].children[j]["material"].blending=1;
           }
-        }
-        break;
-      }
-    }
-    //this.selectMat=new THREE.MeshPhongMaterial( { visible:false} );
-    this.mousehovMat=new THREE.MeshPhongMaterial( { color: 0xFFaaaa,flatShading:true, side:THREE.DoubleSide} );
-
-    for(var i=0;i<this.scene.children.length;i++){
-      if(this.scene.children[i].type==="Scene"){
-        for(var j=0;j<this.scene.children[i].children.length;j++){
           if(this.scene.children[i].children[j].name=="All edges"){
             this.basiclineMat=this.scene.children[i].children[j]["material"];
+            this.scene.children[i].children[j]["material"].blending=1;
           }
-        }
-        break;
-      }
-    }
-    //this.selectlineMat=new THREE.LineBasicMaterial( {  color:0x668cff,side:THREE.DoubleSide} );
-    this.mousehovlineMat=new THREE.LineBasicMaterial( { color: 0xFFaaaa, flatShading:true, side:THREE.DoubleSide} );
-
-    for(var i=0;i<this.scene.children.length;i++){
-      if(this.scene.children[i].type==="Scene"){
-        for(var j=0;j<this.scene.children[i].children.length;j++){
           if(this.scene.children[i].children[j].name=="All wires"){
             this.basicwireMat=this.scene.children[i].children[j]["material"];
+            this.scene.children[i].children[j]["material"].blending=1;
           }
         }
-        break;
       }
     }
-    //this.selectlineMat=new THREE.LineBasicMaterial( {  color:0x668cff,side:THREE.DoubleSide} );
-    this.mousehovwireMat=new THREE.LineBasicMaterial( { color: 0xFFaaaa,flatShading:true, side:THREE.DoubleSide} );
+
     // render loop
     let self = this;
     function animate() {
       self.raycaster.setFromCamera(self.mouse,self.camera);
+      self.raycaster.linePrecision=0.05;
       self.scenechildren=self.dataService.getscenechild();
       var intersects = self.raycaster.intersectObjects(self.scenechildren);
       for (var i = 0; i < self.scenechildren.length; i++) {
         var currObj=self.scenechildren[i];
         if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
           if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
-            if(currObj.name==="All faces") currObj.material=self.mousehovMat;
+
+            //if(currObj.name==="All edges"){
+            self.sphere.visible = true;
+            self.sphere.position.copy( intersects[ 0 ].point );
+          //}
+            /*if(currObj.name==="All faces") currObj.material=self.mousehovMat;
             if(currObj.name==="All edges")  currObj.material=self.mousehovlineMat;
-            if(currObj.name==="All wires")  currObj.material=self.mousehovwireMat;
+            if(currObj.name==="All wires")  currObj.material=self.mousehovwireMat;*/
           } else {
-            if(currObj.name==="All faces") currObj.material=self.basicMat;
+            self.sphere.visible = false;
+            /*if(currObj.name==="All faces") currObj.material=self.basicMat;
             if(currObj.name==="All edges")  currObj.material=self.basiclineMat;
-            if(currObj.name==="All wires")  currObj.material=self.basicwireMat;
+            if(currObj.name==="All wires")  currObj.material=self.basicwireMat;*/
           }
         }
       }
@@ -321,15 +316,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     event.preventDefault();
     var selectedObj, intersects;
     var select:boolean=false;
+    //this.selection_setting=this.dataService.getSelectionSetting();
     this.scenechildren=this.dataService.getscenechild();
     this.raycaster.setFromCamera(this.mouse,this.camera);
-    this.raycaster.linePrecision = 0.5;
+    var linePre=Math.round(this.scene.children[2].children[0]["geometry"].boundingSphere.radius)/10;
+    this.raycaster.linePrecision = 0.05;
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
-      if(this.scenechildren[0].name=="All faces"){
+      if(this.scenechildren[0].name === "All faces"){
         const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
         const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
+
+        //const faces: gs.IFace[] = face.getObj().getFaces();
+        //const wires: gs.IWire[] = wire.getObj().getWires();
+
+
         const label: string = face.getLabel();
         const label_xyz: gs.XYZ = face.getLabelCentroid();
         const verts: gs.IVertex[] = face.getVertices();
@@ -341,9 +343,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
           geometry.faces.push(new THREE.Face3(0,2,1));
           geometry.faces.push(new THREE.Face3(0,3,2));
-          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x668cff,side:THREE.DoubleSide} ));
+          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
           mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
           mesh["geometry"].computeVertexNormals();
+          mesh.name="selects";
           this.scene.add(mesh);
           this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
         }else{
@@ -367,11 +370,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             geometry.faces.push(new THREE.Face3(0,2,1));
             geometry.faces.push(new THREE.Face3(0,3,2));
-            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x668cff,side:THREE.DoubleSide} ));
+            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
             mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
             mesh["geometry"].computeVertexNormals();
+            mesh.name="selects";
             this.scene.add(mesh);
-            console.log(this.scene);
             this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
           }
         }
@@ -389,10 +392,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+          var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
           line.userData.id=Math.floor(intersects[ 0 ].index/2);
           line["material"].needsUpdate=true;
+          line.name="selects";
           this.scene.add(line);
           this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
         }else{
@@ -413,10 +417,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+            var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
             line.userData.id=Math.floor(intersects[ 0 ].index/2);
             line["material"].needsUpdate=true;
+            line.name="selects";
             this.scene.add(line);
             this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
           }
@@ -434,10 +439,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          var material=new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+          var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
           line.userData.id=Math.floor(intersects[ 0 ].index/2);
           line["material"].needsUpdate=true;
+          line.name="selects";
           this.scene.add(line);
           this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
         }else{
@@ -458,9 +464,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            var material= new THREE.LineBasicMaterial( { color:0x668cff,side:THREE.DoubleSide} );
+            var material= new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material );
             line.userData.id=Math.floor(intersects[ 0 ].index/2);
+            line.name="selects";
             this.scene.add(line);
             this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
           }
@@ -472,7 +479,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.dataService.sprite[i].visible=false;
       }
       for(var i=0;i<this.scene.children.length;i++){
-        if(this.scene.children[i].type=="Mesh"||this.scene.children[i].type=="Line"){
+        if(this.scene.children[i].name=="selects"){
           this.scene.remove(this.scene.children[i]);
           i=i-1;
         }
@@ -657,7 +664,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
 
   zoomfit(){
-    //if(this.selecting.length===0){
+    if(this.selecting.length===0){
       const obj=new THREE.Object3D();
       for(var i=0;i<this.scene.children.length;i++){
         if(this.scene.children[i].name!=="GridHelper"){
@@ -684,8 +691,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.lookAt(newLookAt);
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
-    /*}else{
-      event.stopPropagation();
+    }else{
+      event.preventDefault();
       var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
       var radius=0;
       for(var i=0;i<this.selecting.length;i++){
@@ -694,7 +701,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
         radius=Math.max(this.selecting[i].geometry.boundingSphere.radius,radius);
       }
-      console.log(this.selecting);
       centerX=axisX/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
       centerY=axisY/this.scene.children[1].children.length;
@@ -713,7 +719,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.lookAt(newLookAt);
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
-    }*/
+    }
   }
 
 

@@ -42,6 +42,9 @@
 .visible{
   color: grey;
 }
+.selectvisible{
+  color: grey;
+}
 #table{
   width:100% ;
   height: 15px;

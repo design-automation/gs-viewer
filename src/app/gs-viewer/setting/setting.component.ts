@@ -43,7 +43,7 @@ export class SettingComponent implements OnInit {
       this.lightness=this.dataService.lightness;
     }
     if(this.opacity==undefined){
-      this.opacity=0.2;
+      this.opacity=1;
     }else{
       this.opacity=this.dataService.opacity;
     }
@@ -87,8 +87,8 @@ export class SettingComponent implements OnInit {
 
   changegrid(){
     this.gridVisible = !this.gridVisible;
-    var maxX=2;
-    var maxY=2;
+    var maxX=4;
+    var maxY=4;
     /*for(var j=0;j<this.scene.children.length;j++){
       if(this.scene.children[j].type==="Scene"){
         for(var i=0;i<this.scene.children[j].children.length;i++){
@@ -97,11 +97,17 @@ export class SettingComponent implements OnInit {
         }
       }
     }*/
+    
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
-        maxX=Math.max(maxX,Math.abs(this.scene.children[i].children[0]["geometry"].boundingBox.max.x));
-        maxY=Math.max(maxY,Math.abs(this.scene.children[i].children[0]["geometry"].boundingBox.max.y));
-       }
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius!==0){
+            maxX=Math.max(maxX,Math.abs(this.scene.children[i].children[j]["geometry"].boundingBox.max.x));
+            maxY=Math.max(maxY,Math.abs(this.scene.children[i].children[j]["geometry"].boundingBox.max.y));
+            break;
+          }
+        }
+      }
     }
     var max=Math.ceil(Math.max(maxX,maxY)*1.3)*2;
     if(this.gridVisible){
@@ -119,25 +125,20 @@ export class SettingComponent implements OnInit {
 
   changeaxis(){
     this.axisVisible = !this.axisVisible;
-    var maxX=2;
-    var maxY=2;
-    var maxZ=2;
-    /*for(var j=0;j<this.scene.children.length;j++){
-      if(this.scene.children[j].type==="Scene"){
-        for(var i=0;i<this.scene.children[j].children.length;i++){
-          console.log(this.scene.children[j].children[i].children[0]);
-          maxX=Math.max(maxX,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.x));
-          maxY=Math.max(maxY,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.y));
-          maxZ=Math.max(maxZ,Math.abs(this.scene.children[j].children[i].children[0]["geometry"].boundingBox.max.z));
-        }
-      }
-    }*/
+    var maxX=4;
+    var maxY=4;
+    var maxZ=4;
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
-        maxX=Math.max(maxX,Math.abs(this.scene.children[i].children[0]["geometry"].boundingBox.max.x));
-        maxY=Math.max(maxY,Math.abs(this.scene.children[i].children[0]["geometry"].boundingBox.max.y));
-        maxZ=Math.max(maxZ,Math.abs(this.scene.children[i].children[0]["geometry"].boundingBox.max.z));
-       }
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius!==0){
+            maxX=Math.max(maxX,Math.abs(this.scene.children[i].children[j]["geometry"].boundingBox.max.x));
+            maxY=Math.max(maxY,Math.abs(this.scene.children[i].children[j]["geometry"].boundingBox.max.y));
+            maxZ=Math.max(maxZ,Math.abs(this.scene.children[i].children[j]["geometry"].boundingBox.max.z));
+            break;
+          }
+        }
+      }
     }
     var max=Math.ceil(Math.max(maxX,maxY,maxZ)*1.2);
     if(this.axisVisible){

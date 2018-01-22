@@ -30,6 +30,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>} ;
   children:Array<any>;
+  SelectVisible:string="Faces";
   FaceColor:THREE.Color;
   WireColor:THREE.Color;
   EdgeColor:THREE.Color;
@@ -52,7 +53,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.scene_and_maps= this.dataService.updateModel();
     this.getoject();
     this.getcolor();
-    this.faceselect();
+    this.faceselect(this.SelectVisible);
   }
 
   notify(){ 
@@ -182,42 +183,68 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
 
-  faceselect(){
+  faceselect(SelectVisible){
+    this.SelectVisible="Faces";
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
+      if(children[i].name==="All wires") children[i]["material"].opacity=0;
+      if(children[i].name==="All edges") children[i]["material"].opacity=0;
+      if(children[i].name==="All points") children[i]["material"].opacity=0;
       if(children[i].name==="All faces"){
-        //children[i]["material"].color.set(new THREE.Color(0.8,0,0));
+        children[i]["material"].opacity=0.8;
         scenechildren.push(children[i]);
       }
     }
     this.dataService.addscenechild(scenechildren);
   }
 
-  wireselect(){
+  wireselect(SelectVisible){
+    this.SelectVisible="Wires";
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
+      if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All edges") children[i]["material"].opacity=0;
+      if(children[i].name==="All points") children[i]["material"].opacity=0;
       if(children[i].name==="All wires"){
-        //children[i].material.color=new THREE.Color(0.8,0,0);
+        children[i]["material"].opacity=0.6;
         scenechildren.push(children[i]);
       }
     }
     this.dataService.addscenechild(scenechildren);
   }
-  edgeselect(){
+  edgeselect(SelectVisible){
+    this.SelectVisible="Edges";
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
+      if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All wires") children[i]["material"].opacity=0;
+      if(children[i].name==="All points") children[i]["material"].opacity=0;
       if(children[i].name==="All edges"){
-        //children[i].color=new THREE.Color(0.8,0,0);
+        children[i]["material"].opacity=0.4;
         scenechildren.push(children[i]);
       }
     }
     this.dataService.addscenechild(scenechildren);
   }
 
-
+  verticeselect(SelectVisible){
+    this.SelectVisible="Vertices";
+    var scenechildren=[];
+    var children=this.getchildren();
+    for(var i=0;i<children.length;i++){
+      if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All wires") children[i]["material"].opacity=0;
+      if(children[i].name==="All edges") children[i]["material"].opacity=0;
+      if(children[i].name==="All points"){
+        children[i]["material"].opacity=1;
+        scenechildren.push(children[i]);
+      }
+    }
+    this.dataService.addscenechild(scenechildren);
+  }
 
 
   getscenechildren():Array<any>{

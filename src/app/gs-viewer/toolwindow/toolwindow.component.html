@@ -9,12 +9,10 @@
     <input id="selected" type="checkbox" (click)="changeselected()">
     <label id="selectedname" value="selected">Show selected only</label>
     <div id="select">
-      <input name="select" type="radio" (click)="edgeselect()">
-      <label id="selectedges" value="selected">Select Edges</label>
-      <input name="select" type="radio" (click)="wireselect()">
-      <label id="selectwires" value="selected">Select Wires</label>
-      <input name="select" type="radio" checked (click)="faceselect()">
-      <label id="selectfaces" value="selected" >Select Face</label>
+      <button id="vertice" [class.selectvisible]="SelectVisible === 'Vertices'" (click)="verticeselect(SelectVisible)">V</button>
+      <button id="edge" [class.selectvisible]="SelectVisible === 'Edges'" (click)="edgeselect(SelectVisible)">E</button>
+      <button id="wire" [class.selectvisible]="SelectVisible === 'Wires'" (click)="wireselect(SelectVisible)">W</button>
+      <button id="face" [class.selectvisible]="SelectVisible === 'Faces'" (click)="faceselect(SelectVisible)">F</button>
     </div>
   </div>
   <div id="toolview">
