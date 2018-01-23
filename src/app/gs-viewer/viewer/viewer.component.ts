@@ -44,7 +44,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
-          edges_map: Map<number, gs.ITopoPathData>} ;
+          edges_map: Map<number, gs.ITopoPathData>,
+        vertices_map: Map<number, gs.ITopoPathData>} ;
   
   myElement;
   
@@ -139,6 +140,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     };
     animate();   
     this.addgrid();
+    console.log(this.scene);
+    console.log(this.scene_and_maps);
 
   }
   //
@@ -261,6 +264,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             max=Math.ceil(radius)*1.5;
             break;
           }
+          if(this.scene.children[i].children[j].type==="GridHelper") {
+            this.scene.remove(this.scene.children[i].children[j]);
+            j=j-1;
+          }
         }
       }
     }
@@ -269,7 +276,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
-      gridhelper.position.set(center.x,center.y,center.z);
+      gridhelper.position.set(center.x,center.y,0);
       this.scene.add( gridhelper);
     }
   }
@@ -288,9 +295,71 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scenechildren=this.dataService.getscenechild();
     this.raycaster.setFromCamera(this.mouse,this.camera);
     this.raycaster.linePrecision = 0.05;
+    this.raycaster.params.Points.threshold=0.05;
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
+      if(this.scenechildren[0].name === "All objs"){
+        const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
+        const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
+        const label: string = "o"+path.id;
+        const label_xyz: gs.XYZ = face.getLabelCentroid();
+        const faces: gs.IFace[]= face.getObj().getFaces();
+        if(this.textlabels.length===0) {
+          for(var n=0;n<faces.length;n++){
+            var verts: gs.IVertex[] = faces[n].getVertices();
+            var verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+            var geometry=new THREE.Geometry();
+            for(var i=0;i<verts_xyz.length;i++){
+              geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+            }
+            geometry.faces.push(new THREE.Face3(0,2,1));
+            geometry.faces.push(new THREE.Face3(0,3,2));
+            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+            mesh["geometry"].computeVertexNormals();
+            mesh.userData.id=path.id;
+            mesh.name="selects";
+            this.scene.add(mesh);
+           }
+           this.addTextLabel(label,label_xyz, label);
+        }else{
+          for(var j=0;j<this.scene.children.length;j++){
+            if(path.id===this.scene.children[j].userData.id){
+              select=true;
+              this.scene.remove(this.scene.children[j]);
+              j=j-1;
+            }
+          }
+          for(var j=0;j<this.textlabels.length;j++){
+            if(label===this.textlabels[j]["id"]){
+              select=true;
+              this.removeTextLabel(this.textlabels[j]["id"]);
+              j=j-1;
+            }
+          }
+          if(select==false){
+            for(var n=0;n<faces.length;n++){
+              var verts: gs.IVertex[] = faces[n].getVertices();
+              var verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+              var geometry=new THREE.Geometry();
+              for(var i=0;i<verts_xyz.length;i++){
+                geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+              }
+              geometry.faces.push(new THREE.Face3(0,2,1));
+              geometry.faces.push(new THREE.Face3(0,3,2));
+              var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+              mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+              mesh["geometry"].computeVertexNormals();
+              mesh.userData.id=path.id;
+              mesh.name="selects";
+              this.scene.add(mesh);
+            }
+            this.addTextLabel(label,label_xyz, label);
+          }
+        }
+
+      }
+
       if(this.scenechildren[0].name === "All faces"){
         const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(Math.floor(intersects[ 0 ].faceIndex/2));
         const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
@@ -435,6 +504,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
       }
+      if(this.scenechildren[0].name === "All vertices"){
+
+        console.log(intersects.map((i) => i.index));
+        //const path: gs.ITopoPathData = this.scene_and_maps["vertices_map"].get(Math.floor(intersects[ 0 ].index));
+
+      }
       
     } else {
       for(var i=0;i<this.dataService.sprite.length;i++){
@@ -456,56 +531,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       //this.dataService.addselecting(select);
     }
     //this.updateview();
-  }
-
-  getobject(){
-    var path: gs.ITopoPathData;
-    var face: gs.IFace ;
-    var faces: gs.IFace[] ;
-    var label: string;
-    var label_xyz: gs.XYZ;
-    var verts: gs.IVertex[]; 
-    var verts_xyz: gs.XYZ[];
-    var objects:any=[];
-    var material=new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} );
-    var geometry=new THREE.Geometry();
-    for(var i=0;i<this.scene_and_maps.faces_map.size;i++){
-      var sceneobjs=new THREE.Scene();
-      
-      path= this.scene_and_maps.faces_map.get(i);
-      face= this._model.getGeom().getTopo(path) as gs.IFace;
-      faces= face.getObj().getFaces();
-      
-      for(var n=0;n<faces.length;n++){
-        var sceneobj=new THREE.Scene();
-        verts= faces[n].getVertices();
-        verts_xyz= verts.map((v) => v.getPoint().getPosition());
-        for(var j=0;j<verts_xyz.length;j++){
-          geometry.vertices.push(new THREE.Vector3(verts_xyz[j][0],verts_xyz[j][1],verts_xyz[j][2]));
-        }
-/*        console.log(geometry);
-        //geometry.faces.push(new THREE.Face3(0,2,1));
-        //geometry.faces.push(new THREE.Face3(0,3,2));
-        var mesh=new THREE.Mesh(geometry,material);
-        mesh["geometry"].computeVertexNormals();
-        sceneobj.name="o"+path.id;
-        sceneobj.add(mesh);
-        sceneobjs.add(sceneobj);
-        sceneobjs.name="Objs";
-        //sceneobjs.visible=false;        
-        this.scene.add(sceneobjs);*/
-        i=i+faces.length;
-        }
-        
-
-    }
-    for(j=0;j<geometry.vertices.length;j++){
-          geometry.faces.push(new THREE.Face3(j,j+2,j+1));
-          geometry.faces.push(new THREE.Face3(j,j+3,j+2));
-          j=j+3;
-    }
-    var mesh=new THREE.Mesh(geometry,material);
-        mesh["geometry"].computeVertexNormals();
   }
 
   updateview(){

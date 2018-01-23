@@ -52,7 +52,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.Visible=this.dataService.visible;
     this.scene_and_maps= this.dataService.getscememaps();
     this.getoject();
-    this.getcolor();
     this.faceselect(this.SelectVisible);
   }
 
@@ -83,7 +82,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       const face: gs.IFace = this.model.getGeom().getTopo(this.scene_and_maps.faces_map.get(i)) as gs.IFace;
       const verts: gs.IVertex[] = face.getVertices();
        const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
-      console.log(verts_xyz);
+      //console.log(verts_xyz);
     }
   }
 
@@ -167,39 +166,27 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     return children;
   }
-  getcolor(){
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      if(children[i].name==="All faces"){
-        this.FaceColor=children[i]["material"].color;
-      }
-      if(children[i].name==="All wires"){
-        this.WireColor=children[i]["material"].color;
-      }
-      if(children[i].name==="All edges"){
-        this.EdgeColor=children[i]["material"].color;
-      }
-    }
-  }
 
   objectselect(SelectVisible){
-    this.SelectVisible="Ojbs";
+    this.SelectVisible="Objs";
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All wires") children[i]["material"].opacity=0;
       if(children[i].name==="All edges") children[i]["material"].opacity=0;
-      if(children[i].name==="All points") children[i]["material"].opacity=0;
-      if(children[i].name==="All faces"){
+      if(children[i].name==="All vertices") children[i]["material"].opacity=0;
+      if(children[i].name==="All objs"||children[i].name==="All faces"){
         children[i]["material"].opacity=0.8;
+        children[i].name="All objs";
+        scenechildren.push(children[i]);
       }
 
     }
-    for(var j=0;j<this.scene.children.length;j++){
+    /*for(var j=0;j<this.scene.children.length;j++){
       if(this.scene.children[j].name==="Objs"){
         scenechildren.push(this.scene.children[j]);
       }
-    }
+    }*/
     this.dataService.addscenechild(scenechildren);
   }
 
@@ -210,9 +197,10 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
       if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All points") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All faces"){
+      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All objs"||children[i].name==="All faces"){
         children[i]["material"].opacity=0.8;
+        children[i].name="All faces";
         scenechildren.push(children[i]);
       }
     }
@@ -226,7 +214,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<children.length;i++){
       if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All points") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires"){
         children[i]["material"].opacity=0.6;
         scenechildren.push(children[i]);
@@ -241,7 +229,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<children.length;i++){
       if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All points") children[i]["material"].opacity=0.1;
+      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
       if(children[i].name==="All edges"){
         children[i]["material"].opacity=0.4;
         scenechildren.push(children[i]);
@@ -258,7 +246,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       if(children[i].name=="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
       if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All points"){
+      if(children[i].name==="All vertices"){
         children[i]["material"].opacity=1;
         scenechildren.push(children[i]);
       }

@@ -106,7 +106,7 @@ export class SettingComponent implements OnInit {
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
-      gridhelper.position.set(center.x,center.y,center.z);
+      gridhelper.position.set(center.x,center.y,0);
       this.scene.add( gridhelper);
 
     }else{
