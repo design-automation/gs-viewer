@@ -62,6 +62,11 @@ export class DataService {
   blue:number;
   center:THREE.Vector3;
   radius:number;
+  scenemaps:{
+          scene: gs.IThreeScene, 
+          faces_map: Map<number, gs.ITopoPathData>, 
+          wires_map: Map<number, gs.ITopoPathData>, 
+          edges_map: Map<number, gs.ITopoPathData>} ;
 
 
   // ---- 
@@ -158,15 +163,21 @@ export class DataService {
 
   setGsModel(model: gs.IModel){
     this._gsModel = model;
+    if(this._gsModel!==undefined){
+      this.updateModel();
+    }
     this.sendMessage("model_update");
   }
-  updateModel():any{
+  updateModel():void{
     var scene_and_maps: {
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>}= gs.genThreeOptModelAndMaps( this._gsModel );
-    return scene_and_maps;
+    this.scenemaps=scene_and_maps;
+  }
+  getscememaps():any{
+    return this.scenemaps;
   }
 
   getScene(width?: number, height?: number): THREE.Scene{

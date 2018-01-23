@@ -178,7 +178,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
     try{
       //this.scene_and_maps= gs.genThreeOptModelAndMaps( this._model );
-      this.scene_and_maps= this.dataService.updateModel();
+      this.scene_and_maps= this.dataService.getscememaps();
 
       const scene_data = this.scene_and_maps.scene;
       //[three_mode, egde_map, tri_map] = genThreeModelandMaps()

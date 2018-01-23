@@ -50,7 +50,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.model= this.dataService.getGsModel(); 
   	this.object(this.Visible);
     this.Visible=this.dataService.visible;
-    this.scene_and_maps= this.dataService.updateModel();
+    this.scene_and_maps= this.dataService.getscememaps();
     this.getoject();
     this.getcolor();
     this.faceselect(this.SelectVisible);
