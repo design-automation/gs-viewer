@@ -41,7 +41,7 @@ export class DataService {
   selecting:any = [];
   object:any;
   axis:boolean;
-  grid:boolean;
+  grid:boolean=true;
   shadow:boolean;
   frame:boolean;
   opacity:number;
@@ -60,6 +60,8 @@ export class DataService {
   red:number;
   green:number;
   blue:number;
+  center:THREE.Vector3;
+  radius:number;
 
 
   // ---- 
@@ -89,6 +91,7 @@ export class DataService {
     // scene
     let scene: THREE.Scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xcccccc );
+    console.log(scene);
     
 
     // renderer
@@ -129,14 +132,6 @@ export class DataService {
     hemi_light.color.setHSL( default_hue, default_saturation, default_saturation);
     scene.add( hemi_light );
 
-    // var self=this;
-    // self.;
-    // self._controls.addEventListener( 'change',  function() {
-    //   self.light.position.copy( self._camera.position );
-    // } );
-    // self.light.target.position.set( 0, 0, 0 );
-    // this.scene.add( self.light );
-    
     this._scene = scene;
     this._renderer = renderer;
     this._camera = camera; 
@@ -149,9 +144,10 @@ export class DataService {
     // add it to alight - what does alight do?
     this._alight = [];
     this._alight.push(hemi_light);
+    
+    //this.zoomfit();
+    
   }
-
-
 
   //
   //  Getter and Setting for gs-model
@@ -172,15 +168,6 @@ export class DataService {
           edges_map: Map<number, gs.ITopoPathData>}= gs.genThreeOptModelAndMaps( this._gsModel );
     return scene_and_maps;
   }
-
-
-  //
-  // Getter and Setter for Scene
-  //
-  // addScene(scene: THREE.Scene): void{
-  //   console.warn("Three Scene is being reset");
-  // 	this._scene = scene;
-  // }
 
   getScene(width?: number, height?: number): THREE.Scene{
     if(width && height){
