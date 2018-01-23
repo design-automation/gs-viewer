@@ -104,7 +104,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scenechild=new THREE.Scene();
 
     var geometry = new THREE.SphereGeometry( 0.05 );
-    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
     this.sphere = new THREE.Mesh( geometry, material );
     this.sphere.visible = false;
     this.sphere.name="sphereInter";
@@ -142,7 +142,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.addgrid();
     console.log(this.scene);
     console.log(this.scene_and_maps);
-
   }
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
@@ -261,7 +260,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius!==0){
             center=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
             var radius:number=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
-            max=Math.ceil(radius)*1.5;
+            max=Math.ceil(radius*1.5);
             break;
           }
           if(this.scene.children[i].children[j].type==="GridHelper") {
@@ -315,7 +314,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             geometry.faces.push(new THREE.Face3(0,2,1));
             geometry.faces.push(new THREE.Face3(0,3,2));
-            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
             mesh["geometry"].computeVertexNormals();
             mesh.userData.id=path.id;
             mesh.name="selects";
@@ -347,7 +346,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               }
               geometry.faces.push(new THREE.Face3(0,2,1));
               geometry.faces.push(new THREE.Face3(0,3,2));
-              var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+              var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
               mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
               mesh["geometry"].computeVertexNormals();
               mesh.userData.id=path.id;
@@ -374,7 +373,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
           geometry.faces.push(new THREE.Face3(0,2,1));
           geometry.faces.push(new THREE.Face3(0,3,2));
-          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
           mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
           mesh["geometry"].computeVertexNormals();
           mesh.name="selects";
@@ -401,7 +400,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             geometry.faces.push(new THREE.Face3(0,2,1));
             geometry.faces.push(new THREE.Face3(0,3,2));
-            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0xFF0000,side:THREE.DoubleSide} ));
+            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
             mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
             mesh["geometry"].computeVertexNormals();
             mesh.name="selects";
@@ -423,7 +422,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
+          var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
           line.userData.id=Math.floor(intersects[ 0 ].index/2);
           line["material"].needsUpdate=true;
@@ -448,7 +447,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
+            var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
             line.userData.id=Math.floor(intersects[ 0 ].index/2);
             line["material"].needsUpdate=true;
@@ -470,7 +469,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          var material=new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
+          var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
           line.userData.id=Math.floor(intersects[ 0 ].index/2);
           line["material"].needsUpdate=true;
@@ -495,7 +494,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            var material= new THREE.LineBasicMaterial( { color:0xff0000,side:THREE.DoubleSide} );
+            var material= new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material );
             line.userData.id=Math.floor(intersects[ 0 ].index/2);
             line.name="selects";
