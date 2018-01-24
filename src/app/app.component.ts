@@ -13,7 +13,7 @@ export class AppComponent {
 
 	// dummy gs_data
 	// to pass to the viewer
-	public gs_dummy_data: gs.IModel =gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();
+	public gs_dummy_data: gs.IModel =gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
 
     genModelManyBoxes(): gs.IModel {
         const m: gs.IModel = new gs.Model();
