@@ -308,7 +308,19 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
   
   getverticescheck(){
-    var points:Array<any>=this.getpoints();
+    var attributes=[];
+    var vertices=this.getvertices();
+    var selecting=this.dataService.getselecting();
+    if(selecting.length!==0){
+      for(var i=0;i<selecting.length;i++){
+        for(var j=0;j<vertices.length;j++){
+          if(selecting[i]["id"]===vertices[j].pointid){
+            //console.log(vertices[j].pointid);
+          }
+        }
+      }
+    }
+    /*var points:Array<any>=this.getpoints();
     var attributes=[];
     for(var i=0;i<this.selectObj.length;i++){
       for(var j=0;j<this.selectObj[i].children.length;j++){
@@ -327,7 +339,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           }
         }
       }
-    }
+    }*/
     return attributes;
   }
 

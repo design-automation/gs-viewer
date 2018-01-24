@@ -221,7 +221,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.controls.target.set(this.center.x,this.center.y,this.center.z);
       this.controls.update();
       this.scene.add(objectData);
-      console.log(this.scene);
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -235,7 +234,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var context = canvas.getContext('2d');
     context.textAlign = "center";
     context.fillText( name , canvas.width/2, canvas.height/2);
-    context.font ="Bold  100px Arial";
+    context.font ="Bold  100px sans-serif";
     var texture = new THREE.Texture(canvas) 
     texture.needsUpdate = true;
     var spriteMaterial = new THREE.SpriteMaterial( { map: texture, color: 0xffffff } );
@@ -424,7 +423,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius>radius){
             center=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
             radius=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
-            max=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z))*1.5);
+            max=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
             break;
           }
           if(this.scene.children[i].children[j].type==="GridHelper") {
@@ -483,14 +482,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             geometry.faces.push(new THREE.Face3(0,3,2));
             var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
             mesh["geometry"].computeVertexNormals();
-            mesh.userData.id=path.id;
+            mesh.userData.id=label;
             mesh.name="selects";
             this.scene.add(mesh);
            }
            this.addTextLabel(label,label_xyz, label);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-            if(path.id===this.scene.children[j].userData.id){
+            if(label===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
               j=j-1;
@@ -514,9 +513,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               geometry.faces.push(new THREE.Face3(0,2,1));
               geometry.faces.push(new THREE.Face3(0,3,2));
               var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-              mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+              mesh.userData.id=label;
               mesh["geometry"].computeVertexNormals();
-              mesh.userData.id=path.id;
               mesh.name="selects";
               this.scene.add(mesh);
             }
@@ -541,21 +539,21 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           geometry.faces.push(new THREE.Face3(0,2,1));
           geometry.faces.push(new THREE.Face3(0,3,2));
           var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-          mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+          mesh.userData.id=label;
           mesh["geometry"].computeVertexNormals();
           mesh.name="selects";
           this.scene.add(mesh);
-          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+          this.addTextLabel(label,label_xyz, label);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
 
-            if(Math.floor(intersects[ 0 ].faceIndex/2)===this.scene.children[j].userData.id){
+            if(label===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-            if(Math.floor(intersects[ 0 ].faceIndex/2)===this.textlabels[j]["id"]){
+            if(label===this.textlabels[j]["id"]){
               select=true;
               this.removeTextLabel(this.textlabels[j]["id"]);
             }
@@ -568,11 +566,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             geometry.faces.push(new THREE.Face3(0,2,1));
             geometry.faces.push(new THREE.Face3(0,3,2));
             var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-            mesh.userData.id=Math.floor(intersects[ 0 ].faceIndex/2);
+            mesh.userData.id=label;
             mesh["geometry"].computeVertexNormals();
             mesh.name="selects";
             this.scene.add(mesh);
-            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].faceIndex/2));
+            this.addTextLabel(label,label_xyz,label);
           }
         }
       }
@@ -591,20 +589,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
           var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
-          line.userData.id=Math.floor(intersects[ 0 ].index/2);
+          line.userData.id=label;
           line["material"].needsUpdate=true;
           line.name="selects";
           this.scene.add(line);
-          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+          this.addTextLabel(label,label_xyz, label);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-            if(Math.floor(intersects[ 0 ].index/2)===this.scene.children[j].userData.id){
+            if(label===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-            if(Math.floor(intersects[ 0 ].index/2)===this.textlabels[j]["id"]){
+            if(label===this.textlabels[j]["id"]){
               select=true;
               this.removeTextLabel(this.textlabels[j]["id"]);
             }
@@ -616,11 +614,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
-            line.userData.id=Math.floor(intersects[ 0 ].index/2);
+            line.userData.id=label;
             line["material"].needsUpdate=true;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+            this.addTextLabel(label,label_xyz, label);
           }
         }
       }
@@ -638,20 +636,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
           var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
-          line.userData.id=Math.floor(intersects[ 0 ].index/2);
+          line.userData.id=label;
           line["material"].needsUpdate=true;
           line.name="selects";
           this.scene.add(line);
-          this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+          this.addTextLabel(label,label_xyz, label);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-            if(Math.floor(intersects[ 0 ].index/2)===this.scene.children[j].userData.id){
+            if(label===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-            if(Math.floor(intersects[ 0 ].index/2)===this.textlabels[j]["id"]){
+            if(label===this.textlabels[j]["id"]){
               select=true;
               this.removeTextLabel(this.textlabels[j]["id"]);
             }
@@ -663,18 +661,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             var material= new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material );
-            line.userData.id=Math.floor(intersects[ 0 ].index/2);
+            line.userData.id=label;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz, Math.floor(intersects[ 0 ].index/2));
+            this.addTextLabel(label,label_xyz, label);
           }
         }
       }
       if(this.scenechildren[0].name === "All points"){
         const attributevertix=this.dataService.getattrvertix();
-        //const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(intersects[ 0 ].index);
-        //const vertices: gs.IVertex = this._model.getGeom().getTopo(path) as gs.IVertex;
-        //const points: gs.IPoint = this._model.getGeom().getTopo(path) as gs.IPoint;
         const id:string=this._model.getGeom().getAllPoints()[intersects[ 0 ].index].getLabel();
         for(var i=0;i<attributevertix.length;i++){
           if(id===attributevertix[i].pointid){
@@ -682,29 +677,25 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
         const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[intersects[ 0 ].index].getPosition();//vertices.getPoint().getPosition();
-        console.log(intersects[ 0 ].index,verts_xyz);
-        console.log(this.scene);
-        //const verts: gs.IVertex[] = vertices.getVertices();
-        //const verts_xyz: gs.XYZ[] = vertices.getPoint().getPosition();
         if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
           var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:0.2} );
           const points = new THREE.Points( geometry, pointsmaterial);
-          points.userData.id=label;
+          points.userData.id=id;
           points["material"].needsUpdate=true;
           points.name="selects";
           this.scene.add(points);
-          this.addTextLabel(label,verts_xyz, label);
+          this.addTextLabel(label,verts_xyz, id);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-            if(label===this.scene.children[j].userData.id){
+            if(id===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-              if(label===this.textlabels[j]["id"]){
+              if(id===this.textlabels[j]["id"]){
                 select=true;
                 this.removeTextLabel(this.textlabels[j]["id"]);
               }
@@ -714,11 +705,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
             var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:0.2} );
             const points = new THREE.Points( geometry, pointsmaterial);
-            points.userData.id=label[0];
+            points.userData.id=id;
             points["material"].needsUpdate=true;
             points.name="selects";
             this.scene.add(points);
-            this.addTextLabel(label,verts_xyz, label);
+            this.addTextLabel(label,verts_xyz, id);
           }
         }
 
@@ -1005,7 +996,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 */
   /*sprite( message: string, parameters?: any ): THREE.Sprite{
 
-    if ( parameters === undefined ) parameters = {};
+    if ( parameters === 2 ) parameters = {};
     var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
     var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 30;
     var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 0.1;
