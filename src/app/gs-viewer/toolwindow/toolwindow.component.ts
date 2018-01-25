@@ -77,6 +77,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       if(this.Visible==="Wires") this.wirecheck();
       if(this.Visible==="Edges") this.edgecheck();
       if(this.Visible==="Vertices") this.verticecheck();
+      if(this.Visible==="Points") this.pointcheck();
     }
     this.dataService.visible=this.Visible;
   }
@@ -307,7 +308,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     return attrubtepoints;
   }
   
-  getverticescheck(){
+  /*getverticescheck(){
     var attributes=[];
     var vertices=this.getvertices();
     var selecting=this.dataService.getselecting();
@@ -315,33 +316,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       for(var i=0;i<selecting.length;i++){
         for(var j=0;j<vertices.length;j++){
           if(selecting[i]["id"]===vertices[j].pointid){
-            //console.log(vertices[j].pointid);
+            attributes.push(vertices[j]);
           }
         }
       }
     }
-    /*var points:Array<any>=this.getpoints();
-    var attributes=[];
-    for(var i=0;i<this.selectObj.length;i++){
-      for(var j=0;j<this.selectObj[i].children.length;j++){
-        if(this.selectObj[i].children[j].name==="Vertices"){
-          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
-            for(var m=0;m<points.length;m++){
-              if(points[m].x===this.selectObj[i].children[j].children[n].position.x&&
-                points[m].y===this.selectObj[i].children[j].children[n].position.y&&
-                points[m].z===this.selectObj[i].children[j].children[n].position.z){
-                var attributevertice:any=[];
-                attributevertice.id=this.selectObj[i].children[j].children[n].name;
-                attributevertice.pointid=points[m].id
-                attributes.push(attributevertice);
-              }
-            }
-          }
-        }
-      }
-    }*/
     return attributes;
-  }
+  }*/
 
   point(Visible){
   	this.Visible="Points";
@@ -353,7 +334,17 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   pointcheck(){
     this.attribute=[];
-    this.attribute=this.getpoints();
+    var points=this.getpoints();
+    var selecting=this.dataService.getselecting();
+    if(selecting.length!==0){
+      for(var i=0;i<selecting.length;i++){
+        for(var j=0;j<points.length;j++){
+          if(selecting[i]["id"]===points[j].id){
+            this.attribute.push(points[j]);
+          }
+        }
+      }
+    }
   }
 
   vertice(Visible){
@@ -367,8 +358,22 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   verticecheck(){
-  	this.attribute=[];
-    this.attribute=this.getverticescheck();
+    this.attribute=[];
+    var vertices=this.getvertices();
+    var selecting=this.dataService.getselecting();
+    var char:string;
+    if(selecting.length!==0){
+      for(var i=0;i<selecting.length;i++){
+        for(var j=0;j<vertices.length;j++){
+          //char=selecting[i]["id"].substring(0,2);
+          if(selecting[i]["id"]===vertices[j].pointid){
+            this.attribute.push(vertices[j]);
+          }
+        }
+        
+      }
+    }
+
   }
 
   edge(Visible){
@@ -384,6 +389,18 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   edgecheck(){
     this.attribute=[];
+    var edges=this.getedges();
+    var selecting=this.dataService.getselecting();
+    if(selecting.length!==0){
+      for(var i=0;i<selecting.length;i++){
+        for(var j=0;j<edges.length;j++){
+          if(selecting[i]["id"]===edges[j]){
+            this.attribute.push(edges[j]);
+          }
+        }
+      }
+    }
+    /*this.attribute=[];
     for(var i=0;i<this.selectObj.length;i++){
       for(var j=0;j<this.selectObj[i].children.length;j++){
         if(this.selectObj[i].children[j].name==="Edges"){
@@ -395,7 +412,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           break;
         }
       }
-    }
+    }*/
   }
 
   wire(Visible){
