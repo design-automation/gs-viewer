@@ -162,119 +162,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     return children;
   }
 
-  /*objectselect(SelectVisible){
-    this.SelectVisible="Objs";
-    this.object(this.Visible);
-    document.getElementById("object").style.color=null;
-    document.getElementById("face").style.color=null;
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
-    var scenechildren=[];
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      if(children[i].name==="All wires") children[i]["material"].opacity=0;
-      if(children[i].name==="All edges") children[i]["material"].opacity=0;
-      if(children[i].name==="All vertices") children[i]["material"].opacity=0;
-      if(children[i].name==="All objs"||children[i].name==="All faces"){
-        children[i]["material"].opacity=0.8;
-        children[i].name="All objs";
-        scenechildren.push(children[i]);
-      }
-    }
-    this.dataService.addscenechild(scenechildren);
-  }
-
-  faceselect(SelectVisible){
-    this.SelectVisible="Faces";
-    this.face(this.Visible);
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color=null;
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
-    var scenechildren=[];
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All objs"||children[i].name==="All faces"){
-        children[i]["material"].opacity=0.8;
-        children[i].name="All faces";
-        scenechildren.push(children[i]);
-      }
-    }
-    this.dataService.addscenechild(scenechildren);
-  }
-
-  wireselect(SelectVisible){
-    this.SelectVisible="Wires";
-    this.wire(this.Visible);
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
-    var scenechildren=[];
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All wires"){
-        children[i]["material"].opacity=0.6;
-        scenechildren.push(children[i]);
-      }
-    }
-    this.dataService.addscenechild(scenechildren);
-  }
-  edgeselect(SelectVisible){
-    this.SelectVisible="Edges";
-    this.edge(this.Visible);
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color="grey";
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
-    var scenechildren=[];
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges"){
-        children[i]["material"].opacity=0.4;
-        scenechildren.push(children[i]);
-      }
-    }
-    this.dataService.addscenechild(scenechildren);
-  }
-
-  verticeselect(SelectVisible){
-    this.SelectVisible="Vertices";
-    this.vertice(this.Visible);
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color="grey";
-    document.getElementById("edge").style.color="grey";
-    document.getElementById("vertice").style.color=null;
-    var scenechildren=[];
-    var children=this.getchildren();
-    for(var i=0;i<children.length;i++){
-      console.log(children);
-      if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All vertices"){
-        children[i]["material"].opacity=1;
-        scenechildren.push(children[i]);
-      }
-    }
-    this.dataService.addscenechild(scenechildren);
-  }*/
-
-
   getscenechildren():Array<any>{
     var scenechildren=[];
     for(var n=0;n<this.scene.children.length;n++){
@@ -307,27 +194,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     }
     return attrubtepoints;
   }
-  
-  /*getverticescheck(){
-    var attributes=[];
-    var vertices=this.getvertices();
-    var selecting=this.dataService.getselecting();
-    if(selecting.length!==0){
-      for(var i=0;i<selecting.length;i++){
-        for(var j=0;j<vertices.length;j++){
-          if(selecting[i]["id"]===vertices[j].pointid){
-            attributes.push(vertices[j]);
-          }
-        }
-      }
-    }
-    return attributes;
-  }*/
 
   point(Visible){
   	this.Visible="Points";
-  	this.attribute=[];
     this.attribute=this.getpoints();
+    if(this.selectedVisible==true){
+      this.pointcheck();
+    }
     this.dataService.visible=this.Visible;
     this.clearsprite();
   }
@@ -362,18 +235,33 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     var vertices=this.getvertices();
     var selecting=this.dataService.getselecting();
     var char:string;
+    var labels:Array<any>;
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
-        for(var j=0;j<vertices.length;j++){
-          //char=selecting[i]["id"].substring(0,2);
-          if(selecting[i]["id"]===vertices[j].pointid){
-            this.attribute.push(vertices[j]);
+        if(selecting[i]["id"].indexOf("e")){
+          const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(selecting[i]["index"]);
+          const edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
+          const verts: gs.IVertex[] = edge.getVertices();
+          for(var n=0;n<verts.length;n++){
+            var label=verts[n].getLabel();
+            labels.push(label);
           }
         }
-        
+        for(var j=0;j<vertices.length;j++){
+          if(labels.length===0){
+            if(selecting[i]["id"]===vertices[j].pointid){
+              this.attribute.push(vertices[j]);
+            }
+          }else{
+            for(var m=0;m<labels.length;m++){
+              if(selecting[i]["id"]===vertices[j].pointid||labels[m]===vertices[j].vertixlabel){
+                this.attribute.push(vertices[j]);
+              }
+            }
+          }
+        }
       }
     }
-
   }
 
   edge(Visible){
@@ -400,19 +288,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-    /*this.attribute=[];
-    for(var i=0;i<this.selectObj.length;i++){
-      for(var j=0;j<this.selectObj[i].children.length;j++){
-        if(this.selectObj[i].children[j].name==="Edges"){
-          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
-            var attributeedge:any=[];
-            attributeedge.id=this.selectObj[i].children[j].children[n].name;
-            this.attribute.push(attributeedge);
-          }
-          break;
-        }
-      }
-    }*/
   }
 
   wire(Visible){
@@ -539,19 +414,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             }
           }
         }
-        
-        //this.scene.children[n].children
       }
     }
-  	// for(var j=0;j<this.attribute.length;j++){
-  	//   if(this.attribute[j].id==i){
-  	//   	select=this.attribute[j].mesh;
-  	//   	this.dataService.pushselecting(select);
-  	//   	select.material.color.setHex(0x2E9AFE);
-   //      console.log(this.attribute[j]);
-  	//   }
-  	// }
-
   }
-
 }

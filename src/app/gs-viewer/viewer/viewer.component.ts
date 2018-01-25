@@ -4,6 +4,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
+//import { ResizedEvent } from 'angular-resize-event';
 
 @Component({
   selector: 'app-viewer',
@@ -60,6 +61,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   center:THREE.Vector3;
   seVisible:boolean=false;
   SelectVisible:string='Objs';
+  containerx:number;
+  containery:number;
+  containerwidth:number;
+  containerheight:number;
+
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
@@ -148,6 +154,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.getchildren()[i]["material"].transparent=false;
     }
     this.addgrid();
+    
   }
   //
   //  checks if the flowchart service has a flowchart and calls update function for the viewer
@@ -156,6 +163,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     if(message == "model_update" && this.scene){
       this.updateModel();
     }
+
     
   }
 
@@ -168,6 +176,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
          this.scene.remove(this.scene.children[i]);
       }
     }
+  }
+
+  onResize(event) :void{
+    this.width = event.target.innerWidth;//event.ClientWidth;
+    this.height = event.target.innerHeight;//event.ClientHeight;
+    this.renderer.setSize(this.width,this.height);
+    this.camera.aspect=this.width/this.height;
+    this.camera.updateProjectionMatrix();
   }
 
 
@@ -410,7 +426,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   onDocumentMouseMove(event) {
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
     this.mouse.y =-( event.clientY / this.height ) * 2 + 1;
-
   }
 
   addgrid(){
@@ -434,6 +449,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     }
     if(this.dataService.grid){
+      console.log(this.scene);
       var gridhelper=new THREE.GridHelper( max, max);
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
@@ -486,7 +502,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             mesh.name="selects";
             this.scene.add(mesh);
            }
-           this.addTextLabel(label,label_xyz, label);
+           this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
         }else{
           for(var j=0;j<this.scene.children.length;j++){
             if(label===this.scene.children[j].userData.id){
@@ -518,7 +534,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               mesh.name="selects";
               this.scene.add(mesh);
             }
-            this.addTextLabel(label,label_xyz, label);
+            this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
           }
         }
 
@@ -543,7 +559,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           mesh["geometry"].computeVertexNormals();
           mesh.name="selects";
           this.scene.add(mesh);
-          this.addTextLabel(label,label_xyz, label);
+          this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
         }else{
           for(var j=0;j<this.scene.children.length;j++){
 
@@ -570,7 +586,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             mesh["geometry"].computeVertexNormals();
             mesh.name="selects";
             this.scene.add(mesh);
-            this.addTextLabel(label,label_xyz,label);
+            this.addTextLabel(label,label_xyz,label,Math.floor(intersects[ 0 ].faceIndex/2));
           }
         }
       }
@@ -593,7 +609,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           line["material"].needsUpdate=true;
           line.name="selects";
           this.scene.add(line);
-          this.addTextLabel(label,label_xyz, label);
+          this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
         }else{
           for(var j=0;j<this.scene.children.length;j++){
             if(label===this.scene.children[j].userData.id){
@@ -618,7 +634,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             line["material"].needsUpdate=true;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz, label);
+            this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
           }
         }
       }
@@ -640,7 +656,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           line["material"].needsUpdate=true;
           line.name="selects";
           this.scene.add(line);
-          this.addTextLabel(label,label_xyz, label);
+          this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
         }else{
           for(var j=0;j<this.scene.children.length;j++){
             if(label===this.scene.children[j].userData.id){
@@ -664,16 +680,19 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             line.userData.id=label;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz, label);
+            this.addTextLabel(label,label_xyz, label,Math.floor(intersects[ 0 ].faceIndex/2));
           }
         }
       }
       if(this.scenechildren[0].name === "All points"){
         const attributevertix=this.dataService.getattrvertix();
         const id:string=this._model.getGeom().getAllPoints()[intersects[ 0 ].index].getLabel();
+        var label:string="";
         for(var i=0;i<attributevertix.length;i++){
           if(id===attributevertix[i].pointid){
-            var label:string=attributevertix[i].vertixlabel;
+            var str:string=attributevertix[i].vertixlabel;
+            if(label==="") label=str;
+            else label=label+"<br/>"+str;
           }
         }
         const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[intersects[ 0 ].index].getPosition();//vertices.getPoint().getPosition();
@@ -686,7 +705,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           points["material"].needsUpdate=true;
           points.name="selects";
           this.scene.add(points);
-          this.addTextLabel(label,verts_xyz, id);
+          this.addTextLabel(label,verts_xyz, id,intersects[ 0 ].index);
         }else{
           for(var j=0;j<this.scene.children.length;j++){
             if(id===this.scene.children[j].userData.id){
@@ -709,7 +728,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             points["material"].needsUpdate=true;
             points.name="selects";
             this.scene.add(points);
-            this.addTextLabel(label,verts_xyz, id);
+            this.addTextLabel(label,verts_xyz, id,intersects[ 0 ].index);
           }
         }
 
@@ -774,15 +793,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   //To add text labels just provide label text, label position[x,y,z] and its id
-  addTextLabel(label, label_xyz, id) {
+  addTextLabel(label, label_xyz, id,index) {
     let container = this.myElement.nativeElement.children.namedItem("container");
     let star = this.creatStarGeometry(label_xyz);
-    let textLabel=this.createTextLabel(label, star, id);
+    let textLabel=this.createTextLabel(label, star, id,index);
     this.starsGeometry.vertices.push( star );
     this.textlabels.push(textLabel);
     this.dataService.pushselecting(textLabel);
     container.appendChild(textLabel.element);
-    console.log(this.dataService.selecting);
   }
 
   //To remove text labels just provide its id
@@ -814,11 +832,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     return star;
   }
 
-  createTextLabel(label, star, id) {
+  createTextLabel(label, star, id,index) {
     let div = this.createLabelDiv();
     var self=this;
     let textLabel= {
       id: id,
+      index:index,
       element: div,
       parent: false,
       position: new THREE.Vector3(0,0,0),
