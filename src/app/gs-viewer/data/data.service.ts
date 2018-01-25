@@ -172,10 +172,6 @@ export class DataService {
         if(this._scene.children[i].type==="Scene"){
           this._scene.remove(this._scene.children[i]);
         }
-        if(this._scene.children[i].type==="GridHelper") {
-            this._scene.remove(this._scene.children[i]);
-          }
-
       }
     }
     this.sendMessage("model_update");
