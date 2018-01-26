@@ -56,7 +56,8 @@ export class DataService {
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>,
-          vertices_map: Map<number, gs.ITopoPathData>} ;
+          vertices_map: Map<number, gs.ITopoPathData>,
+          points_map: Map<number, gs.ITopoPathData>} ;
   scenechildren:Array<any>=[];
   red:number;
   green:number;
@@ -68,7 +69,8 @@ export class DataService {
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>,
-          vertices_map: Map<number, gs.ITopoPathData>} ;
+          vertices_map: Map<number, gs.ITopoPathData>,
+          points_map: Map<number, gs.ITopoPathData>} ;
   textlabels:Array<any>=[];
   attributevertix:Array<any>;
 
@@ -164,7 +166,7 @@ export class DataService {
   setGsModel(model: gs.IModel){
     this._gsModel = model;
     if(this._gsModel!==undefined){
-      this.updateModel();
+      this.generateSceneMaps();
     }
     else{
       // remove all children from the scene
@@ -176,13 +178,15 @@ export class DataService {
     }
     this.sendMessage("model_update");
   }
-  updateModel():void{
-    var scene_and_maps: {
+
+  generateSceneMaps():void{
+    var scene_and_maps:any /*{
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>,
-          vertices_map: Map<number, gs.ITopoPathData>}= gs.genThreeOptModelAndMaps( this._gsModel );
+          vertices_map: Map<number, gs.ITopoPathData>,
+          points_map: Map<number, gs.ITopoPathData>}*/= gs.genThreeOptModelAndMaps( this._gsModel );
     this.scenemaps=scene_and_maps;
   }
   getscememaps():any{

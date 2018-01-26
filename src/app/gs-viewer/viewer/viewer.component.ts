@@ -46,7 +46,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>,
-          vertices_map: Map<number, gs.ITopoPathData>} ;
+          vertices_map: Map<number, gs.ITopoPathData>,
+          points_map: Map<number, gs.ITopoPathData>} ;
   
   myElement;
   
@@ -65,6 +66,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   containery:number;
   containerwidth:number;
   containerheight:number;
+  threshold:number;
+  linpre:number;
 
 
   constructor(injector: Injector, myElement: ElementRef) { 
@@ -118,6 +121,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.sphere.name="sphereInter";
     this.scene.add( this.sphere );
 
+    this.threshold=1;
+    this.linpre=1;
+
     // render loop
     let self = this;
     function animate() {
@@ -128,6 +134,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       self.raycaster.params.Points.threshold=0.2;
       self.scenechildren=self.dataService.getscenechild();
       var intersects = self.raycaster.intersectObjects(self.scenechildren);
+      /*if(self.scenechildren.length!==0&&self.scenechildren[0].name==="All points"||"All vertices") {
+        if(intersects.length>1) {self.threshold=self.threshold-0.01;}
+          self.raycaster.params.Points.threshold=self.threshold;
+      }
+      if(self.scenechildren.length!==0&&self.scenechildren[0].name==="All edges"||"All wires") {
+        if(intersects.length>1) {self.linpre=self.linpre-0.01;}
+          self.raycaster.linePrecision=self.linpre;
+      }*/
       for (var i = 0; i < self.scenechildren.length; i++) {
         var currObj=self.scenechildren[i];
         if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
@@ -158,14 +172,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     
   }
   //
-  //  checks if the flowchart service has a flowchart and calls update function for the viewer
+  //  checks if the data service has a data and calls update function for the viewer
   //
   notify(message: string): void{
     if(message == "model_update" && this.scene){
       this.updateModel();
     }
-
-    
   }
 
 
@@ -180,11 +192,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onResize(event) :void{
-    this.width = event.target.innerWidth;//event.ClientWidth;
-    this.height = event.target.innerHeight;//event.ClientHeight;
-    this.renderer.setSize(this.width,this.height);
-    this.camera.aspect=this.width/this.height;
-    this.camera.updateProjectionMatrix();
+    /*var changewidth:number=this.myElement.nativeElement.children.namedItem("container").clientWidth;
+    var changeheight:number=this.myElement.nativeElement.children.namedItem("container").clientHeight;
+    console.log(changewidth);
+    if(this.width!==changewidth||this.height!=changeheight){
+      console.log(this.width)
+
+      this.width = event.target.innerWidth;//event.ClientWidth;
+      this.height = event.target.innerHeight;//event.ClientHeight;
+      this.width = changeheight;//event.ClientWidth;
+      this.height = changeheight;//event.ClientHeight;
+      this.renderer.setSize(this.width,this.height);
+      this.camera.aspect=this.width/this.height;
+      this.camera.updateProjectionMatrix();
+    }*/
   }
 
 
@@ -213,9 +234,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
       this.clearScene();
 
+
       let loader = new THREE.ObjectLoader();
 
+      // loading data
       let objectData = loader.parse( scene_data );
+      
+      // preprocessing
       if( objectData.children!==undefined){
         var radius=0;
         for(var i=0;i< objectData.children.length;i++){
@@ -223,24 +248,37 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           chd["material"].needsUpdate=true;
           chd["material"].transparent=true;
           chd["material"].blending=1;
+          /*var nan:boolean=false;
+          var array=chd["geometry"].attributes.position.array;
+          nan=array.filter(function(undentified) {return true});
+          console.log(chd)*/;
           if( chd.name==="All faces"||chd.name==="All wires"||chd.name==="All edges"||chd.name==="All vertices"||
             chd.name==="Other lines"||chd.name==="All points"){
-            chd["geometry"].computeVertexNormals();
-            chd["geometry"].computeBoundingBox();
-            chd["geometry"].computeBoundingSphere();
-            if(chd.name==="All edges"||chd.name==="Other lines"){
-              this.basicMat=chd["material"].color;
-            }
+              chd["geometry"].computeVertexNormals();
+              chd["geometry"].computeBoundingBox();
+              chd["geometry"].computeBoundingSphere();
+              if(chd.name==="All edges"||chd.name==="Other lines"){
+                this.basicMat=chd["material"].color;
+              }
+            //}
           }
-          if(chd["geometry"].boundingSphere.radius>radius){
-            radius=chd["geometry"].boundingSphere.radius;
-            this.center=chd["geometry"].boundingSphere.center;
+          if(chd["geometry"]!=undefined&&chd["geometry"].boundingSphere.radius!==null){
+            if(chd["geometry"].boundingSphere.radius>radius){
+              radius=chd["geometry"].boundingSphere.radius;
+              this.center=chd["geometry"].boundingSphere.center;
+            }
           }
         }
       }
+
+      // setting controls
       this.controls.target.set(this.center.x,this.center.y,this.center.z);
       this.controls.update();
+      
+      // adding the object to the scene
       this.scene.add(objectData);
+      
+      // add the grid based on size of the object
       this.addgrid();
     }
     catch(ex){
@@ -434,6 +472,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onDocumentMouseMove(event) {
+    this.onResize(event);
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
     this.mouse.y =-( event.offsetY / this.height ) * 2 + 1;
   }
@@ -451,14 +490,15 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             max=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
             break;
           }
-          
         }
       }
-      if(this.scene.children[i].type==="GridHelper") {
+      if(this.scene.children[i].name==="GridHelper") {
             this.scene.remove(this.scene.children[i]);
-            j=j-1;
+            i=i-1;
       }
     }
+
+    // todo: change grid -> grid_value
     if(this.dataService.grid){
       var gridhelper=new THREE.GridHelper( max, max);
       gridhelper.name="GridHelper";

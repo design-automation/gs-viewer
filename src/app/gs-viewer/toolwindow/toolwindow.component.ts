@@ -29,7 +29,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
           edges_map: Map<number, gs.ITopoPathData>,
-          vertices_map: Map<number, gs.ITopoPathData>} ;
+          vertices_map: Map<number, gs.ITopoPathData>,
+          points_map: Map<number, gs.ITopoPathData>} ;
   children:Array<any>;
   SelectVisible:string;//="Faces";
   FaceColor:THREE.Color;
@@ -185,14 +186,18 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getpoints():Array<any>{
     var attrubtepoints=[];
-    //console.log(this.model.getGeom().getAllPoints());
-    for(var i=0;i<this.model.getGeom().getAllPoints().length;i++){
+    for(var i=0;i<this.scene_and_maps.points_map.size;i++){
+      const points: gs.IPoint = this.model.getGeom().getPoint(i) as gs.IPoint;
+      const label: string = points.getLabel();
+      const verts_xyz: gs.XYZ = points.getLabelCentroid();
       var attributepoint:any=[];
-      attributepoint.id=this.model.getGeom().getAllPoints()[i].getLabel();
-      attributepoint.x=this.model.getGeom().getAllPoints()[i].getPosition()[0];
-      attributepoint.y=this.model.getGeom().getAllPoints()[i].getPosition()[1];
-      attributepoint.z=this.model.getGeom().getAllPoints()[i].getPosition()[2];
-      attrubtepoints.push(attributepoint);
+      if(verts_xyz!==undefined){
+        attributepoint.id=label;
+        attributepoint.x=verts_xyz[0];
+        attributepoint.y=verts_xyz[1];
+        attributepoint.z=verts_xyz[2];
+        attrubtepoints.push(attributepoint);
+      }
     }
     return attrubtepoints;
   }
