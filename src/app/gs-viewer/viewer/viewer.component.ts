@@ -451,11 +451,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             max=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
             break;
           }
-          if(this.scene.children[i].children[j].type==="GridHelper") {
-            this.scene.remove(this.scene.children[i].children[j]);
-            j=j-1;
-          }
+          
         }
+      }
+      if(this.scene.children[i].type==="GridHelper") {
+            this.scene.remove(this.scene.children[i]);
+            j=j-1;
       }
     }
     if(this.dataService.grid){
@@ -468,12 +469,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
+
   /// selects object from three.js scene
 
 
   onDocumentMouseDown(event){
     //if(this.seVisible===true) console.log(event);
-    console.log(this.scene);
+    //console.log(this.scene_and_maps);
     var threshold: number;
     if(this.seVisible===true) {
       threshold= 100;
@@ -610,8 +612,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
       if(this.scenechildren[0].name=="All wires"){
         const index:number=Math.floor(intersects[ 0 ].index/2);
-        console.log(index);
-        console.log(this.scene_and_maps.wires_map);
+        /*console.log(index);
+        console.log(this.scene_and_maps.wires_map);*/
         const path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(index);
         const wire: gs.IWire = this._model.getGeom().getTopo(path) as gs.IWire;
         const label: string = wire.getLabel();
@@ -710,13 +712,16 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
       }*/
       if(this.scenechildren[0].name === "All points"){
-        const index:number=intersects[ 0 ].index;
-        const attributevertix=this.dataService.getattrvertix();
-        const id:string=this._model.getGeom().getAllPoints()[index].getLabel();
-        console.log(id);
+        //for(var n=0;n<intersects.length;n++){
+        //console.log(intersects);
+        var index:number=intersects[ 0 ].index;
+        var attributevertix=this.dataService.getattrvertix();
+        var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
+        //console.log(id);
         var label:string="";
         if(this.SelectVisible=="Points"){ 
-          label=id;
+          if(label==="") label=id;
+          else label=label+"<br/>"+id;
         }else{
           for(var i=0;i<attributevertix.length;i++){
             if(id===attributevertix[i].pointid){
@@ -725,6 +730,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               else label=label+"<br/>"+str;
             }
           }
+        //}
         }
         const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[index].getPosition();//vertices.getPoint().getPosition();
         if(this.textlabels.length===0) {
@@ -827,7 +833,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.textlabels.push(textLabel);
     this.dataService.pushselecting(textLabel);
     container.appendChild(textLabel.element);
-    console.log(this.dataService.selecting);
   }
 
   //To remove text labels just provide its id
