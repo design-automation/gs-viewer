@@ -161,7 +161,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(self.dataService.selecting.length!=0){
         self.updateview();
       }
-      //self.onResize();
+      self.onResize();
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
     };
@@ -192,23 +192,25 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
-  /*onResize() :void{
-    const resizeEvent = document.createEvent('HTMLEvents');
-    resizeEvent.initEvent('resize', true, true);
-    console.log('triggering resize...');
-    //findDOMNode(this.componentNode).dispatchEvent(resizeEvent);
-    let changewidth:number=this.myElement.nativeElement.children.namedItem("container").offsetWidth;
-    let changeheight:number=this.myElement.nativeElement.children.namedItem("container").offsetHeight;
-    //if(this.width!==changewidth||this.height!==changeheight){
-      //this.width = event.target.innerWidth;//event.ClientWidth;
-      //this.height = event.target.innerHeight;//event.ClientHeight;
-      this.width = changeheight;//event.ClientWidth;
-      this.height = changeheight;//event.ClientHeight;
-      this.renderer.setSize(this.width,this.height);
-      this.camera.aspect=this.width/this.height;
-      this.camera.updateProjectionMatrix();
+  onResize() :void{
+    let container = this.myElement.nativeElement.children.namedItem("container");
+
+    /// check for container
+    if(!container){
+      console.error("No container in Three Viewer");
+      return;
+    }
+
+    ///
+    let width: number = container.clientWidth;
+    let height: number = container.clientHeight;
+    this.width = width;//event.ClientWidth;
+    this.height = height;//event.ClientHeight;
+    this.renderer.setSize(this.width,this.height);
+    this.camera.aspect=this.width/this.height;
+    this.camera.updateProjectionMatrix();
    // }
-  }*/
+  }
 
 
   //
