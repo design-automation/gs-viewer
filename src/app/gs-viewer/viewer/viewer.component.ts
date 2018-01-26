@@ -111,7 +111,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scenechildren=this.dataService.getscenechild();
     this.scenechild=new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry( 0.05 );
+    var geometry = new THREE.SphereGeometry( 0.3 );
     var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
     this.sphere = new THREE.Mesh( geometry, material );
     this.sphere.visible = false;
@@ -125,7 +125,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       //self.raycaster.linePrecision=0.05;
       self.raycaster.linePrecision=0.5;
       //self.raycaster.params.Points.threshold=0.05;
-      self.raycaster.params.Points.threshold=1;
+      self.raycaster.params.Points.threshold=0.2;
       self.scenechildren=self.dataService.getscenechild();
       var intersects = self.raycaster.intersectObjects(self.scenechildren);
       for (var i = 0; i < self.scenechildren.length; i++) {
@@ -228,7 +228,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             chd["geometry"].computeVertexNormals();
             chd["geometry"].computeBoundingBox();
             chd["geometry"].computeBoundingSphere();
-            if(chd.name==="All edges"){
+            if(chd.name==="All edges"||chd.name==="Other lines"){
               this.basicMat=chd["material"].color;
             }
           }
@@ -289,7 +289,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }else{
       for(var i=0;i<this.getchildren().length;i++){
         this.getchildren()[i]["material"].transparent=false;
-        if(this.getchildren()[i].name=="All edges"){
+        if(this.getchildren()[i].name=="All edges"||this.getchildren()[i].name=="Other edges"){
           this.getchildren()[i]["material"].color=this.basicMat;
         }
       }
@@ -310,7 +310,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All wires") children[i]["material"].opacity=0;
-      if(children[i].name==="All edges") {children[i]["material"].opacity=0;children[i]["material"].color=this.basicMat;}
+      if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0;children[i]["material"].color=this.basicMat;}
       if(children[i].name==="All vertices") children[i]["material"].opacity=0;
       if(children[i].name==="All objs"||children[i].name==="All faces"){
         children[i]["material"].opacity=0.8;
@@ -334,7 +334,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
+      if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
       if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
       if(children[i].name==="All objs"||children[i].name==="All faces"){
         children[i]["material"].opacity=0.8;
@@ -357,7 +357,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
+      if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
       if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires"){
         children[i]["material"].opacity=0.6;
@@ -381,7 +381,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
       if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges"){
+      if(children[i].name==="All edges"||children[i].name==="Other lines"){
         children[i]["material"].opacity=0.5;
         children[i]["material"].color=new THREE.Color(255,255,0);
         scenechildren.push(children[i]);
@@ -403,7 +403,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
-      if(children[i].name==="All edges") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
+      if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
       if(children[i].name==="All vertices"){
         children[i]["material"].opacity=1;
         //scenechildren.push(children[i]);
@@ -492,7 +492,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     //this.raycaster.linePrecision = 0.05;
     this.raycaster.linePrecision = 0.5;
     //this.raycaster.params.Points.threshold=0.05;
-    this.raycaster.params.Points.threshold=1;
+    this.raycaster.params.Points.threshold=0.2;
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
@@ -659,7 +659,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
       }
-      if(this.scenechildren[0].name=="All edges"){
+      if(this.scenechildren[0].name=="All edges"||this.scenechildren[0].name=="Other lines"){
         const index:number=Math.floor(intersects[ 0 ].index/2);
         const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
         const edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
@@ -706,10 +706,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           }
         }
       }
+      /*if(this.scenechildren[0].name=="Other lines"){
+
+      }*/
       if(this.scenechildren[0].name === "All points"){
         const index:number=intersects[ 0 ].index;
         const attributevertix=this.dataService.getattrvertix();
         const id:string=this._model.getGeom().getAllPoints()[index].getLabel();
+        console.log(id);
         var label:string="";
         if(this.SelectVisible=="Points"){ 
           label=id;
@@ -726,7 +730,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
-          var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:0.2} );
+          var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
           const points = new THREE.Points( geometry, pointsmaterial);
           points.userData.id=id;
           points["material"].needsUpdate=true;
@@ -749,7 +753,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           if(select==false){
             var geometry=new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
-            var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:0.2} );
+            var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
             const points = new THREE.Points( geometry, pointsmaterial);
             points.userData.id=id;
             points["material"].needsUpdate=true;
