@@ -21,7 +21,7 @@ export class AppComponent {
         let fr = new FileReader();
         let self = this;
         fr.onload = function(text){ 
-            let js_data = JSON.parse(text.target.result);
+            let js_data = JSON.parse(text.target["result"]);
             let model: gs.IModel = new gs.Model(js_data);
             self.gs_dummy_data = model;
         };

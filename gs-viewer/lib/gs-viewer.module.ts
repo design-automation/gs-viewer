@@ -15,7 +15,7 @@ import { GroupsComponent } from './toolwindow/groups.component';
 @NgModule({
     imports: [ 	CommonModule,
     			AngularSplitModule,
-			   	MatSliderModule
+			   	MatSliderModule,
 			 ],
     exports: [ GSViewerComponent ],
     declarations: [GSViewerComponent,

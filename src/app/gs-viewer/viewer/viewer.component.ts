@@ -161,6 +161,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(self.dataService.selecting.length!=0){
         self.updateview();
       }
+      //self.onResize();
       requestAnimationFrame( animate );
       self.renderer.render( self.scene, self.camera );
     };
@@ -191,22 +192,23 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
-  onResize(event) :void{
-    /*var changewidth:number=this.myElement.nativeElement.children.namedItem("container").clientWidth;
-    var changeheight:number=this.myElement.nativeElement.children.namedItem("container").clientHeight;
-    console.log(changewidth);
-    if(this.width!==changewidth||this.height!=changeheight){
-      console.log(this.width)
-
-      this.width = event.target.innerWidth;//event.ClientWidth;
-      this.height = event.target.innerHeight;//event.ClientHeight;
+  /*onResize() :void{
+    const resizeEvent = document.createEvent('HTMLEvents');
+    resizeEvent.initEvent('resize', true, true);
+    console.log('triggering resize...');
+    //findDOMNode(this.componentNode).dispatchEvent(resizeEvent);
+    let changewidth:number=this.myElement.nativeElement.children.namedItem("container").offsetWidth;
+    let changeheight:number=this.myElement.nativeElement.children.namedItem("container").offsetHeight;
+    //if(this.width!==changewidth||this.height!==changeheight){
+      //this.width = event.target.innerWidth;//event.ClientWidth;
+      //this.height = event.target.innerHeight;//event.ClientHeight;
       this.width = changeheight;//event.ClientWidth;
       this.height = changeheight;//event.ClientHeight;
       this.renderer.setSize(this.width,this.height);
       this.camera.aspect=this.width/this.height;
       this.camera.updateProjectionMatrix();
-    }*/
-  }
+   // }
+  }*/
 
 
   //
@@ -472,7 +474,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onDocumentMouseMove(event) {
-    this.onResize(event);
     this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
     this.mouse.y =-( event.offsetY / this.height ) * 2 + 1;
   }

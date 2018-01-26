@@ -6732,6 +6732,7 @@ var ViewerComponent = /** @class */ (function (_super) {
             if (self.dataService.selecting.length != 0) {
                 self.updateview();
             }
+            //self.onResize();
             requestAnimationFrame(animate);
             self.renderer.render(self.scene, self.camera);
         }
@@ -6759,20 +6760,23 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
         }
     };
-    ViewerComponent.prototype.onResize = function (event) {
-        /*console.log(document);
-        let changewidth:number=this.myElement.nativeElement.children.namedItem("container").clientWidth;
-        let changeheight:number=this.myElement.nativeElement.children.namedItem("container").clientHeight;
-        if(this.width!==changewidth||this.height!==changeheight){
-          //this.width = event.target.innerWidth;//event.ClientWidth;
-          //this.height = event.target.innerHeight;//event.ClientHeight;
-          this.width = changeheight;//event.ClientWidth;
-          this.height = changeheight;//event.ClientHeight;
-          this.renderer.setSize(this.width,this.height);
-          this.camera.aspect=this.width/this.height;
-          this.camera.updateProjectionMatrix();
-        }*/
-    };
+    /*onResize() :void{
+      const resizeEvent = document.createEvent('HTMLEvents');
+      resizeEvent.initEvent('resize', true, true);
+      console.log('triggering resize...');
+      //findDOMNode(this.componentNode).dispatchEvent(resizeEvent);
+      let changewidth:number=this.myElement.nativeElement.children.namedItem("container").offsetWidth;
+      let changeheight:number=this.myElement.nativeElement.children.namedItem("container").offsetHeight;
+      //if(this.width!==changewidth||this.height!==changeheight){
+        //this.width = event.target.innerWidth;//event.ClientWidth;
+        //this.height = event.target.innerHeight;//event.ClientHeight;
+        this.width = changeheight;//event.ClientWidth;
+        this.height = changeheight;//event.ClientHeight;
+        this.renderer.setSize(this.width,this.height);
+        this.camera.aspect=this.width/this.height;
+        this.camera.updateProjectionMatrix();
+     // }
+    }*/
     //
     // update mode
     // todo: optimize
@@ -7035,7 +7039,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.mUpTime = (new Date()).getTime();
     };
     ViewerComponent.prototype.onDocumentMouseMove = function (event) {
-        this.onResize(event);
         this.mouse.x = (event.offsetX / this.width) * 2 - 1;
         this.mouse.y = -(event.offsetY / this.height) * 2 + 1;
     };
