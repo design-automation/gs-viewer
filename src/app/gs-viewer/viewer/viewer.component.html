@@ -35,6 +35,20 @@
   		<button id="setting" [class.selected]="settingVisible" (click)= "settingVisible = !settingVisible"><i class="fa fa-cog"></i></button>
 
       <button id="selecting" [class.selected]="seVisible" (click)= "select(seVisible)" ><i class="fa fa-mouse-pointer"></i></button>
+      <div id="shownumber">
+        <tr>
+        <td  align=center width="50%">Triangles</td>
+        <td  align=center width="40%">{{renderer.info.render.faces}}</td>
+        </tr>
+        <tr>
+        <td  align=center width="50%">Points</td>
+        <td  align=center width="40%">{{renderer.info.render.points}}</td>
+        </tr>
+        <tr>
+        <td  align=center width="50%">Vertices</td>
+        <td  align=center width="40%">{{renderer.info.render.vertices}}</td>
+        </tr>
+      </div>
 
       	
       	<!--setting-->

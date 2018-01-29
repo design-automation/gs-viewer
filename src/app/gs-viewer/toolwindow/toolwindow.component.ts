@@ -4,6 +4,7 @@ import { AngularSplitModule } from 'angular-split';
 import { DataService } from "../data/data.service";
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
+import {ViewerComponent} from "../viewer/viewer.component";
 
 
 @Component({
@@ -36,6 +37,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   FaceColor:THREE.Color;
   WireColor:THREE.Color;
   EdgeColor:THREE.Color;
+  textlabels: Array<any>=[];
+  starsGeometry:THREE.Geometry = new THREE.Geometry();
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -98,6 +101,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
       attributes.vertixlabel=label;
+      attributes.path=path;
       attributevertix.push(attributes);
     }
     this.dataService.addattrvertix(attributevertix);
@@ -449,9 +453,24 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.clearsprite();
   }
 
-  clicktoshow(id){
-    this.ID=id;
-    for(var i=0;i<this.scenechildren.length;i++){
+  clicktoshow(select){
+    const vertices: gs.IVertex = this.model.getGeom().getTopo(select.path) as gs.IVertex;
+    const label: string = vertices.getLabel();
+    console.log(select.path,label)
+    const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
+
+    var geometry=new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
+    var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
+    const points = new THREE.Points( geometry, pointsmaterial);
+    points.userData.id=select.id;
+    points["material"].needsUpdate=true;
+    points.name="selects";
+    this.scene.add(points);
+    this.dataService.addTextLabel(label,verts_xyz, select.id,null,select.path);
+    console.log(this.dataService.selecting);
+
+    /*for(var i=0;i<this.scenechildren.length;i++){
       if(this.scenechildren[i].name===this.Visible){
         if(this.selectObj.length!==0){
           for(var j=0;j<this.scenechildren[i].children.length;j++){
@@ -462,7 +481,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           }
         }
       }
-    }
+    }*/
   }
   
   facecheck(){
@@ -563,4 +582,102 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
     }
   }
+  /*//To add text labels just provide label text, label position[x,y,z] and its id
+  addTextLabel(label, label_xyz, id,index,path) {
+    //console.log(document.getElementsByTagName("app-viewer")[0].children.namedItem("container"));
+    //let container = this.myElement.nativeElement.children.namedItem("container");
+    let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
+    let star = this.creatStarGeometry(label_xyz);
+    let textLabel=this.createTextLabel(label, star, id,index,path);
+    this.starsGeometry.vertices.push( star );
+    this.textlabels.push(textLabel);
+    this.dataService.pushselecting(textLabel);
+    container.appendChild(textLabel.element);
+    console.log(container);
+  }
+
+  //To remove text labels just provide its id
+  removeTextLabel(id) {
+    let i=0;
+    for(i=0; i<this.textlabels.length; i++) {
+      if(this.textlabels[i].id==id) {
+        // let container = this.myElement.nativeElement.children.namedItem("container");
+        let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
+        container.removeChild(this.textlabels[i].element);
+        let index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
+        if(index !== -1) {
+          this.starsGeometry.vertices.splice(index, 1);
+        }
+        break;
+      }
+    }
+    if(i<this.textlabels.length) {
+      this.textlabels.splice(i, 1);
+      this.dataService.spliceselecting(i, 1);
+    }
+  }
+
+  creatStarGeometry(label_xyz) {
+    let star = new THREE.Vector3();
+    star.x = label_xyz[0];
+    star.y = label_xyz[1];
+    star.z = label_xyz[2];
+    return star;
+  }
+
+  createTextLabel(label, star, id,index,path) {
+    let div = this.createLabelDiv();
+    var self=this;
+    let textLabel= {
+      id: id,
+      index:index,
+      path:path,
+      element: div,
+      parent: false,
+      position: new THREE.Vector3(0,0,0),
+      setHTML: function(html) {
+        this.element.innerHTML = html;
+        console.log(this.element.innerHTML);
+      },
+      setParent: function(threejsobj) {
+        this.parent = threejsobj;
+        console.log(this.parent);
+      },
+      updatePosition: function() {
+        if(parent) {
+          this.position.copy(this.parent);
+          console.log(this.position);
+        }
+        
+        var coords2d = this.get2DCoords(this.position, this.camera);
+        this.element.style.left = coords2d.x + 'px';
+        this.element.style.top = coords2d.y + 'px';
+      },
+      get2DCoords: function(position, camera) {
+        var vector = position.project(camera);
+        vector.x = (vector.x + 1)/2 * this.width;
+        vector.y = -(vector.y - 1)/2 * this.height;
+        return vector;
+      }
+    };
+    textLabel.setHTML(label);
+    textLabel.setParent(star);
+    return textLabel;
+  }
+
+  createLabelDiv() {
+    var div=document.createElement("div");
+    div.style.color= '#00f';
+    div.style.fontFamily= '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
+    div.style.margin='-5px 0 0 15px';
+    div.style.pointerEvents='none';
+    div.style.position = 'absolute';
+    div.style.width = '100';
+    div.style.height = '100';
+    div.style.top = '-1000';
+    div.style.left = '-1000';
+    div.style.textShadow="0px 0px 3px white";
+    div.style.color="black";
+    return div;
+   }*/
 }

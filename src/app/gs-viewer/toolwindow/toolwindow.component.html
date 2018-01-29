@@ -45,7 +45,7 @@
       <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute" width="50%">
         <tr>
           <!-- <button id="numberbutton" [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id)>{{datascale.vertixlabel}}</button> -->
-          <button id="numberbutton">{{datascale.vertixlabel}}</button>
+          <button id="numberbutton" (click)=clicktoshow(datascale)>{{datascale.vertixlabel}}</button>
           <td  align=center  width="50%">{{datascale.pointid}}</td>
         </tr>
       </table>

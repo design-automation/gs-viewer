@@ -73,7 +73,7 @@ export class DataService {
           points_map: Map<number, gs.ITopoPathData>} ;
   textlabels:Array<any>=[];
   attributevertix:Array<any>;
-
+  starsGeometry:THREE.Geometry = new THREE.Geometry();
 
   // ---- 
   // Subscription Handling
@@ -353,5 +353,101 @@ export class DataService {
    this.sendMessage();
    return this.scenechildren;
  }
+
+ //To add text labels just provide label text, label position[x,y,z] and its id
+  addTextLabel(label, label_xyz, id,index,path) {
+    //console.log(document.getElementsByTagName("app-viewer")[0].children.namedItem("container"));
+    //let container = this.myElement.nativeElement.children.namedItem("container");
+    let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
+    let star = this.creatStarGeometry(label_xyz);
+    let textLabel=this.createTextLabel(label, star, id,index,path);
+    this.starsGeometry.vertices.push( star );
+    this.textlabels.push(textLabel);
+    this.pushselecting(textLabel);
+    container.appendChild(textLabel.element);
+  }
+
+  //To remove text labels just provide its id
+  removeTextLabel(id) {
+    let i=0;
+    for(i=0; i<this.textlabels.length; i++) {
+      if(this.textlabels[i].id==id) {
+        // let container = this.myElement.nativeElement.children.namedItem("container");
+        let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
+        container.removeChild(this.textlabels[i].element);
+        let index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
+        if(index !== -1) {
+          this.starsGeometry.vertices.splice(index, 1);
+        }
+        break;
+      }
+    }
+    if(i<this.textlabels.length) {
+      this.textlabels.splice(i, 1);
+      this.spliceselecting(i, 1);
+    }
+  }
+
+  creatStarGeometry(label_xyz) {
+    let star = new THREE.Vector3();
+    star.x = label_xyz[0];
+    star.y = label_xyz[1];
+    star.z = label_xyz[2];
+    return star;
+  }
+
+  createTextLabel(label, star, id,index,path) {
+    let div = this.createLabelDiv();
+    var self=this;
+    let textLabel= {
+      id: id,
+      index:index,
+      path:path,
+      element: div,
+      parent: false,
+      position: new THREE.Vector3(0,0,0),
+      setHTML: function(html) {
+        this.element.innerHTML = html;
+      },
+      setParent: function(threejsobj) {
+        this.parent = threejsobj;
+      },
+      updatePosition: function() {
+        if(parent) {
+          this.position.copy(this.parent);
+          console.log(this.parent);
+        }
+        
+        var coords2d = this.get2DCoords(this.position, this.camera);
+        this.element.style.left = coords2d.x + 'px';
+        this.element.style.top = coords2d.y + 'px';
+      },
+      get2DCoords: function(position, camera) {
+        var vector = position.project(camera);
+        vector.x = (vector.x + 1)/2 * this.width;
+        vector.y = -(vector.y - 1)/2 * this.height;
+        return vector;
+      }
+    };
+    textLabel.setHTML(label);
+    textLabel.setParent(star);
+    return textLabel;
+  }
+
+  createLabelDiv() {
+    var div=document.createElement("div");
+    div.style.color= '#00f';
+    div.style.fontFamily= '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
+    div.style.margin='-5px 0 0 15px';
+    div.style.pointerEvents='none';
+    div.style.position = 'absolute';
+    div.style.width = '100';
+    div.style.height = '100';
+    div.style.top = '-1000';
+    div.style.left = '-1000';
+    div.style.textShadow="0px 0px 3px white";
+    div.style.color="black";
+    return div;
+   }
 
 }

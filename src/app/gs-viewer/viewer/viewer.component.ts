@@ -68,17 +68,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   containerheight:number;
   threshold:number;
   linpre:number;
+  FaceNo:number;
+  PointsNo:number;
+  VerticesNo:number;
 
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
     this.myElement = myElement;
-    
   }
 
   ngOnInit() {
 
     let container = this.myElement.nativeElement.children.namedItem("container");
+
 
     /// check for container
     if(!container){
@@ -157,6 +160,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
       for(var i=0; i<self.textlabels.length; i++) {
         self.textlabels[i].updatePosition();
+        //self.textlabels[i].dataServiec.updatePosition();
       }
       if(self.dataService.selecting.length!=0){
         self.updateview();
@@ -169,7 +173,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<this.getchildren().length;i++){
       this.getchildren()[i]["material"].transparent=false;
     }
-    //this.addgrid();
+    //this.shownumber();
+    
     
   }
   //
@@ -255,7 +260,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           /*var nan:boolean=false;
           var array=chd["geometry"].attributes.position.array;
           nan=array.filter(function(undentified) {return true});
-          console.log(chd)*/;
+          console.log(chd);*/
           if( chd.name==="All faces"||chd.name==="All wires"||chd.name==="All edges"||chd.name==="All vertices"||
             chd.name==="Other lines"||chd.name==="All points"){
               chd["geometry"].computeVertexNormals();
@@ -876,6 +881,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.textlabels.push(textLabel);
     this.dataService.pushselecting(textLabel);
     container.appendChild(textLabel.element);
+    console.log(container);
   }
 
   //To remove text labels just provide its id
@@ -918,13 +924,17 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       position: new THREE.Vector3(0,0,0),
       setHTML: function(html) {
         this.element.innerHTML = html;
+        console.log(html)
       },
       setParent: function(threejsobj) {
         this.parent = threejsobj;
+        console.log(this.parent);
       },
       updatePosition: function() {
         if(parent) {
           this.position.copy(this.parent);
+          console.log(this.position);
+           
         }
         
         var coords2d = this.get2DCoords(this.position, self.camera);
