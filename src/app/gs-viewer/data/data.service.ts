@@ -180,7 +180,7 @@ export class DataService {
   }
 
   generateSceneMaps():void{
-    var scene_and_maps:any /*{
+    var scene_and_maps:any/*{
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
           wires_map: Map<number, gs.ITopoPathData>, 
@@ -191,6 +191,7 @@ export class DataService {
   }
   getscememaps():any{
     return this.scenemaps;
+
   }
 
   getScene(width?: number, height?: number): THREE.Scene{

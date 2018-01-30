@@ -4,6 +4,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
+import {NgxPaginationModule} from 'ngx-pagination';
 //import { ResizedEvent } from 'angular-resize-event';
 
 @Component({
@@ -263,6 +264,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           console.log(chd);*/
           if( chd.name==="All faces"||chd.name==="All wires"||chd.name==="All edges"||chd.name==="All vertices"||
             chd.name==="Other lines"||chd.name==="All points"){
+              chd["material"].transparent=false;
               chd["geometry"].computeVertexNormals();
               chd["geometry"].computeBoundingBox();
               chd["geometry"].computeBoundingSphere();
@@ -285,8 +287,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.controls.update();
       
       // adding the object to the scene
-      this.scene.add(objectData);
-      
+      this.scene.add(objectData);      
       // add the grid based on size of the object
       this.addgrid();
     }
@@ -539,6 +540,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var select:boolean=false;
     this.scenechildren=this.dataService.getscenechild();
     this.raycaster.setFromCamera(this.mouse,this.camera);
+
     //this.raycaster.linePrecision = 0.05;
     this.raycaster.linePrecision = 0.5;
     //this.raycaster.params.Points.threshold=0.05;
@@ -761,15 +763,26 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }*/
       if(this.scenechildren[0].name === "All points"){
         //for(var n=0;n<intersects.length;n++){
-        //console.log(intersects);
+        /*console.log(intersects);
+        var index:any=[];
+        for(var i=0;i<intersects.length-1;i++){
+          if(intersects[i].point!==intersects[i].point)
+        }*/
         var index:number=intersects[ 0 ].index;
         var attributevertix=this.dataService.getattrvertix();
         var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
         //console.log(id);
         var label:string="";
-        if(this.SelectVisible=="Points"){ 
+        if(this.SelectVisible=="Points"){
           if(label==="") label=id;
           else label=label+"<br/>"+id;
+          /*for(var i=0;i<attributevertix.length;i++){
+            if(id===attributevertix[i].pointid){
+              var str:string=attributevertix[i].pointid;
+              if(label==="") label=str;
+              else label=label+"<br/>"+str;
+            }
+          }*/
         }else{
           for(var i=0;i<attributevertix.length;i++){
             if(id===attributevertix[i].pointid){
@@ -881,7 +894,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.textlabels.push(textLabel);
     this.dataService.pushselecting(textLabel);
     container.appendChild(textLabel.element);
-    console.log(container);
   }
 
   //To remove text labels just provide its id
@@ -924,17 +936,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       position: new THREE.Vector3(0,0,0),
       setHTML: function(html) {
         this.element.innerHTML = html;
-        console.log(html)
       },
       setParent: function(threejsobj) {
         this.parent = threejsobj;
-        console.log(this.parent);
       },
       updatePosition: function() {
         if(parent) {
           this.position.copy(this.parent);
-          console.log(this.position);
-           
         }
         
         var coords2d = this.get2DCoords(this.position, self.camera);

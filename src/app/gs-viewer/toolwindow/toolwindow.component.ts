@@ -39,6 +39,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   EdgeColor:THREE.Color;
   textlabels: Array<any>=[];
   starsGeometry:THREE.Geometry = new THREE.Geometry();
+  message:string;
+  p1:number;
+  p2:number;
+  p3:number;
+  p4:number;
+  p5:number;
+  p6:number;
+
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -54,17 +62,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   ngOnInit() {
     this.model= this.dataService.getGsModel(); 
     this.Visible=this.dataService.visible;
-    if(this.model!==undefined){
-      this.scene_and_maps= this.dataService.getscememaps();
-    }else{
-      return undefined;
-    }
+    this.updateModel();
     this.object(this.Visible);
-    //this.objectselect(this.SelectVisible);
     this.getvertices();
   }
 
-  notify(){ 
+  notify(message: string):void{ 
+    if(message == "model_update" && this.scene){
+      this.updateModel();
+      this.ngOnInit();
+    }
     this.selectObj=[];
     for(var i=0;i<this.dataService.selecting.length;i++){
        for(var n=0;n<this.scene.children.length;n++){
@@ -86,6 +93,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.dataService.visible=this.Visible;
   }
 
+  updateModel():void{
+    if(this.model!==undefined){
+      try{
+        this.scene_and_maps= this.dataService.getscememaps();
+
+      }catch(ex){
+        console.error("Error displaying model:", ex);
+      }
+    }
+  }
   getvertices(){
     var attributevertix=[];
     var points=this.getpoints();

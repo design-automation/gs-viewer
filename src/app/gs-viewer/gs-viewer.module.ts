@@ -10,12 +10,14 @@ import { SettingComponent } from './setting/setting.component';
 import { ToolwindowComponent } from './toolwindow/toolwindow.component';
 import { DataService } from './data/data.service';
 import { GroupsComponent } from './toolwindow/groups.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
     imports: [ 	CommonModule,
     			AngularSplitModule,
-			   	MatSliderModule
+			   	MatSliderModule,
+                NgxPaginationModule
 			 ],
     exports: [ GSViewerComponent ],
     declarations: [GSViewerComponent,
