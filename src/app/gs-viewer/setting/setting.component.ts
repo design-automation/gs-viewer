@@ -28,6 +28,10 @@ export class SettingComponent implements OnInit {
   _centerx:number;
   _centery:number;
   _centerz:number;
+  raycaster:THREE.Raycaster;
+  _linepre:number;
+  _pointpre:number;
+  _pointsize:number;
 
   ngOnInit(){
     if(this.hue == undefined) {
@@ -79,10 +83,26 @@ export class SettingComponent implements OnInit {
     }else{
       this._centery=this.dataService.centery;
     }
-     if(this._centerz==undefined){
+    if(this._centerz==undefined){
       this._centerz=0;
     }else{
       this._centerz=this.dataService.centerz;
+    }
+    this.raycaster=this.dataService.getraycaster();
+    if(this._linepre==undefined){
+      this._linepre=0.05;
+    }else{
+      this._linepre=this.raycaster.linePrecision;
+    }
+    if(this._pointpre==undefined){
+      this._pointpre=1;
+    }else{
+      this._pointpre=this.raycaster.params.Points.threshold;
+    }
+    if(this._pointsize==undefined){
+      this._pointsize=1;
+    }else{
+      this._pointsize=this.dataService.pointsize;
     }
     
   }
@@ -104,6 +124,10 @@ export class SettingComponent implements OnInit {
     this._centerx=this.dataService.centerx;
     this._centery=this.dataService.centery;
     this._centerz=this.dataService.centerz;
+    this.raycaster=this.dataService.getraycaster();
+    this._linepre=this.raycaster.linePrecision;
+    this._pointpre=this.raycaster.params.Points.threshold;
+    this._pointsize=this.dataService.pointsize;
   }
 
   changegrid(){
@@ -137,6 +161,7 @@ export class SettingComponent implements OnInit {
     this.dataService.addgrid(this.gridVisible);
   }
 
+
   changecenter(centerx,centery,centerz){
     if(this.gridVisible){
       var gridhelper=this.scene.getObjectByName("GridHelper");
@@ -148,6 +173,41 @@ export class SettingComponent implements OnInit {
       this.dataService.getcentery(centery);
       this.dataService.getcenterz(centerz);
     }
+  }
+
+  changeline(lineprecision){
+    this._linepre=lineprecision;
+    this.raycaster.linePrecision=lineprecision;
+    this.dataService.addraycaster(this.raycaster);
+  }
+
+  changepoint(pointprecision){
+    this._pointpre=pointprecision;
+    this.raycaster.params.Points.threshold=pointprecision;
+    this.dataService.addraycaster(this.raycaster);
+    /*for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="sphereInter"){
+        this.scene.children[i]["geometry"].parameters.radius=this._pointpre;
+      }
+      if(this.scene.children[i].name==="selects"&&this.scene.children[i].type==="Points"){
+        this.scene.children[i]["material"].size=this._pointpre;
+      }
+    }*/
+  }
+
+  changepointsize(pointsize){
+    this._pointsize=pointsize;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="sphereInter"){
+        var geometry = new THREE.SphereGeometry( pointsize/3);
+        this.scene.children[i]["geometry"]=geometry;
+      }
+      if(this.scene.children[i].name==="selects"&&this.scene.children[i].type==="Points"){
+        this.scene.children[i]["material"].size=pointsize;
+      }
+    }
+    this.dataService.getpointsize(pointsize);
+
   }
 
   changeaxis(){

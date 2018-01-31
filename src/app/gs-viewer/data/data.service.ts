@@ -77,6 +77,7 @@ export class DataService {
   centerx:number;
   centery:number;
   centerz:number;
+  pointsize:number;
 
   // ---- 
   // Subscription Handling
@@ -221,12 +222,18 @@ export class DataService {
     return this._orbitControls;
   }
 
-
   //
   //
   //
   getalight():any{
     return this._alight;
+  }
+  addraycaster(raycaster){
+    this.raycaster=raycaster;
+  }
+
+  getraycaster():THREE.Raycaster{
+    return this.raycaster;
   }
 
   addlightvalue(hue,saturation,lightness){
@@ -261,6 +268,10 @@ export class DataService {
   }
   getblue(blue):any{
     this.blue=blue;
+  }
+
+  getpointsize(pointszie):void{
+    this.pointsize=pointszie;
   }
 
   getcenterx(centerx):void{
@@ -429,7 +440,6 @@ export class DataService {
       updatePosition: function() {
         if(parent) {
           this.position.copy(this.parent);
-          console.log(this.parent);
         }
         
         var coords2d = this.get2DCoords(this.position, this.camera);

@@ -67,12 +67,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   containery:number;
   containerwidth:number;
   containerheight:number;
-  threshold:number;
-  linpre:number;
   FaceNo:number;
   PointsNo:number;
   VerticesNo:number;
   distance:number;
+  settingVisible:boolean=false;
 
 
   constructor(injector: Injector, myElement: ElementRef) { 
@@ -83,7 +82,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   ngOnInit() {
 
     let container = this.myElement.nativeElement.children.namedItem("container");
-
 
     /// check for container
     if(!container){
@@ -116,27 +114,25 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.selecting = this.dataService.getselecting();  // todo: should this be in the data service??
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+    this.raycaster.linePrecision=0.05;
     this.scenechildren=this.dataService.getscenechild();
     this.scenechild=new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry( this.distance );
+    var geometry = new THREE.SphereGeometry( 0.3 );
     var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
     this.sphere = new THREE.Mesh( geometry, material );
     this.sphere.visible = false;
     this.sphere.name="sphereInter";
     this.scene.add( this.sphere );
 
-    this.threshold=1;
-    this.linpre=1;
-
     // render loop
     let self = this;
     function animate() {
       self.raycaster.setFromCamera(self.mouse,self.camera);
       //self.raycaster.linePrecision=0.05;
-      self.raycaster.linePrecision=0.05;
+      //self.raycaster.linePrecision=0.05;
       //self.raycaster.params.Points.threshold=0.05;
-      if(self.distance!==undefined) self.raycaster.params.Points.threshold=self.distance;
+      //if(self.distance!==undefined) self.raycaster.params.Points.threshold=self.distance;
       self.scenechildren=self.dataService.getscenechild();
       var intersects = self.raycaster.intersectObjects(self.scenechildren);
       for (var i = 0; i < self.scenechildren.length; i++) {
@@ -168,6 +164,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.getchildren()[i]["material"].transparent=false;
     }
     //this.shownumber();
+    this.dataService.addraycaster(this.raycaster);
     
   }
   //
@@ -295,7 +292,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.scene.add(objectData);      
       // add the grid based on size of the object
       this.addgrid();
-      this.distance=this.closestpoint();
+      //this.distance=this.closestpoint();
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -330,7 +327,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     return children;
   }
 
-  closestpoint():number{
+  /*closestpoint():number{
     var distance:number=0
     for(var i=0;i<this._model.getGeom().getAllPoints().length-1;i++){
       for(var j=i+1;j<this._model.getGeom().getAllPoints().length;j++){
@@ -344,7 +341,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     distance=Math.round(distance)/50;
     return distance;
-  }
+  }*/
 
   select(seVisible){
     event.stopPropagation();
@@ -567,8 +564,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
-      //gridhelper.position.set(center.x,center.y,0);
+      gridhelper.position.set(0,0,0);
       this.scene.add( gridhelper);
+      this.dataService.centerx=0;
+      this.dataService.centery=0;
+      this.dataService.centerz=0;
     }
   }
 
@@ -596,9 +596,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.raycaster.setFromCamera(this.mouse,this.camera);
 
     //this.raycaster.linePrecision = 0.05;
-    this.raycaster.linePrecision = 0.5;
+    //this.raycaster.linePrecision = 0.5;
     //this.raycaster.params.Points.threshold=0.05;
-    this.raycaster.params.Points.threshold=this.distance;
+    //this.raycaster.params.Points.threshold=this.distance;
     intersects = this.raycaster.intersectObjects(this.scenechildren);
     if ( intersects.length > 0 ) {
       selectedObj=intersects[ 0 ].object;
@@ -860,7 +860,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
 
       if(this.scenechildren[0].name === "All points"){
+        var distance:number=intersects[ 0 ].distanceToRay;
         var index:number=intersects[ 0 ].index;
+        for(var i=1;i<intersects.length;i++){
+          if(distance>intersects[ i ].distanceToRay){
+            distance=intersects[ i ].distanceToRay;
+            index=intersects[ i ].index;
+          }
+        }
         var attributevertix=this.dataService.getattrvertix();
         var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
         var label:string="";
@@ -887,7 +894,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         if(this.textlabels.length===0&&label!=="") {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
-          var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:this.distance} );
+          var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
+          if(this.dataService.pointsize!==undefined){
+              pointsmaterial.size=this.dataService.pointsize;
+          }
           const points = new THREE.Points( geometry, pointsmaterial);
           points.userData.id=id;
           points["material"].needsUpdate=true;
@@ -910,7 +920,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           if(select==false&&label!==""){
             var geometry=new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
-            var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:this.distance} );
+            var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
+            if(this.dataService.pointsize!==undefined){
+              pointsmaterial.size=this.dataService.pointsize;
+            }
             const points = new THREE.Points( geometry, pointsmaterial);
             points.userData.id=id;
             points["material"].needsUpdate=true;
@@ -1127,6 +1140,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
     }
   }
+
+  setting(settingVisible){
+    event.stopPropagation();
+    this.settingVisible=!this.settingVisible;
+   }
 
   /*getSceneChildren() {
     var scenechildren=[];

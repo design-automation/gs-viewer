@@ -69,7 +69,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   notify(message: string):void{ 
     if(message == "model_update" && this.scene){
-      this.updateModel();
+      //this.updateModel();
       this.ngOnInit();
     }
     this.selectObj=[];

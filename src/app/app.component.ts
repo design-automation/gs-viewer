@@ -14,7 +14,7 @@ export class AppComponent {
 	// dummy gs_data
 	// to pass to the viewer
 	// gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-    public gs_dummy_data: gs.IModel = gs.genModelClosedPolyline();
+    public gs_dummy_data: gs.IModel = gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
 
     handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
