@@ -106,66 +106,76 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   getvertices(){
     var attributevertix=[];
     var points=this.getpoints();
-    for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
-      const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
-      const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
-      const label: string = vertices.getLabel();
-      const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
-      var attributes:any=[];
-      for(var j=0;j<points.length;j++){
-        if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
-           attributes.pointid=points[j].id;
+    if(this.scene_and_maps.vertices_map.size!==0){
+      for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
+        const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
+        const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
+        const label: string = vertices.getLabel();
+        const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
+        var attributes:any=[];
+        for(var j=0;j<points.length;j++){
+          if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
+             attributes.pointid=points[j].id;
+          }
         }
+        attributes.vertixlabel=label;
+        attributes.path=path;
+        attributevertix.push(attributes);
       }
-      attributes.vertixlabel=label;
-      attributes.path=path;
-      attributevertix.push(attributes);
+      this.dataService.addattrvertix(attributevertix);
     }
-    this.dataService.addattrvertix(attributevertix);
     return attributevertix;
   }
 
   getedges():Array<any>{
     var attributeedge=[];
-    for(var i =0;i<this.scene_and_maps.edges_map.size;i++){
-      const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(i);
-      const edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
-      const label: string = edge.getLabel();
-      attributeedge.push(label);
+    if(this.scene_and_maps.edges_map.size!==0){
+      for(var i =0;i<this.scene_and_maps.edges_map.size;i++){
+        const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(i);
+        const edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
+        const label: string = edge.getLabel();
+        attributeedge.push(label);
+      }
     }
     return attributeedge;
   }
 
   getwires():Array<any>{
     var attributewire=[];
-    for(var i =0;i<this.scene_and_maps.wires_map.size;i++){
-      const path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(i);
-      const wire: gs.IWire = this.model.getGeom().getTopo(path) as gs.IWire;
-      const label: string = wire.getLabel();
-      if(attributewire.indexOf(label)===-1)
-        attributewire.push(label);
+    if(this.scene_and_maps.wires_map.size!==0){
+      for(var i =0;i<this.scene_and_maps.wires_map.size;i++){
+        const path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(i);
+        const wire: gs.IWire = this.model.getGeom().getTopo(path) as gs.IWire;
+        const label: string = wire.getLabel();
+        if(attributewire.indexOf(label)===-1)
+          attributewire.push(label);
+      }
     }
     return attributewire;
   }
 
   getfaces():Array<any>{
     var attributeface=[];
-    for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
-      const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
-      const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
-      const label: string = face.getLabel();
-      attributeface.push(label)
+    if(this.scene_and_maps.faces_map.size!==0){
+      for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+        const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
+        const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+        const label: string = face.getLabel();
+        attributeface.push(label)
+      }
     }
     return attributeface;
   }
 
   getoject():Array<any>{
     var attributeobject=[];
-    for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
-      const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
-      if(i===0||path.id!==this.scene_and_maps.faces_map.get(i-1).id){
-        const label: string = "o"+path.id;
-        attributeobject.push(label);
+    if(this.scene_and_maps.faces_map.size!==0){
+      for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+        const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
+        if(i===0||path.id!==this.scene_and_maps.faces_map.get(i-1).id){
+          const label: string = "o"+path.id;
+          attributeobject.push(label);
+        }
       }
     }
     return attributeobject;
@@ -207,18 +217,21 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getpoints():Array<any>{
     var attrubtepoints=[];
-    for(var i=0;i<this.scene_and_maps.points_map.size;i++){
-      const points: gs.IPoint = this.model.getGeom().getPoint(i) as gs.IPoint;
-      const label: string = points.getLabel();
-      const verts_xyz: gs.XYZ = points.getLabelCentroid();
-      var attributepoint:any=[];
-      if(verts_xyz!==undefined){
-        attributepoint.id=label;
-        attributepoint.x=verts_xyz[0];
-        attributepoint.y=verts_xyz[1];
-        attributepoint.z=verts_xyz[2];
-        attrubtepoints.push(attributepoint);
+    if(this.scene_and_maps.points_map.size!==0){
+      for(var i=0;i<this.scene_and_maps.points_map.size;i++){
+        const points: gs.IPoint = this.model.getGeom().getPoint(i) as gs.IPoint;
+        const label: string = points.getLabel();
+        const verts_xyz: gs.XYZ = points.getLabelCentroid();
+        var attributepoint:any=[];
+        if(verts_xyz!==undefined){
+          attributepoint.id=label;
+          attributepoint.x=verts_xyz[0];
+          attributepoint.y=verts_xyz[1];
+          attributepoint.z=verts_xyz[2];
+          attrubtepoints.push(attributepoint);
+        }
       }
+      
     }
     return attrubtepoints;
   }
@@ -235,37 +248,18 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   pointcheck(){
     this.attribute=[];
-    var selecting=this.dataService.getselecting();
-    for(var i=0;i<selecting.length;i++){
-      var attributepoint:any=[];
-      attributepoint.id=this.model.getGeom().getAllPoints()[selecting[i].index].getLabel();
-      attributepoint.x=this.model.getGeom().getAllPoints()[selecting[i].index].getPosition()[0];
-      attributepoint.y=this.model.getGeom().getAllPoints()[selecting[i].index].getPosition()[1];
-      attributepoint.z=this.model.getGeom().getAllPoints()[selecting[i].index].getPosition()[2];
-      this.attribute.push(attributepoint);
+    var attributes:any=this.pointtovertix();
+    var points=this.getpoints();
+    for(var i=0;i<points.length;i++){
+      for(var j=0;j<attributes.length;j++){
+        if(points[i].id===attributes[j].pointid&&this.attribute.indexOf(points[i])===-1){
+          this.attribute.push(points[i]);
+        }
+      }
     }
   }
 
   pointtovertix():any{
-    /*var attributevertix=[];
-    var selecting=this.dataService.getselecting();
-    var points=this.getpoints();
-    for(var i =0;i<selecting.length;i++){
-      var path=selecting[i].path;
-      const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
-      const label: string = vertices.getLabel();
-      const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
-      var attributes:any=[];
-      for(var j=0;j<points.length;j++){
-        if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
-           attributes.pointid=points[j].id;
-        }
-      }
-      attributes.vertixlabel=label;
-      attributevertix.push(attributes);
-    }
-    this.dataService.addattrvertix(attributevertix);
-    return attributevertix;*/
     var attributes:any=[];
     var vertices=this.getvertices();
     var selecting=this.dataService.getselecting();
@@ -274,12 +268,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
         for(var j=0;j<vertices.length;j++){
-          if(selecting[i]["id"]===vertices[j].pointid){
+          if(selecting[i]["id"]===vertices[j].pointid&&attributes.indexOf(vertices[j]) == -1){
             attributes.push(vertices[j]);
           }
-          if(selecting[i]["id"].indexOf("e")>-1){
-            const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(selecting[i]["index"]);
-            const edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
+          if(selecting[i]["type"]==="All edges"){
+            const edge: gs.IEdge = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IEdge;
             const verts: gs.IVertex[] = edge.getVertices();
             for(var n=0;n<verts.length;n++){
               var label=verts[n].getLabel();
@@ -288,9 +281,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               }
             }
           }
-          if(selecting[i]["id"].length<8&&selecting[i]["id"].indexOf("w")>-1){
-            const path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(selecting[i]["index"]);
-            const wire: gs.IWire = this.model.getGeom().getTopo(path) as gs.IWire;
+          if(selecting[i]["type"]==="All wires"){
+            const wire: gs.IWire = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IWire;
             const verts: gs.IVertex[] = wire.getVertices();
             for(var n=0;n<verts.length;n++){
               var label=verts[n].getLabel();
@@ -299,9 +291,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               }
             }
           }
-          if(selecting[i]["id"].length<8&&selecting[i]["id"].indexOf("f")>-1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All faces"){
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const verts: gs.IVertex[] = face.getVertices();
             for(var n=0;n<verts.length;n++){
               var label=verts[n].getLabel();
@@ -310,9 +301,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               }
             }
           }
-          if(selecting[i]["id"].length<5&&selecting[i]["id"].indexOf("p")== -1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All objs"){
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const faces: gs.IFace[]= face.getObj().getFaces();
             for(var f=0;f<faces.length;f++){
             const verts: gs.IVertex[] = faces[f].getVertices();
@@ -343,32 +333,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   verticecheck(){
     this.attribute=this.pointtovertix();
-    /*this.attribute=[];
-    var points=this.getpoints();
-    var vertices=this.getvertices();
-    var selecting=this.dataService.selecting;
-
-    for(var i =0;i<selecting.length;i++){
-      //const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
-      const label:string=this.model.getGeom().getAllPoints()[selecting[i].index].getLabel();
-      for(var j=0;j<vertices.length;j++){
-
-      }
-      const vertices: gs.IVertex = this.model.getGeom().getTopo(selecting[i].index) as gs.IVertex;
-      //const label: string = vertices.getLabel();
-      const verts_xyz: gs.XYZ = this.model.getGeom().getAllPoints()[selecting[i].index].getPosition();
-      console.log(verts_xyz);
-      //const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
-      var attributes:any=[];
-      for(var j=0;j<points.length;j++){
-        if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
-           attributes.pointid=points[j].id;
-        }
-      }
-      attributes.vertixlabel=label;
-      this.attribute.push(attributes);
-    }
-    //this.dataService.addattrvertix(this.attribute);*/
   }
 
   edge(Visible){
@@ -393,9 +357,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           if(selecting[i]["id"]===edges[j]){
             this.attribute.push(edges[j]);
           }
-          if(selecting[i]["id"].length<8&&selecting[i]["id"].indexOf("f")>-1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All faces"){
+            //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const verts: gs.IEdge[] = face.getEdges();
             for(var n=0;n<verts.length;n++){
               var label=verts[n].getLabel();
@@ -404,9 +368,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               }
             }
           }
-          if(selecting[i]["id"].length<5&&selecting[i]["id"].indexOf("p")== -1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All objs"){
+            //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const faces: gs.IFace[]= face.getObj().getFaces();
             for(var f=0;f<faces.length;f++){
               const verts: gs.IEdge[] = faces[f].getEdges();
@@ -444,9 +408,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           if(selecting[i]["id"]===wires[j]){
             this.attribute.push(wires[j]);
           }
-          if(selecting[i]["id"].length<5&&selecting[i]["id"].indexOf("p")== -1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All objs"){
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const wireses: gs.IWire[]= face.getObj().getWires();
             for(var w=0;w<wireses.length;w++){
               var label=wireses[w].getLabel();
@@ -473,9 +436,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   clicktoshow(select){
     const vertices: gs.IVertex = this.model.getGeom().getTopo(select.path) as gs.IVertex;
     const label: string = vertices.getLabel();
-    console.log(select.path,label)
     const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
-
     var geometry=new THREE.Geometry();
     geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
     var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
@@ -485,20 +446,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     points.name="selects";
     this.scene.add(points);
     this.dataService.addTextLabel(label,verts_xyz, select.id,null,select.path);
-    console.log(this.dataService.selecting);
-
-    /*for(var i=0;i<this.scenechildren.length;i++){
-      if(this.scenechildren[i].name===this.Visible){
-        if(this.selectObj.length!==0){
-          for(var j=0;j<this.scenechildren[i].children.length;j++){
-            if(this.scenechildren[i].children[j].name===id){
-              this.scenechildren[i].children[j].visible=true;
-              this.dataService.addsprite(this.scenechildren[i].children[j]);
-            }
-          }
-        }
-      }
-    }*/
   }
   
   facecheck(){
@@ -511,9 +458,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           if(selecting[i]["id"]===faces[j]){
             this.attribute.push(faces[j]);
           }
-          if(selecting[i]["id"].length<5&&selecting[i]["id"].indexOf("p")== -1){
-            const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
-            const face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          if(selecting[i]["type"]==="All objs"){
+            const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const faceses: gs.IFace[]= face.getObj().getFaces();
             for(var f=0;f<faceses.length;f++){
               var label=faceses[f].getLabel();
@@ -551,18 +497,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         }
       }
     }
-  	/*this.attribute=[];
-    for(var i=0;i<this.selectObj.length;i++){
-      for(var j=0;j<this.selectObj[i].children.length;j++){
-        if(this.selectObj[i].children[j].name==="Objs"){
-          for(var n=0;n<this.selectObj[i].children[j].children.length;n++){
-            var attributeface:any=[];
-            attributeface.id=this.selectObj[i].children[j].children[n].name;
-            this.attribute.push(attributeface);
-          }
-        }
-      }
-    }*/
   }
 
   changeselected(){
