@@ -541,11 +541,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   addgrid(){
-    var max=8;
+    /*var max=8;
     var center=new THREE.Vector3(0,0,0);
-    var radius:number=0
+    var radius:number=0*/
     for(var i=0;i<this.scene.children.length;i++){
-      if(this.scene.children[i].type==="Scene"){
+      /*if(this.scene.children[i].type==="Scene"){
         for(var j=0;j<this.scene.children[i].children.length;j++){
           if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius>radius){
             center=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
@@ -554,7 +554,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             break;
           }
         }
-      }
+      }*/
       if(this.scene.children[i].name==="GridHelper") {
             this.scene.remove(this.scene.children[i]);
             i=i-1;
@@ -563,11 +563,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
     // todo: change grid -> grid_value
     if(this.dataService.grid){
-      var gridhelper=new THREE.GridHelper( max, max);
+      var gridhelper=new THREE.GridHelper( 100, 100);
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
-      gridhelper.position.set(center.x,center.y,0);
+      //gridhelper.position.set(center.x,center.y,0);
       this.scene.add( gridhelper);
     }
   }

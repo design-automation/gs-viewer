@@ -2,7 +2,13 @@
   <input id="grid" #grid type="checkbox" [checked]="gridVisible" (click)="changegrid()"> <label id="name" value="gridVisible">grid</label>
   <input id="axis"  type="checkbox" [checked]="axisVisible" (click)="changeaxis()"> <label id="name" value="axisVisible">axis</label>
   <input id="shadow"  type="checkbox" [checked]="shadowVisible" (click)="changeshadow()"> <label id="name" value="shadowVisible">shadow</label>
-  <input id="frame"  type="checkbox" [checked]="frameVisible" (click)="changeframe()"> <label id="name" value="frameVisible">frame</label><br/><hr/>&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >Hemisphere Light</label>&nbsp;&nbsp;<br/>
+  <input id="frame"  type="checkbox" [checked]="frameVisible" (click)="changeframe()"> <label id="name" value="frameVisible">frame</label><br/>
+  <hr/>&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >Grid Center</label><br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >X</label><input type="text" name="center" id="centerx" #centerx value={{_centerx}}>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >Y</label><input type="text" name="center" #centery id="centery" value={{_centery}}>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >Z</label><input type="text" name="center"  #centerz id="centerz" value={{_centerz}}>
+  <button (click)="changecenter(centerx.value,centery.value,centerz.value)">Set</button>
+  <hr/>&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >Hemisphere Light</label>&nbsp;&nbsp;<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label id="name" >hue</label>
   <mat-slider class="slider" name="range" id="huerange" min=0 max=360 step=1  value={{hue}} #slider (change)="changelight(slider.value,slider1.value,slider2.value)" ></mat-slider><label id="name" >{{slider.value.toPrecision(2)}}</label><br/>
   &nbsp;&nbsp;&nbsp;<label id="name" >saturation</label>

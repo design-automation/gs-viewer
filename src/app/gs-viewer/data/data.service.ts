@@ -74,6 +74,9 @@ export class DataService {
   textlabels:Array<any>=[];
   attributevertix:Array<any>;
   starsGeometry:THREE.Geometry = new THREE.Geometry();
+  centerx:number;
+  centery:number;
+  centerz:number;
 
   // ---- 
   // Subscription Handling
@@ -258,6 +261,16 @@ export class DataService {
   }
   getblue(blue):any{
     this.blue=blue;
+  }
+
+  getcenterx(centerx):void{
+    this.centerx=centerx;
+  }
+  getcentery(centery):void{
+    this.centery=centery;
+  }
+  getcenterz(centerz):void{
+    this.centerz=centerz;
   }
 
   addGeom(Geom): void{

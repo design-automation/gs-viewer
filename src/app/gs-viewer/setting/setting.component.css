@@ -63,6 +63,20 @@
   font-family:sans-serif;
 }
 
+#centerx{
+  width:50px;
+  margin-left:10px;
+}
+#centery{
+  width:50px;
+  margin-left:10px;
+}
+#centerz{
+  width:50px;
+  margin-left:10px;
+  margin-right:30px;
+}
+
 ::ng-deep .mat-accent .mat-slider-thumb {
     background-color: #395d73;
     font-family:sans-serif;
