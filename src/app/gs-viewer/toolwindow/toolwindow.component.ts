@@ -354,7 +354,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
         for(var j=0;j<edges.length;j++){
-          if(selecting[i]["id"]===edges[j]){
+          if(selecting[i]["id"].indexOf(edges[j])>-1){
             this.attribute.push(edges[j]);
           }
           if(selecting[i]["type"]==="All faces"){
