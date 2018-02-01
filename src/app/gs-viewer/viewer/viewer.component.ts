@@ -129,6 +129,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     let self = this;
     function animate() {
       self.raycaster.setFromCamera(self.mouse,self.camera);
+      //self.controls.target.set(self.raycaster.ray.origin.x,self.raycaster.ray.origin.y,self.raycaster.ray.origin.z);
+      //console.log(self.raycaster.ray.origin);
       //self.raycaster.linePrecision=0.05;
       //self.raycaster.linePrecision=0.05;
       //self.raycaster.params.Points.threshold=0.05;
@@ -165,7 +167,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     //this.shownumber();
     this.dataService.addraycaster(this.raycaster);
-    
   }
   //
   //  checks if the data service has a data and calls update function for the viewer
@@ -292,7 +293,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.scene.add(objectData);      
       // add the grid based on size of the object
       this.addgrid();
-      //this.distance=this.closestpoint();
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -383,7 +383,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0;i<children.length;i++){
       if(children[i].name==="All objs"||children[i].name==="All faces"){
         if(children[i]["geometry"].attributes.position.array.length!==0){
-        children[i]["material"].opacity=0.8;
+        children[i]["material"].opacity=0.3;
         children[i].name="All objs";
         scenechildren.push(children[i]);
         }else{
@@ -420,7 +420,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
       if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
       if(children[i].name==="All objs"||children[i].name==="All faces"){
-        children[i]["material"].opacity=0.8;
+        children[i]["material"].opacity=0.3;
         children[i].name="All faces";
         scenechildren.push(children[i]);
       }
@@ -537,6 +537,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.mouse.y =-( event.offsetY / this.height ) * 2 + 1;
   }
 
+
   addgrid(){
     /*var max=8;
     var center=new THREE.Vector3(0,0,0);
@@ -592,7 +593,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var select:boolean=false;
     this.scenechildren=this.dataService.getscenechild();
     this.raycaster.setFromCamera(this.mouse,this.camera);
-
     //this.raycaster.linePrecision = 0.05;
     //this.raycaster.linePrecision = 0.5;
     //this.raycaster.params.Points.threshold=0.05;
@@ -762,11 +762,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
       if(this.scenechildren[0].name=="All edges"){
-        const index:number=Math.floor(intersects[ 0 ].index/2);
-        if(index<this.scene_and_maps.edges_map.size||index===this.scene_and_maps.edges_map.size) {
-          const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
-          const edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
-          const label: string = edge.getLabel();
+        var label:string="";
+        var index:number=Math.floor(intersects[ 0 ].index/2);
+        if(this.scene_and_maps.edges_map!==null&&(index<this.scene_and_maps.edges_map.size||index===this.scene_and_maps.edges_map.size)) {
+          var path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
+          var edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
+          var id: string = edge.getLabel();
+          label=id;
+          for(var i=1;i<intersects.length;i++){
+            if(intersects[0].distance===intersects[i].distance){
+              index=Math.floor(intersects[ i ].index/2);
+              path = this.scene_and_maps.edges_map.get(index);
+              edge= this._model.getGeom().getTopo(path) as gs.IEdge;
+              id=edge.getLabel();
+              if(label!==id) label=label+"<br/>"+id;
+            }
+          }
           const label_xyz: gs.XYZ = edge.getLabelCentroid();
           const verts: gs.IVertex[] = edge.getVertices();
           const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
@@ -808,11 +819,25 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               this.addTextLabel(label,label_xyz, label,index,path,"All edges");
             }
           }
-        }else if(this.scenechildren[0].name=="Other lines"){
-          const index:number=Math.floor(intersects[ 0 ].index/2);
-          const path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
-          const edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
-          const label: string = edge.getLabel();
+        }
+      }
+      else if(this.scenechildren[0].name=="Other lines"){
+        var label:string="";
+        var index:number=Math.floor(intersects[ 0 ].index/2);
+        if(this.scene_and_maps.edges_map!==null&&(index<this.scene_and_maps.edges_map.size||index===this.scene_and_maps.edges_map.size)){
+          var path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
+          var edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
+          var id: string = edge.getLabel();
+          label=id;
+          for(var i=1;i<intersects.length;i++){
+            if(intersects[0].distance===intersects[i].distance){
+              index=Math.floor(intersects[ i ].index/2);
+              path = this.scene_and_maps.edges_map.get(index);
+              edge= this._model.getGeom().getTopo(path) as gs.IEdge;
+              id=edge.getLabel();
+              if(label!==id) label=label+"<br/>"+id;
+            }
+          }
           const label_xyz: gs.XYZ = edge.getLabelCentroid();
           const verts: gs.IVertex[] = edge.getVertices();
           const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
@@ -876,7 +901,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               var index:number=intersects[ i ].index;
               var attributevertix=this.dataService.getattrvertix();
               var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
-              label=label+"<br/>"+id;
+              if(label!==id) label=label+"<br/>"+id;
             }
           }
         }else{
@@ -884,7 +909,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             if(id===attributevertix[i].pointid){
               var str:string=attributevertix[i].vertixlabel;
               if(label==="") label=str;
-              else label=label+"<br/>"+str;
+              else {if(label!==id) label=label+"<br/>"+str;}
             }
           }
         }
@@ -988,7 +1013,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   //To add text labels just provide label text, label position[x,y,z] and its id
   addTextLabel(label, label_xyz, id,index,path,type) {
-    let container = this.myElement.nativeElement.children.namedItem("container");
+    //let container = this.myElement.nativeElement.children.namedItem("container");
+    let container=document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
     let star = this.creatStarGeometry(label_xyz);
     let textLabel=this.createTextLabel(label, star, id,index,path,type);
     this.starsGeometry.vertices.push( star );
@@ -1048,6 +1074,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
         
         var coords2d = this.get2DCoords(this.position, self.camera);
+
         this.element.style.left = coords2d.x + 'px';
         this.element.style.top = coords2d.y + 'px';
       },
