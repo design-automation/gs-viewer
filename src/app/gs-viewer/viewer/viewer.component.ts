@@ -577,8 +577,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
 
   onDocumentMouseDown(event){
-    //if(this.seVisible===true) console.log(event);
-    //console.log(this.scene_and_maps);
     var threshold: number;
     if(this.seVisible===true) {
       threshold= 100;
@@ -950,7 +948,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         i=i-1;
       }
     }
-  //}
+
   }
 
   updateview(){
@@ -1082,8 +1080,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
    }
 
   zoomfit(){
-    event.preventDefault();
-    if(this.selecting.length===0){
+    event.stopPropagation();
+    if(this.dataService.selecting.length===0){
       const obj=new THREE.Object3D();
       for(var i=0;i<this.scene.children.length;i++){
         if(this.scene.children[i].name!=="GridHelper"){
@@ -1110,20 +1108,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.lookAt(newLookAt);
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
+      this.controls.update();
     }else{
-      
-      var axisX,axisY,axisZ,centerX,centerY,centerZ=0;
-      var radius=0;
-      for(var i=0;i<this.selecting.length;i++){
-        axisX+=this.selecting[i].geometry.boundingSphere.center.x;
-        axisY+=this.selecting[i].geometry.boundingSphere.center.y;
-        axisZ+=this.selecting[i].geometry.boundingSphere.center.z;
-        radius=Math.max(this.selecting[i].geometry.boundingSphere.radius,radius);
-      }
-      centerX=axisX/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
-      centerY=axisY/this.scene.children[1].children.length;
-      var center = new THREE.Vector3(centerX,centerY,centerZ);
+      var box:THREE.BoxHelper=this.selectbox();
+      var center = new THREE.Vector3(box["geometry"].boundingSphere.center.x,box["geometry"].boundingSphere.center.y,box["geometry"].boundingSphere.center.z);
+      var radius=box["geometry"].boundingSphere.radius;
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
@@ -1138,6 +1127,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.camera.lookAt(newLookAt);
       this.camera.updateProjectionMatrix();
       this.controls.target.set(newLookAt.x, newLookAt.y,newLookAt.z);
+      this.controls.update();
+    }
+  }
+
+  selectbox():THREE.BoxHelper{
+    if(this.dataService.selecting.length!==0){
+      var select=new THREE.Object3D();
+        for(var i=0;i<this.scene.children.length;i++){
+          if(this.scene.children[i].name==="selects"){
+            select.children.push(this.scene.children[i]);
+          }
+        }
+      var box=new THREE.BoxHelper(select);
+      box["geometry"].computeBoundingBox();
+      box["geometry"].computeBoundingSphere();
+      return box;
     }
   }
 
