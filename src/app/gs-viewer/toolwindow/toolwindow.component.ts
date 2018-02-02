@@ -63,8 +63,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.model= this.dataService.getGsModel(); 
     this.Visible=this.dataService.visible;
     this.updateModel();
-    this.object(this.Visible);
-    this.getvertices();
+    
   }
 
   notify(message: string):void{ 
@@ -97,7 +96,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.model!==undefined){
       try{
         this.scene_and_maps= this.dataService.getscememaps();
-
+        this.object(this.Visible);
+        this.getvertices();
       }catch(ex){
         console.error("Error displaying model:", ex);
       }
