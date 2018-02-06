@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n\r\n  <!-- navigation bar -->\r\n  <!-- <nav class=\"toolbar\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"dropdown\"><a href=\"#\">File <i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n          <ul class=\"sub\">\r\n            <li><a href=\"#\" name=\"importers\">Open</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Save</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Export As ThreeJS</a></li>\r\n            <li><a href=\"#\" name=\"importers\">Import From CityGML</a></li>\r\n            <li><a href=\"#\">Exit</a></li>\r\n          </ul>\r\n        </li>\r\n        <li class=\"dropdown\">\r\n              <a href=\"#\">Wiki<i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n              <ul class=\"sub\">\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">SourceCode</a></li>\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">Tutorial</a></li>\r\n              </ul>\r\n        </li>  \r\n        <li><a href=\"#\">About</a></li>\r\n        <li><a href=\"#\">Contact</a></li>\r\n      </ul>\r\n    </div>\r\n  </nav>\r\n -->\r\n  <input type=\"file\" id=\"files\" name=\"files[]\" (change)=\"handleFileSelect($event)\" />\r\n  <div style=\"float: right;\"> v.0.0.3</div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n\r\n\r\n\r\n</div>\r\n"
+module.exports = "<div>\r\n\r\n  <!-- navigation bar -->\r\n  <!-- <nav class=\"toolbar\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"dropdown\"><a href=\"#\">File <i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n          <ul class=\"sub\">\r\n            <li><a href=\"#\" name=\"importers\">Open</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Save</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Export As ThreeJS</a></li>\r\n            <li><a href=\"#\" name=\"importers\">Import From CityGML</a></li>\r\n            <li><a href=\"#\">Exit</a></li>\r\n          </ul>\r\n        </li>\r\n        <li class=\"dropdown\">\r\n              <a href=\"#\">Wiki<i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n              <ul class=\"sub\">\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">SourceCode</a></li>\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">Tutorial</a></li>\r\n              </ul>\r\n        </li>  \r\n        <li><a href=\"#\">About</a></li>\r\n        <li><a href=\"#\">Contact</a></li>\r\n      </ul>\r\n    </div>\r\n  </nav>\r\n -->\r\n  <input type=\"file\" id=\"files\" name=\"files[]\" (change)=\"handleFileSelect($event)\" />\r\n  <div style=\"float: right;\"> v.0.0.4</div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n\r\n\r\n\r\n</div>\r\n"
 
 /***/ }),
 
@@ -7580,7 +7580,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         if (intersects.length > 0) {
             selectedObj = intersects[0].object;
             if (this.scenechildren[0].name === "All objs") {
-                console.log(intersects[0]);
                 var index_1 = Math.floor(intersects[0].faceIndex);
                 var path_1 = this.scene_and_maps.faces_map.get(index_1);
                 var face = this._model.getGeom().getTopo(path_1);
@@ -7595,18 +7594,23 @@ var ViewerComponent = /** @class */ (function (_super) {
                         for (var i = 0; i < verts_xyz.length; i++) {
                             geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz[i][0], verts_xyz[i][1], verts_xyz[i][2]));
                         }
-                        if (verts.length === 4) {
-                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                        /*if(verts.length===4){
+                          geometry.faces.push(new THREE.Face3(0,2,1));
+                          geometry.faces.push(new THREE.Face3(0,3,2));
+                        }else if(verts.length===3){
+                          geometry.faces.push(new THREE.Face3(0,2,1));
                         }
-                        else if (verts.length === 3) {
-                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                        }
-                        var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
+                        var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
                         mesh["geometry"].computeVertexNormals();
-                        mesh.userData.id = label_1;
-                        mesh.name = "selects";
-                        this.scene.add(mesh);
+                        mesh.userData.id=label;
+                        mesh.name="selects";
+                        this.scene.add(mesh);*/
+                        var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
+                        var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
+                        line.userData.id = label_1;
+                        line["material"].needsUpdate = true;
+                        line.name = "selects";
+                        this.scene.add(line);
                     }
                     this.addTextLabel(label_1, label_xyz, label_1, path_1, "All objs");
                 }
@@ -7640,11 +7644,17 @@ var ViewerComponent = /** @class */ (function (_super) {
                             else if (verts.length === 3) {
                                 geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
                             }
-                            var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
-                            mesh.userData.id = label_1;
+                            /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
+                            mesh.userData.id=label;
                             mesh["geometry"].computeVertexNormals();
-                            mesh.name = "selects";
-                            this.scene.add(mesh);
+                            mesh.name="selects";
+                            this.scene.add(mesh);*/
+                            var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
+                            var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
+                            line.userData.id = label_1;
+                            line["material"].needsUpdate = true;
+                            line.name = "selects";
+                            this.scene.add(line);
                         }
                         this.addTextLabel(label_1, label_xyz, label_1, path_1, "All objs");
                     }
@@ -7663,21 +7673,26 @@ var ViewerComponent = /** @class */ (function (_super) {
                     for (var i = 0; i < verts_xyz_1.length; i++) {
                         geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz_1[i][0], verts_xyz_1[i][1], verts_xyz_1[i][2]));
                     }
-                    if (verts_1.length === 4) {
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
-                    }
-                    else if (verts_1.length === 3) {
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                    }
-                    /*for(var i=2;i<verts.length;i++){
+                    /*if(verts.length===4){
                       geometry.faces.push(new THREE.Face3(0,2,1));
-                    }*/
-                    var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
-                    mesh.userData.id = label_2;
+                      geometry.faces.push(new THREE.Face3(0,3,2));
+                    }else if(verts.length===3){
+                      geometry.faces.push(new THREE.Face3(0,2,1));
+                    }
+                    for(var i=2;i<verts.length;i++){
+                      geometry.faces.push(new THREE.Face3(0,2,1));
+                    }
+                    var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
+                    mesh.userData.id=label;
                     mesh["geometry"].computeVertexNormals();
-                    mesh.name = "selects";
-                    this.scene.add(mesh);
+                    mesh.name="selects";
+                    this.scene.add(mesh);*/
+                    var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
+                    var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
+                    line.userData.id = label_2;
+                    line["material"].needsUpdate = true;
+                    line.name = "selects";
+                    this.scene.add(line);
                     this.addTextLabel(label_2, label_xyz, label_2, path_2, "All faces");
                 }
                 else {
@@ -7705,11 +7720,17 @@ var ViewerComponent = /** @class */ (function (_super) {
                         else if (verts_1.length === 3) {
                             geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
                         }
-                        var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
-                        mesh.userData.id = label_2;
+                        /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
+                        mesh.userData.id=label;
                         mesh["geometry"].computeVertexNormals();
-                        mesh.name = "selects";
-                        this.scene.add(mesh);
+                        mesh.name="selects";
+                        this.scene.add(mesh);*/
+                        var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
+                        var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
+                        line.userData.id = label_2;
+                        line["material"].needsUpdate = true;
+                        line.name = "selects";
+                        this.scene.add(line);
                         this.addTextLabel(label_2, label_xyz, label_2, path_2, "All faces");
                     }
                 }
