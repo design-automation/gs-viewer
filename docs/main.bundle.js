@@ -7580,6 +7580,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         if (intersects.length > 0) {
             selectedObj = intersects[0].object;
             if (this.scenechildren[0].name === "All objs") {
+                console.log(intersects[0]);
                 var index_1 = Math.floor(intersects[0].faceIndex);
                 var path_1 = this.scene_and_maps.faces_map.get(index_1);
                 var face = this._model.getGeom().getTopo(path_1);
@@ -8135,7 +8136,7 @@ var ViewerComponent = /** @class */ (function (_super) {
             var fov = this.camera.fov * (Math.PI / 180);
             var vec_centre_to_pos = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"]();
             vec_centre_to_pos.subVectors(this.camera.position, center);
-            var tmp_vec = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](center.x + Math.abs(radius / Math.sin(fov / 2)), center.y + Math.abs(radius / Math.sin(fov / 2)), center.z + Math.abs(radius / Math.sin(fov / 2)));
+            var tmp_vec = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](Math.abs(radius / Math.sin(fov / 0.2)), Math.abs(radius / Math.sin(fov / 0.2)), Math.abs(radius / Math.sin(fov / 0.2)));
             vec_centre_to_pos.setLength(tmp_vec.length());
             var perspectiveNewPos = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"]();
             perspectiveNewPos.addVectors(center, vec_centre_to_pos);
