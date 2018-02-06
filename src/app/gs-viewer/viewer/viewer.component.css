@@ -5,6 +5,7 @@
   margin:0px;
   overflow: hidden;
   color: white;
+  font-family:sans-serif;
 }
 #container-top-right-resize { top: 0px; right: 0px; }
 #shownumber{
@@ -14,6 +15,7 @@
   width: 130px;
   bottom: 0px;
   color:#395d73;
+  font-family:sans-serif;
 }
 /*#rotating{
   width: 30px;

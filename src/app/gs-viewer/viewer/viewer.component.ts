@@ -624,7 +624,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            if(verts.length===4){
+            /*if(verts.length===4){
               geometry.faces.push(new THREE.Face3(0,2,1));
               geometry.faces.push(new THREE.Face3(0,3,2));
             }else if(verts.length===3){
@@ -634,7 +634,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             mesh["geometry"].computeVertexNormals();
             mesh.userData.id=label;
             mesh.name="selects";
-            this.scene.add(mesh);
+            this.scene.add(mesh);*/
+            var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+            const line = new THREE.Line( geometry, material);
+            line.userData.id=label;
+            line["material"].needsUpdate=true;
+            line.name="selects";
+            this.scene.add(line);
            }
            this.addTextLabel(label,label_xyz, label,path,"All objs");
         }else{
@@ -666,11 +672,17 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               }else if(verts.length===3){
                 geometry.faces.push(new THREE.Face3(0,2,1));
               }
-              var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
+              /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
               mesh.userData.id=label;
               mesh["geometry"].computeVertexNormals();
               mesh.name="selects";
-              this.scene.add(mesh);
+              this.scene.add(mesh);*/
+              var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+              const line = new THREE.Line( geometry, material);
+              line.userData.id=label;
+              line["material"].needsUpdate=true;
+              line.name="selects";
+              this.scene.add(line);
             }
             this.addTextLabel(label,label_xyz, label,path,"All objs");
           }
@@ -686,26 +698,31 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         const label_xyz: gs.XYZ = face.getLabelCentroid();
         const verts: gs.IVertex[] = face.getVertices();
         const verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
-        console.log(verts,verts_xyz);
         if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          if(verts.length===4){
+          /*if(verts.length===4){
             geometry.faces.push(new THREE.Face3(0,2,1));
             geometry.faces.push(new THREE.Face3(0,3,2));
           }else if(verts.length===3){
             geometry.faces.push(new THREE.Face3(0,2,1));
           }
-          /*for(var i=2;i<verts.length;i++){
+          for(var i=2;i<verts.length;i++){
             geometry.faces.push(new THREE.Face3(0,2,1));
-          }*/
+          }
           var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
           mesh.userData.id=label;
           mesh["geometry"].computeVertexNormals();
           mesh.name="selects";
-          this.scene.add(mesh);
+          this.scene.add(mesh);*/
+          var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+          const line = new THREE.Line( geometry, material);
+          line.userData.id=label;
+          line["material"].needsUpdate=true;
+          line.name="selects";
+          this.scene.add(line);
           this.addTextLabel(label,label_xyz, label,path, "All faces");
         }else{
           for(var j=0;j<this.scene.children.length;j++){
@@ -732,11 +749,17 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }else if(verts.length===3){
               geometry.faces.push(new THREE.Face3(0,2,1));
             }
-            var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
+            /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
             mesh.userData.id=label;
             mesh["geometry"].computeVertexNormals();
             mesh.name="selects";
-            this.scene.add(mesh);
+            this.scene.add(mesh);*/
+            var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+            const line = new THREE.Line( geometry, material);
+            line.userData.id=label;
+            line["material"].needsUpdate=true;
+            line.name="selects";
+            this.scene.add(line);
             this.addTextLabel(label,label_xyz,label,path, "All faces");
           }
         }
@@ -1161,9 +1184,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
-      var tmp_vec=new THREE.Vector3(center.x+Math.abs( radius / Math.sin( fov / 2 )),
-                                    center.y+Math.abs( radius / Math.sin( fov / 2 ) ),
-                                    center.z+Math.abs( radius / Math.sin( fov / 2 )));
+      var tmp_vec=new THREE.Vector3(Math.abs( radius / Math.sin( fov / 0.2 )),
+                                    Math.abs( radius / Math.sin( fov / 0.2 ) ),
+                                    Math.abs( radius / Math.sin( fov / 0.2 )));
       vec_centre_to_pos.setLength(tmp_vec.length());
       var perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
       perspectiveNewPos.addVectors(center, vec_centre_to_pos);

@@ -33,7 +33,7 @@
   		
   		<!-- <button id="selecting" [class.visible]="Visible === 'select'" (click)= "select($event, Visible)" ><i class="fa fa-mouse-pointer"></i></button> -->
   		
-  		<button id="setting" [class.selected]="settingVisible" (click)= "setting(settingVisible)"><i class="fa fa-cog"></i></button>
+  		<!-- <button id="setting" [class.selected]="settingVisible" (click)= "setting(settingVisible)"><i class="fa fa-cog"></i></button> -->
 
       <button id="selecting" [class.selected]="seVisible" (click)= "select(seVisible)" ><i class="fa fa-mouse-pointer"></i></button>
       <div id="shownumber">
@@ -54,7 +54,7 @@
       	
       	<!--setting-->
       	
- 		<app-setting *ngIf="settingVisible == true"></app-setting>
+ 		<!-- <app-setting *ngIf="settingVisible == true"></app-setting> -->
     <div *ngIf="seVisible == true">
         <button id="points" [class.selectvisible]="SelectVisible === 'Points'" (click)="pointselect(SelectVisible)">P</button>
         <button id="vertices" [class.selectvisible]="SelectVisible === 'Vertices'" (click)="verticeselect(SelectVisible)">V</button>

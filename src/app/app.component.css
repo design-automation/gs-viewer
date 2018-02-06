@@ -1,8 +1,8 @@
 html, body {
   font-family: 'Open Sans', sans-serif;
-  text-align: justify;
-  margin: 0px;
-  padding: 0px;
+  margin: 0px !important;
+  padding: 0px !important;
+  overflow: hidden;
 }
 
 #appdiv {
@@ -11,6 +11,21 @@ html, body {
   height: 100%;
   background-color: black;
   overflow: hidden;
+  font-family:sans-serif;
+
+}
+
+#input-container{
+  position: absolute;
+  width: 300px; 
+  left: calc(50% - 150px);
+  top: 15px;
+  z-index: 100;
+  font-family:sans-serif;
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between;
+
 }
 
 a { text-decoration: none; color: #fff; text-transform: uppercase; }
