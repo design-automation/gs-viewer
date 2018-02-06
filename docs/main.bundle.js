@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n\r\n  <!-- navigation bar -->\r\n  <!-- <nav class=\"toolbar\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"dropdown\"><a href=\"#\">File <i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n          <ul class=\"sub\">\r\n            <li><a href=\"#\" name=\"importers\">Open</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Save</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Export As ThreeJS</a></li>\r\n            <li><a href=\"#\" name=\"importers\">Import From CityGML</a></li>\r\n            <li><a href=\"#\">Exit</a></li>\r\n          </ul>\r\n        </li>\r\n        <li class=\"dropdown\">\r\n              <a href=\"#\">Wiki<i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n              <ul class=\"sub\">\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">SourceCode</a></li>\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">Tutorial</a></li>\r\n              </ul>\r\n        </li>  \r\n        <li><a href=\"#\">About</a></li>\r\n        <li><a href=\"#\">Contact</a></li>\r\n      </ul>\r\n    </div>\r\n  </nav>\r\n -->\r\n  <input type=\"file\" id=\"files\" name=\"files[]\" (change)=\"handleFileSelect($event)\" />\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n\r\n\r\n\r\n</div>\r\n"
+module.exports = "<div>\r\n\r\n  <!-- navigation bar -->\r\n  <!-- <nav class=\"toolbar\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"dropdown\"><a href=\"#\">File <i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n          <ul class=\"sub\">\r\n            <li><a href=\"#\" name=\"importers\">Open</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Save</a></li>\r\n            <li><a href=\"#\" name=\"exporters\">Export As ThreeJS</a></li>\r\n            <li><a href=\"#\" name=\"importers\">Import From CityGML</a></li>\r\n            <li><a href=\"#\">Exit</a></li>\r\n          </ul>\r\n        </li>\r\n        <li class=\"dropdown\">\r\n              <a href=\"#\">Wiki<i class=\"icon-caret-down\"></i><i class=\"icon-sort\"></i></a>\r\n              <ul class=\"sub\">\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">SourceCode</a></li>\r\n              <li><a href=\"https://github.com/akiajk/gs-JSON\">Tutorial</a></li>\r\n              </ul>\r\n        </li>  \r\n        <li><a href=\"#\">About</a></li>\r\n        <li><a href=\"#\">Contact</a></li>\r\n      </ul>\r\n    </div>\r\n  </nav>\r\n -->\r\n  <input type=\"file\" id=\"files\" name=\"files[]\" (change)=\"handleFileSelect($event)\" />\r\n  <div style=\"float: right;\"> v.0.0.1</div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n\r\n\r\n\r\n</div>\r\n"
 
 /***/ }),
 
@@ -63,7 +63,7 @@ var AppComponent = /** @class */ (function () {
         // dummy gs_data
         // to pass to the viewer
         // gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelBoxWithAttribs"](); //gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
+        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelObjWithAttribs"](); //gs.genModelBoxWithAttribs(); //gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
         this.test_data1 = {
             "metadata": {
                 "filetype": "gs-json",
@@ -6340,7 +6340,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/toolwindow/toolwindow.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"toolwindow\">\r\n  <div id=\"toolbar\">\r\n    <button id=\"point\" [class.visible]=\"Visible === 'Points'\" (click)=\"point(Visible)\">P</button>\r\n    <button id=\"vertice\" [class.visible]=\"Visible === 'Vertices'\" (click)=\"vertice(Visible)\">V</button>\r\n    <button id=\"edge\" [class.visible]=\"Visible === 'Edges'\" (click)=\"edge(Visible)\">E</button>\r\n    <button id=\"wire\" [class.visible]=\"Visible === 'Wires'\" (click)=\"wire(Visible)\">W</button>\r\n    <button id=\"face\" [class.visible]=\"Visible === 'Faces'\" (click)=\"face(Visible)\">F</button>\r\n    <button id=\"object\" [class.visible]=\"Visible === 'Objs'\" (click)=\"object(Visible)\">O</button>\r\n    <input id=\"selected\" type=\"checkbox\" (click)=\"changeselected()\">\r\n    <label id=\"selectedname\" value=\"selected\">Show selected only</label>\r\n\r\n    <!-- <pagination-controls id=\"pagination\" (pageChange)=\"p = $event\"></pagination-controls> -->\r\n    <!-- <div id=\"pagination\">\r\n    <ul>\r\n      <li *ngFor=\"let item of attribute | paginate: { itemsPerPage: 50, currentPage: p }\">{{item}}</li>\r\n    </ul> \r\n   <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>\r\n  </div> -->\r\n    <!-- <div id=\"select\">\r\n      <button id=\"vertice\" [class.selectvisible]=\"SelectVisible === 'Vertices'\" (click)=\"verticeselect(SelectVisible)\">V</button>\r\n      <button id=\"edge\" [class.selectvisible]=\"SelectVisible === 'Edges'\" (click)=\"edgeselect(SelectVisible)\">E</button>\r\n      <button id=\"wire\" [class.selectvisible]=\"SelectVisible === 'Wires'\" (click)=\"wireselect(SelectVisible)\">W</button>\r\n      <button id=\"face\" [class.selectvisible]=\"SelectVisible === 'Faces'\" (click)=\"faceselect(SelectVisible)\">F</button>\r\n      <button id=\"object\" [class.selectvisible]=\"SelectVisible === 'Objs'\" (click)=\"objectselect(SelectVisible)\"><i class=\"fa fa-map\"></i></button>\r\n    </div> -->\r\n\r\n  </div>\r\n  <div id=\"pagination\">\r\n    <pagination-controls *ngIf=\"Visible === 'Points'\" class=\"my-pagination\" (pageChange)=\"p1 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Vertices'\" class=\"my-pagination\" (pageChange)=\"p2 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Edges'\" class=\"my-pagination\" (pageChange)=\"p3 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Wires'\" class=\"my-pagination\" (pageChange)=\"p4 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Faces'\" class=\"my-pagination\" (pageChange)=\"p5 = $event\"></pagination-controls>\r\n    <pagination-controls *ngIf=\"Visible === 'Objs'\" class=\"my-pagination\" (pageChange)=\"p6 = $event\"></pagination-controls>  \r\n  </div>\r\n  <div id=\"toolview\">\r\n    <div *ngIf=\"Visible === 'Points'\">\r\n     <!-- <div class=\"pagination\"> <pagination-controls  (pageChange)=\"p1 = $event\"></pagination-controls> </div> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" id=\"table\" name=\"table\" bordercolor=\"#d0d0d0\">\r\n        <tr>\r\n          <td name=\"Number\" align=center width=\"100px\" align=center>ID</td>\r\n          <td width=\"100px\" align=center>X</td>\r\n          <td width=\"100px\" align=center>Y</td>\r\n          <td width=\"100px\" align=center>Z</td>\r\n          <td width=\"100px\" align=center *ngFor=\"let name of point_name\">{{name}}</td> \r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" id=\"tablename\" name=\"table\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }\">\r\n        <tr>\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.id}}</button>\r\n          <td width=\"20%\" align=center>{{datascale.x}}</td>\r\n          <td width=\"20%\" align=center>{{datascale.y}}</td>\r\n          <td width=\"20%\" align=center>{{datascale.z}}</td>\r\n          <td width=\"20%\" align=center>{{datascale.name}}</td>\r\n        <tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p1 = $event\"></pagination-controls>  -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Vertices'\">\r\n      <!-- <pagination-controls (pageChange)=\"p2 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" width=\"50%\">\r\n        <tr>\r\n          <td  align=center width=\"25%\">Vertices Label</td>\r\n          <td  align=center width=\"25%\">Points ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }\" width=\"50%\">\r\n        <tr>\r\n          <!-- <button id=\"numberbutton\" [class.selectid]=\"ID == datascale.id\" (click)=clicktoshow(datascale.id)>{{datascale.vertixlabel}}</button> -->\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.vertixlabel}}</button>\r\n          <td  align=center  width=\"50%\">{{datascale.pointid}}</td>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p2 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Edges'\">\r\n      <!-- <pagination-controls (pageChange)=\"p3 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"40%\">\r\n        <tr>\r\n          <td  align=center>Edge ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p3 }\" width=\"40%\">\r\n        <tr>\r\n          <!-- <button id=\"numberbutton\"[class.selectid]=\"ID == datascale.id\" (click)=clicktoshow(datascale.id) >{{datascale.id}}</button> -->\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.label}}</button>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p3 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Wires'\">\r\n      <!-- <pagination-controls (pageChange)=\"p4 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"40%\">\r\n        <tr>\r\n          <td  align=center>Wire ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p4 }\" width=\"40%\">\r\n        <tr>\r\n          <button id=\"numberbutton\" >{{datascale.label}}</button>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p4 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Faces'\">\r\n      <!-- <pagination-controls (pageChange)=\"p5 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"60%\">\r\n        <tr>\r\n          <td  align=center width=\"30%\">Face ID</td>\r\n          <td  align=center width=\"30%\" *ngFor=\"let name of face_name\">{{name}}</td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }\" width=\"60%\">\r\n        <tr>\r\n          <button id=\"numberbutton\" >{{datascale.label}}</button>\r\n          <td  align=center  width=\"50%\">{{datascale.name}}</td>\r\n        </tr>\r\n      </table>\r\n       <!-- <pagination-controls (pageChange)=\"p5 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Objs'\">\r\n      <!-- <pagination-controls (pageChange)=\"p6 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"40%\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  align=center>Object ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } \" width=\"40%\">\r\n        <tr>\r\n          <button  id=\"numberbutton\"  >{{datascale.label}}</button>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p6 = $event\"></pagination-controls> -->\r\n    </div>\r\n  </div>\r\n"
+module.exports = "<div id=\"toolwindow\">\r\n  <div id=\"toolbar\">\r\n    <button id=\"point\" [class.visible]=\"Visible === 'Points'\" (click)=\"point(Visible)\">P</button>\r\n    <button id=\"vertice\" [class.visible]=\"Visible === 'Vertices'\" (click)=\"vertice(Visible)\">V</button>\r\n    <button id=\"edge\" [class.visible]=\"Visible === 'Edges'\" (click)=\"edge(Visible)\">E</button>\r\n    <button id=\"wire\" [class.visible]=\"Visible === 'Wires'\" (click)=\"wire(Visible)\">W</button>\r\n    <button id=\"face\" [class.visible]=\"Visible === 'Faces'\" (click)=\"face(Visible)\">F</button>\r\n    <button id=\"object\" [class.visible]=\"Visible === 'Objs'\" (click)=\"object(Visible)\">O</button>\r\n    <input id=\"selected\" type=\"checkbox\" (click)=\"changeselected()\">\r\n    <label id=\"selectedname\" value=\"selected\">Show selected only</label>\r\n\r\n    <!-- <pagination-controls id=\"pagination\" (pageChange)=\"p = $event\"></pagination-controls> -->\r\n    <!-- <div id=\"pagination\">\r\n    <ul>\r\n      <li *ngFor=\"let item of attribute | paginate: { itemsPerPage: 50, currentPage: p }\">{{item}}</li>\r\n    </ul> \r\n   <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>\r\n  </div> -->\r\n    <!-- <div id=\"select\">\r\n      <button id=\"vertice\" [class.selectvisible]=\"SelectVisible === 'Vertices'\" (click)=\"verticeselect(SelectVisible)\">V</button>\r\n      <button id=\"edge\" [class.selectvisible]=\"SelectVisible === 'Edges'\" (click)=\"edgeselect(SelectVisible)\">E</button>\r\n      <button id=\"wire\" [class.selectvisible]=\"SelectVisible === 'Wires'\" (click)=\"wireselect(SelectVisible)\">W</button>\r\n      <button id=\"face\" [class.selectvisible]=\"SelectVisible === 'Faces'\" (click)=\"faceselect(SelectVisible)\">F</button>\r\n      <button id=\"object\" [class.selectvisible]=\"SelectVisible === 'Objs'\" (click)=\"objectselect(SelectVisible)\"><i class=\"fa fa-map\"></i></button>\r\n    </div> -->\r\n\r\n  </div>\r\n  <div id=\"pagination\">\r\n    <pagination-controls *ngIf=\"Visible === 'Points'\" class=\"my-pagination\" (pageChange)=\"p1 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Vertices'\" class=\"my-pagination\" (pageChange)=\"p2 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Edges'\" class=\"my-pagination\" (pageChange)=\"p3 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Wires'\" class=\"my-pagination\" (pageChange)=\"p4 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Faces'\" class=\"my-pagination\" (pageChange)=\"p5 = $event\"></pagination-controls>\r\n    <pagination-controls *ngIf=\"Visible === 'Objs'\" class=\"my-pagination\" (pageChange)=\"p6 = $event\"></pagination-controls>  \r\n  </div>\r\n  <div id=\"toolview\">\r\n    <div *ngIf=\"Visible === 'Points'\">\r\n     <!-- <div class=\"pagination\"> <pagination-controls  (pageChange)=\"p1 = $event\"></pagination-controls> </div> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" id=\"table\" name=\"table\" bordercolor=\"#d0d0d0\">\r\n        <tr>\r\n          <td name=\"Number\" align=center width=\"100px\" align=center>ID</td>\r\n          <td width=\"20%\" align=center>X</td>\r\n          <td width=\"20%\" align=center>Y</td>\r\n          <td width=\"20%\" align=center>Z</td>\r\n          <!-- <td width=\"100px\" align=center *ngFor=\"let name of point_name\">{{name}}</td>  -->\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" id=\"tablename\" name=\"table\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }\">\r\n        <tr>\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.id}}</button>\r\n          <td width=\"20%\" align=center>{{datascale.x}}</td>\r\n          <td width=\"20%\" align=center>{{datascale.y}}</td>\r\n          <td width=\"20%\" align=center>{{datascale.z}}</td>\r\n          <!-- <td width=\"20%\" align=center>{{datascale.name}}</td> -->\r\n        <tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p1 = $event\"></pagination-controls>  -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Vertices'\">\r\n      <!-- <pagination-controls (pageChange)=\"p2 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" width=\"50%\">\r\n        <tr>\r\n          <td  align=center width=\"25%\">Vertices Label</td>\r\n          <td  align=center width=\"25%\">Points ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }\" width=\"50%\">\r\n        <tr>\r\n          <!-- <button id=\"numberbutton\" [class.selectid]=\"ID == datascale.id\" (click)=clicktoshow(datascale.id)>{{datascale.vertixlabel}}</button> -->\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.vertixlabel}}</button>\r\n          <td  align=center  width=\"50%\">{{datascale.pointid}}</td>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p2 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Edges'\">\r\n      <!-- <pagination-controls (pageChange)=\"p3 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"40%\">\r\n        <tr>\r\n          <td  align=center>Edge ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p3 }\" width=\"40%\">\r\n        <tr>\r\n          <!-- <button id=\"numberbutton\"[class.selectid]=\"ID == datascale.id\" (click)=clicktoshow(datascale.id) >{{datascale.id}}</button> -->\r\n          <button id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale}}</button>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p3 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Wires'\">\r\n      <!-- <pagination-controls (pageChange)=\"p4 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"40%\">\r\n        <tr>\r\n          <td  align=center>Wire ID</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p4 }\" width=\"40%\">\r\n        <tr>\r\n          <button id=\"numberbutton\" >{{datascale}}</button>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p4 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Faces'\">\r\n      <!-- <pagination-controls (pageChange)=\"p5 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"60%\">\r\n        <tr>\r\n          <td  align=center width=\"60%\">Face ID</td>\r\n          <!-- <td  align=center width=\"30%\" *ngFor=\"let name of face_name\">{{name}}</td>  -->\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }\" width=\"60%\">\r\n        <tr>\r\n          <button id=\"numberbutton\" >{{datascale}}</button>\r\n          <!-- <td  align=center  width=\"50%\">{{datascale.name}}</td> -->\r\n        </tr>\r\n      </table>\r\n       <!-- <pagination-controls (pageChange)=\"p5 = $event\"></pagination-controls> -->\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Objs'\">\r\n      <!-- <pagination-controls (pageChange)=\"p6 = $event\"></pagination-controls> -->\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" width=\"60%\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  align=center>Object ID</td>\r\n          <td  align=center width=\"50%\" *ngFor=\"let name of obj_name\">{{name}}</td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } \" width=\"60%\">\r\n        <tr>\r\n          <button  id=\"numberbutton\"  >{{datascale.label}}</button>\r\n          <td  align=center  width=\"50%\">{{datascale.name}}</td>\r\n        </tr>\r\n      </table>\r\n      <!-- <pagination-controls (pageChange)=\"p6 = $event\"></pagination-controls> -->\r\n    </div>\r\n  </div>\r\n"
 
 /***/ }),
 
@@ -6445,25 +6445,25 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var attrubtepoints = [];
         this.point_name = [];
         if (this.scene_and_maps.points_map !== null && this.scene_and_maps.points_map.size !== 0 && this.scene_and_maps.points_map !== undefined) {
-            var point_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].points);
-            for (var j = 0; j < point_attribs.length; j++) {
-                this.point_name.push(point_attribs[j].getName());
-                for (var i = 0; i < this.scene_and_maps.points_map.size; i++) {
-                    var points = this.model.getGeom().getPoint(i);
-                    var points_attrib = points.getAttribValue(point_attribs[j]);
-                    var label = points.getLabel();
-                    var verts_xyz = points.getLabelCentroid();
-                    var attributepoint = [];
-                    if (verts_xyz !== undefined) {
-                        attributepoint.id = label;
-                        attributepoint.x = verts_xyz[0];
-                        attributepoint.y = verts_xyz[1];
-                        attributepoint.z = verts_xyz[2];
-                        attributepoint.name = points_attrib;
-                        attrubtepoints.push(attributepoint);
-                    }
+            /*const point_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.points) as gs.IEntAttrib[];
+            for(var j=0;j<point_attribs.length;j++){
+              this.point_name.push(point_attribs[j].getName());*/
+            for (var i = 0; i < this.scene_and_maps.points_map.size; i++) {
+                var points = this.model.getGeom().getPoint(i);
+                //const points_attrib: gs.IEntAttrib=points.getAttribValue(point_attribs[j]);
+                var label = points.getLabel();
+                var verts_xyz = points.getLabelCentroid();
+                var attributepoint = [];
+                if (verts_xyz !== undefined) {
+                    attributepoint.id = label;
+                    attributepoint.x = verts_xyz[0];
+                    attributepoint.y = verts_xyz[1];
+                    attributepoint.z = verts_xyz[2];
+                    //attributepoint.name=points_attrib;
+                    attrubtepoints.push(attributepoint);
                 }
             }
+            //}
         }
         return attrubtepoints;
     };
@@ -6472,29 +6472,29 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var points = this.getpoints();
         this.vertex_name = [];
         if (this.scene_and_maps.vertices_map !== null && this.scene_and_maps.vertices_map.size !== 0 && this.scene_and_maps.vertices_map !== undefined) {
-            var vertex_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].vertices);
-            for (var n = 0; n < vertex_attribs.length; n++) {
-                this.vertex_name.push(vertex_attribs[n].getName());
-                for (var i = 0; i < this.scene_and_maps.vertices_map.size; i++) {
-                    var path = this.scene_and_maps.vertices_map.get(i);
-                    var vertices = this.model.getGeom().getTopo(path);
-                    //console.log(vertices);
-                    //const vertex_attrib: gs.ITopoAttrib=vertices.getAttribValue(vertex_attribs[0]);
-                    //console.log(vertex_attrib);
-                    //console.log(vertices.getAttribValue(vertex_attribs[0]));
-                    var label = vertices.getLabel();
-                    var verts_xyz = vertices.getLabelCentroid();
-                    var attributes = [];
-                    for (var j = 0; j < points.length; j++) {
-                        if (points[j].x === verts_xyz[0] && points[j].y === verts_xyz[1] && points[j].z === verts_xyz[2]) {
-                            attributes.pointid = points[j].id;
-                        }
+            /*const vertex_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.vertices) as gs.ITopoAttrib[];
+            for(var n=0;n<vertex_attribs.length;n++){
+              this.vertex_name.push(vertex_attribs[n].getName());*/
+            for (var i = 0; i < this.scene_and_maps.vertices_map.size; i++) {
+                var path = this.scene_and_maps.vertices_map.get(i);
+                var vertices = this.model.getGeom().getTopo(path);
+                //console.log(vertices);
+                //const vertex_attrib: gs.ITopoAttrib=vertices.getAttribValue(vertex_attribs[0]);
+                //console.log(vertex_attrib);
+                //console.log(vertices.getAttribValue(vertex_attribs[0]));
+                var label = vertices.getLabel();
+                var verts_xyz = vertices.getLabelCentroid();
+                var attributes = [];
+                for (var j = 0; j < points.length; j++) {
+                    if (points[j].x === verts_xyz[0] && points[j].y === verts_xyz[1] && points[j].z === verts_xyz[2]) {
+                        attributes.pointid = points[j].id;
                     }
-                    attributes.vertixlabel = label;
-                    attributes.path = path;
-                    attributevertix.push(attributes);
                 }
+                attributes.vertixlabel = label;
+                attributes.path = path;
+                attributevertix.push(attributes);
             }
+            //}
             this.dataService.addattrvertix(attributevertix);
         }
         return attributevertix;
@@ -6503,20 +6503,20 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var attributeedge = [];
         this.edge_name = [];
         if (this.scene_and_maps.edges_map !== null && this.scene_and_maps.edges_map.size !== 0 && this.scene_and_maps.edges_map !== undefined) {
-            var edge_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].edges);
-            for (var j = 0; j < edge_attribs.length; j++) {
-                this.edge_name.push(edge_attribs[j].getName());
-                //console.log(this.edge_name);
-                for (var i = 0; i < this.scene_and_maps.edges_map.size; i++) {
-                    var path = this.scene_and_maps.edges_map.get(i);
-                    var edge = this.model.getGeom().getTopo(path);
-                    //const edge_attrib=edge.getAttribValue(edge_attribs[j]);
-                    var label = edge.getLabel();
-                    var attributes = [];
-                    attributes.label = label;
-                    attributeedge.push(attributes);
-                }
+            /*const edge_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.edges) as gs.ITopoAttrib[];
+             for(var j=0;j<edge_attribs.length;j++){
+              this.edge_name.push(edge_attribs[j].getName());*/
+            //console.log(this.edge_name);
+            for (var i = 0; i < this.scene_and_maps.edges_map.size; i++) {
+                var path = this.scene_and_maps.edges_map.get(i);
+                var edge = this.model.getGeom().getTopo(path);
+                //const edge_attrib=edge.getAttribValue(edge_attribs[j]);
+                var label = edge.getLabel();
+                //var attributes:any=[];
+                //attributes.label=label;
+                attributeedge.push(label);
             }
+            //}
         }
         return attributeedge;
     };
@@ -6524,19 +6524,19 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var attributewire = [];
         this.wire_name = [];
         if (this.scene_and_maps.wires_map !== null && this.scene_and_maps.wires_map.size !== 0 && this.scene_and_maps.wires_map !== undefined) {
-            var wire_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].wires);
-            for (var j = 0; j < wire_attribs.length; j++) {
-                this.wire_name.push(wire_attribs[j].getName());
-                for (var i = 0; i < this.scene_and_maps.wires_map.size; i++) {
-                    var path = this.scene_and_maps.wires_map.get(i);
-                    var wire = this.model.getGeom().getTopo(path);
-                    var attributes = [];
-                    var label = wire.getLabel();
-                    attributes.label = label;
-                    if (attributewire.indexOf(attributes) === -1)
-                        attributewire.push(attributes);
-                }
+            /*const wire_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.wires) as gs.ITopoAttrib[];
+            for(var j=0;j<wire_attribs.length;j++){
+              this.wire_name.push(wire_attribs[j].getName());*/
+            for (var i = 0; i < this.scene_and_maps.wires_map.size; i++) {
+                var path = this.scene_and_maps.wires_map.get(i);
+                var wire = this.model.getGeom().getTopo(path);
+                //var attributes:any=[];
+                var label = wire.getLabel();
+                //attributes.label=label;
+                if (attributewire.indexOf(label) === -1)
+                    attributewire.push(label);
             }
+            //}
         }
         return attributewire;
     };
@@ -6544,43 +6544,61 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var attributeface = [];
         this.face_name = [];
         if (this.scene_and_maps.faces_map !== null && this.scene_and_maps.faces_map.size !== 0 && this.scene_and_maps.faces_map !== undefined) {
-            var face_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].faces);
-            for (var j = 0; j < face_attribs.length; j++) {
-                this.face_name.push(face_attribs[j].getName());
-                for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
-                    var path = this.scene_and_maps.faces_map.get(i);
-                    var face = this.model.getGeom().getTopo(path);
-                    var attributes = [];
-                    var label = face.getLabel();
-                    attributes.label = label;
-                    attributes.name = face.getAttribValue(face_attribs[j]);
-                    attributeface.push(attributes);
+            /*const face_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.faces) as gs.ITopoAttrib[];
+            for(var j=0;j<face_attribs.length;j++){
+            this.face_name.push(face_attribs[j].getName());*/
+            for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
+                var path = this.scene_and_maps.faces_map.get(i);
+                var face = this.model.getGeom().getTopo(path);
+                //var attributes:any=[];
+                var label = face.getLabel();
+                //attributes.label=label;
+                if (attributeface.indexOf(label) === -1) {
+                    //attributes.name=face.getAttribValue(face_attribs[j]);
+                    attributeface.push(label);
                 }
             }
         }
+        //}
         return attributeface;
     };
     ToolwindowComponent.prototype.getoject = function () {
         var attributeobject = [];
+        this.obj_name = [];
         if (this.scene_and_maps.faces_map !== null && this.scene_and_maps.faces_map.size !== 0 && this.scene_and_maps.faces_map !== undefined) {
+            var obj_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].objs);
+            if (obj_attribs.length !== 0) {
+                for (var j = 0; j < obj_attribs.length; j++) {
+                    this.obj_name.push(obj_attribs[j].getName());
+                }
+            }
             for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
                 var path = this.scene_and_maps.faces_map.get(i);
                 if (i === 0 || path.id !== this.scene_and_maps.faces_map.get(i - 1).id) {
                     var attribute = [];
                     var label = "o" + path.id;
                     attribute.label = label;
+                    for (var j = 0; j < obj_attribs.length; j++) {
+                        var obj = this.model.getGeom().getObj(path.id);
+                        attribute.name = obj.getAttribValue(obj_attribs[j]);
+                    }
+                    /*if(obj_attribs.length!==0){
+                      var obj: gs.IObj = this.model.getGeom().getObj(path.id) as gs.IObj;
+                      attribute.name=obj.getAttribValue(obj_attribs[j]);
+                    }*/
                     attributeobject.push(attribute);
                 }
             }
-            var obj_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].objs);
-            console.log(obj_attribs);
-            if (obj_attribs.length !== 0) {
-                for (var j = 0; j < obj_attribs.length; j++) {
-                    this.obj_name.push(obj_attribs[j].getName());
-                    for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
-                    }
+            //const obj_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.objs) as gs.IEntAttrib[];
+            /*console.log(obj_attribs);
+            if(obj_attribs.length!==0){
+              for(var j=0;j<obj_attribs.length;j++){
+                this.obj_name.push(obj_attribs[j].getName());
+                for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
+      
                 }
-            }
+              }
+            }*/
         }
         return attributeobject;
     };
@@ -6734,7 +6752,9 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                         var face = this.model.getGeom().getTopo(selecting[i]["path"]);
                         var verts = face.getEdges();
                         for (var n = 0; n < verts.length; n++) {
+                            //var attributes:any=[];
                             var label = verts[n].getLabel();
+                            //attributes.label=label;
                             if (label === edges[j] && this.attribute.indexOf(edges[j]) == -1) {
                                 this.attribute.push(edges[j]);
                             }
@@ -6856,7 +6876,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         if (selecting.length !== 0) {
             for (var i = 0; i < selecting.length; i++) {
                 for (var j = 0; j < object.length; j++) {
-                    if (selecting[i]["id"] === object[j]) {
+                    if (selecting[i]["id"] === object[j].label) {
                         this.attribute.push(object[j]);
                     }
                 }
@@ -7564,7 +7584,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         if (intersects.length > 0) {
             selectedObj = intersects[0].object;
             if (this.scenechildren[0].name === "All objs") {
-                var index_1 = Math.floor(intersects[0].faceIndex / 2);
+                var index_1 = Math.floor(intersects[0].faceIndex);
                 var path_1 = this.scene_and_maps.faces_map.get(index_1);
                 var face = this._model.getGeom().getTopo(path_1);
                 var label_1 = "o" + path_1.id;
@@ -7578,8 +7598,13 @@ var ViewerComponent = /** @class */ (function (_super) {
                         for (var i = 0; i < verts_xyz.length; i++) {
                             geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz[i][0], verts_xyz[i][1], verts_xyz[i][2]));
                         }
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                        if (verts.length === 4) {
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                        }
+                        else if (verts.length === 3) {
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                        }
                         var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
                         mesh["geometry"].computeVertexNormals();
                         mesh.userData.id = label_1;
@@ -7611,8 +7636,13 @@ var ViewerComponent = /** @class */ (function (_super) {
                             for (var i = 0; i < verts_xyz.length; i++) {
                                 geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz[i][0], verts_xyz[i][1], verts_xyz[i][2]));
                             }
-                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                            if (verts.length === 4) {
+                                geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                                geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                            }
+                            else if (verts.length === 3) {
+                                geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                            }
                             var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
                             mesh.userData.id = label_1;
                             mesh["geometry"].computeVertexNormals();
@@ -7624,20 +7654,29 @@ var ViewerComponent = /** @class */ (function (_super) {
                 }
             }
             if (this.scenechildren[0].name === "All faces") {
-                var index_2 = Math.floor(intersects[0].faceIndex / 2);
+                var index_2 = Math.floor(intersects[0].faceIndex);
                 var path_2 = this.scene_and_maps.faces_map.get(index_2);
                 var face = this._model.getGeom().getTopo(path_2);
                 var label_2 = face.getLabel();
                 var label_xyz = face.getLabelCentroid();
                 var verts_1 = face.getVertices();
                 var verts_xyz_1 = verts_1.map(function (v) { return v.getPoint().getPosition(); });
+                console.log(verts_1, verts_xyz_1);
                 if (this.textlabels.length === 0) {
                     var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["Geometry"]();
                     for (var i = 0; i < verts_xyz_1.length; i++) {
                         geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz_1[i][0], verts_xyz_1[i][1], verts_xyz_1[i][2]));
                     }
-                    geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                    geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                    if (verts_1.length === 4) {
+                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                    }
+                    else if (verts_1.length === 3) {
+                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                    }
+                    /*for(var i=2;i<verts.length;i++){
+                      geometry.faces.push(new THREE.Face3(0,2,1));
+                    }*/
                     var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
                     mesh.userData.id = label_2;
                     mesh["geometry"].computeVertexNormals();
@@ -7663,8 +7702,13 @@ var ViewerComponent = /** @class */ (function (_super) {
                         for (var i = 0; i < verts_xyz_1.length; i++) {
                             geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](verts_xyz_1[i][0], verts_xyz_1[i][1], verts_xyz_1[i][2]));
                         }
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
-                        geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                        if (verts_1.length === 4) {
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 3, 2));
+                        }
+                        else if (verts_1.length === 3) {
+                            geometry.faces.push(new __WEBPACK_IMPORTED_MODULE_1_three__["Face3"](0, 2, 1));
+                        }
                         var mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, new __WEBPACK_IMPORTED_MODULE_1_three__["MeshPhongMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] }));
                         mesh.userData.id = label_2;
                         mesh["geometry"].computeVertexNormals();
