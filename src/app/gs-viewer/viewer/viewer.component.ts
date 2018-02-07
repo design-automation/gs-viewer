@@ -970,12 +970,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
           var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
+          //pointsmaterial.sizeAttenuation=false;
           if(this.dataService.pointsize!==undefined){
               pointsmaterial.size=this.dataService.pointsize;
           }
           const points = new THREE.Points( geometry, pointsmaterial);
           points.userData.id=id;
           points["material"].needsUpdate=true;
+          console.log(points);
           points.name="selects";
           this.scene.add(points);
           this.addTextLabel(label,verts_xyz, id,id,"All points");

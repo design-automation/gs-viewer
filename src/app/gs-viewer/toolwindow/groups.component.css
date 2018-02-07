@@ -5,11 +5,13 @@
   font-family: Roboto,"Helvetica Neue",sans-serif;
   font-size: 12px !important;
   line-height: 14px;
+  overflow: hidden;
 }
 #groupsview{
   color:black;
   font-family: Roboto,"Helvetica Neue",sans-serif;
   font-size: 12px !important;
+  overflow: hidden;
 }
 #settingview{
   font-family: Roboto,"Helvetica Neue",sans-serif;
@@ -51,7 +53,11 @@
 ::ng-deep .mat-accent .mat-slider-track-fill {
     background-color: #395d73;
     font-family:sans-serif;
-} 
+}
+::ng-deep .mat-expansion-panel {
+  margin: 0px !important;
+  overflow: hidden !important;
+}
 
 .mat-expansion-panel{
    background-color: #F1F1F1 !important;
@@ -73,10 +79,16 @@
 }
 
 /deep/.mat-tab-label, /deep/.mat-tab-label-active{
-  min-width: 10px!important;
-  padding: 10px!important;
+  min-width: 3px!important;
+  padding: 3px!important;
   margin: 3px!important;
   color:#395d73;
+}
+/deep/.mat-tab-label{
+  height: 30px !important;
+}
+/deep/.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination{
+  display: none !important;
 }
 /deep/.mat-ink-bar{
   background-color: #395d73 !important;
