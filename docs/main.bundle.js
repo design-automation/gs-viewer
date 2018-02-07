@@ -5323,7 +5323,7 @@ var DataService = /** @class */ (function () {
         renderer.setPixelRatio(window.devicePixelRatio);
         // camera settings
         var aspect_ratio = this._width / this._height;
-        var camera = new __WEBPACK_IMPORTED_MODULE_2_three__["PerspectiveCamera"](50, aspect_ratio, 0.0001, 100000000);
+        var camera = new __WEBPACK_IMPORTED_MODULE_2_three__["PerspectiveCamera"](50, aspect_ratio, 0.01, 1000); //0.0001, 100000000 );
         camera.position.y = 10;
         camera.up.set(0, 0, 1);
         camera.lookAt(scene.position);
@@ -6206,7 +6206,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/toolwindow/groups.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"setandgroup\">\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Group\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Setting\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">frame</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><label class=\"name\" >Grid Center</label><br/>\r\n\t\t<label class=\"name\" >X</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>\r\n\t\t<label class=\"name\" >Y</label><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>\r\n\t\t<label class=\"name\" >Z</label><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>\r\n\t\t<button (click)=\"getcenter()\" style=\"margin-left: 10px\">Get</button><br/>\r\n\t\t<label class=\"name\" >Line Precision</label>\r\n  \t\t<!-- <label id=\"name\" >{{linepre.value.toPrecision(2)}}</label> -->\r\n  \t\t<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01  value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<label class=\"name\" >Points Size</label>&nbsp;&nbsp;&nbsp;&nbsp;\r\n  \t\t<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t<label class=\"name\" >hue</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01  value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t<label class=\"name\" >saturation</label>\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t<label class=\"name\" >lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n<!-- <div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n</div> -->\r\n</div>\r\n"
+module.exports = "<div id=\"setandgroup\">\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Group\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Setting\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">frame</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><label class=\"name\" >Grid Center</label><br/>\r\n\t\t<label class=\"name\" >X</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Y</label><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Z</label><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecentersize(size.value)><br/>\r\n\t\t<button (click)=\"getcenter()\" style=\"margin-left: 10px\">Get</button><br/>\r\n\t\t<label class=\"name\" >Line Precision</label>\r\n  \t\t<!-- <label id=\"name\" >{{linepre.value.toPrecision(2)}}</label> -->\r\n  \t\t<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01  value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<label class=\"name\" >Points Size</label>&nbsp;&nbsp;&nbsp;&nbsp;\r\n  \t\t<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t<label class=\"name\" >hue</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01  value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t<label class=\"name\" >saturation</label>\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t<label class=\"name\" >lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n<!-- <div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n</div> -->\r\n</div>\r\n"
 
 /***/ }),
 
@@ -6345,10 +6345,11 @@ var GroupsComponent = /** @class */ (function (_super) {
     GroupsComponent.prototype.changegrid = function () {
         this.gridVisible = !this.gridVisible;
         if (this.gridVisible) {
-            var gridhelper = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](100, 100);
+            var gridhelper = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](this._centersize, this._centersize);
             gridhelper.name = "GridHelper";
             var vector = new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](0, 1, 0);
             gridhelper.lookAt(vector);
+            gridhelper.position.set(this._centerx, this._centery, this._centerz);
             this.scene.add(gridhelper);
         }
         else {
@@ -6430,20 +6431,58 @@ var GroupsComponent = /** @class */ (function (_super) {
         }
         this.dataService.addframe(this.frameVisible);
     };
-    GroupsComponent.prototype.changecenter = function (centerx, centery, centerz, centersize) {
+    GroupsComponent.prototype.changecenter = function (centerx, centery, centerz) {
         if (this.gridVisible) {
             var gridhelper = this.scene.getObjectByName("GridHelper");
-            gridhelper = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](centersize, centersize);
             gridhelper.position.set(centerx, centery, centerz);
             this._centerx = centerx;
             this._centery = centery;
             this._centerz = centerz;
-            this._centersize = centersize;
             this.dataService.getcenterx(centerx);
             this.dataService.getcentery(centery);
             this.dataService.getcenterz(centerz);
+        }
+    };
+    GroupsComponent.prototype.changecentersize = function (centersize) {
+        if (this.gridVisible) {
+            this._centersize = centersize;
+            this.scene.remove(this.scene.getObjectByName("GridHelper"));
+            var gridhelper = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](centersize, centersize);
+            gridhelper.name = "GridHelper";
+            var vector = new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](0, 1, 0);
+            gridhelper.lookAt(vector);
+            gridhelper.position.set(this._centerx, this._centery, this._centerz);
+            this.scene.add(gridhelper);
             this.dataService.getcentersize(centersize);
         }
+    };
+    GroupsComponent.prototype.getcenter = function () {
+        for (var i = 0; i < this.scene.children.length; i++) {
+            if (this.scene.children[i].type === "Scene") {
+                for (var j = 0; j < this.scene.children[i].children.length; j++) {
+                    if (this.scene.children[i].children[j].name === "All points") {
+                        var center = this.scene.children[i].children[j]["geometry"].boundingSphere.center;
+                        var radius = this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
+                        var max = Math.ceil(radius + Math.max(Math.abs(center.x), Math.abs(center.y), Math.abs(center.z))) * 2;
+                        this._centerx = center.x;
+                        this._centery = center.y;
+                        this._centerz = center.z;
+                        this._centersize = max;
+                    }
+                }
+            }
+        }
+        this.scene.remove(this.scene.getObjectByName("GridHelper"));
+        var gridhelper = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](this._centersize, this._centersize);
+        gridhelper.name = "GridHelper";
+        var vector = new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](0, 1, 0);
+        gridhelper.lookAt(vector);
+        gridhelper.position.set(this._centerx, this._centery, this._centerz);
+        this.scene.add(gridhelper);
+        this.dataService.getcenterx(this._centerx);
+        this.dataService.getcentery(this._centery);
+        this.dataService.getcenterz(this._centerz);
+        this.dataService.getcentersize(this._centersize);
     };
     GroupsComponent.prototype.changeline = function (lineprecision) {
         this._linepre = lineprecision;
@@ -7274,6 +7313,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         _this.SelectVisible = 'Objs';
         _this.settingVisible = false;
         _this.LineNo = 0;
+        _this.animateInitial = false;
         _this.myElement = myElement;
         return _this;
     }
@@ -7312,8 +7352,19 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.sphere.visible = false;
         this.sphere.name = "sphereInter";
         this.scene.add(this.sphere);
-        // render loop
         var self = this;
+        controls.addEventListener('change', function () {
+            animate();
+        });
+        window.addEventListener("mousemove", animate, false);
+        window.addEventListener("mousemove", requestanimate, false);
+        window.addEventListener("click", requestanimate, false);
+        /*if(self.seVisible){
+          self.animate(self);
+          requestAnimationFrame( self.animate );
+        }*/
+        // render loop
+        //let self = this;
         function animate() {
             self.raycaster.setFromCamera(self.mouse, self.camera);
             self.scenechildren = self.dataService.getscenechild();
@@ -7344,11 +7395,18 @@ var ViewerComponent = /** @class */ (function (_super) {
                 self.clickatt = self.dataService.clickshow;
                 self.clickshow();
             }
-            requestAnimationFrame(animate);
+            //requestAnimationFrame( animate );
+            //requestAnimationFrame( animate );
             self.renderer.render(self.scene, self.camera);
         }
         ;
+        function requestanimate() {
+            if (self.seVisible === true) {
+                requestAnimationFrame(animate);
+            }
+        }
         animate();
+        //this.animate(self);
         for (var i = 0; i < this.getchildren().length; i++) {
             this.getchildren()[i]["material"].transparent = false;
         }
@@ -7364,6 +7422,44 @@ var ViewerComponent = /** @class */ (function (_super) {
             this.updateModel();
         }
     };
+    /*animate(self) {
+      self.raycaster.setFromCamera(self.mouse,self.camera);
+      self.scenechildren=self.dataService.getscenechild();
+      var intersects = self.raycaster.intersectObjects(self.scenechildren);
+      for (var i = 0; i < self.scenechildren.length; i++) {
+        var currObj=self.scenechildren[i];
+        if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
+          if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
+            if(self.seVisible===true){
+              self.sphere.visible = true;
+              self.sphere.position.copy( intersects[ 0 ].point );
+            }
+          } else {
+            self.sphere.visible = false;
+          }
+        }
+      }
+      for(var i=0; i<self.textlabels.length; i++) {
+        self.textlabels[i].updatePosition();
+      }
+      if(self.dataService.selecting.length!=0){
+        self.updateview();
+      }
+      self.onResize();
+      if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
+        self.clickatt=self.dataService.clickshow;
+        self.clickshow();
+      }
+      /*if(self.seVisible===true){
+        requestAnimationFrame( self.animate );
+      }*/
+    //requestAnimationFrame( animate );
+    /*self.renderer.render( self.scene, self.camera );
+  }
+
+  requestanimate(){
+    requestAnimationFrame( this.animate );
+  }*/
     /// clears all children from the scene
     ViewerComponent.prototype.clearScene = function () {
         /// remove children from scene
@@ -7398,11 +7494,13 @@ var ViewerComponent = /** @class */ (function (_super) {
         ///
         var width = container.offsetWidth; //container.clientWidth;
         var height = container.offsetHeight; //container.clientHeight;
-        this.width = width; //event.ClientWidth;
-        this.height = height; //event.ClientHeight;
-        this.renderer.setSize(this.width, this.height);
-        this.camera.aspect = this.width / this.height;
-        this.camera.updateProjectionMatrix();
+        if (width !== this.width || height !== this.height) {
+            this.width = width; //event.ClientWidth;
+            this.height = height; //event.ClientHeight;
+            this.renderer.setSize(this.width, this.height);
+            this.camera.aspect = this.width / this.height;
+            this.camera.updateProjectionMatrix();
+        }
         // }
     };
     //
@@ -7729,6 +7827,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.mUpTime = (new Date()).getTime();
     };
     ViewerComponent.prototype.onDocumentMouseMove = function (event) {
+        this.onResize();
         if (this.seVisible === true) {
             this.mouse.x = (event.offsetX / this.width) * 2 - 1;
             this.mouse.y = -(event.offsetY / this.height) * 2 + 1;
@@ -8169,7 +8268,6 @@ var ViewerComponent = /** @class */ (function (_super) {
                     var points = new __WEBPACK_IMPORTED_MODULE_1_three__["Points"](geometry, pointsmaterial);
                     points.userData.id = id;
                     points["material"].needsUpdate = true;
-                    console.log(points);
                     points.name = "selects";
                     this.scene.add(points);
                     this.addTextLabel(label, verts_xyz_5, id, id, "All points");
@@ -8365,10 +8463,12 @@ var ViewerComponent = /** @class */ (function (_super) {
             var box = this.selectbox();
             var center = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](box["geometry"].boundingSphere.center.x, box["geometry"].boundingSphere.center.y, box["geometry"].boundingSphere.center.z);
             var radius = box["geometry"].boundingSphere.radius;
+            if (radius === 0)
+                radius = 4;
             var fov = this.camera.fov * (Math.PI / 180);
             var vec_centre_to_pos = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"]();
             vec_centre_to_pos.subVectors(this.camera.position, center);
-            var tmp_vec = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](Math.abs(radius / Math.sin(fov / 0.2)), Math.abs(radius / Math.sin(fov / 0.2)), Math.abs(radius / Math.sin(fov / 0.2)));
+            var tmp_vec = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](Math.abs(radius / Math.sin(fov / 2)), Math.abs(radius / Math.sin(fov / 2)), Math.abs(radius / Math.sin(fov / 2)));
             vec_centre_to_pos.setLength(tmp_vec.length());
             var perspectiveNewPos = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"]();
             perspectiveNewPos.addVectors(center, vec_centre_to_pos);
