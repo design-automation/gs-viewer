@@ -335,7 +335,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       // adding the object to the scene
       this.scene.add(objectData);  
       this.render(this);
-
     }
     catch(ex){
       console.error("Error displaying model:", ex);
@@ -630,6 +629,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.dataService.centery=0;
       this.dataService.centerz=0;
     }
+    this.render(this);
   }
 
 
