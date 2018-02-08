@@ -333,7 +333,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.controls.update();
       
       // adding the object to the scene
-      this.scene.add(objectData);   
+      this.scene.add(objectData);  
+      this.render(this);
 
     }
     catch(ex){
