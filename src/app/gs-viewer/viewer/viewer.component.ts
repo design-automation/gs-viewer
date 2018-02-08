@@ -126,8 +126,39 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     let self = this;
     //self.animate(self);
     controls.addEventListener( 'change', function(){ 
+                             //self.animate(self);
                              self.render(self);
                               });
+    /*function animate() {
+      self.raycaster.setFromCamera(self.mouse,self.camera);
+      self.scenechildren=self.dataService.getscenechild();
+      var intersects = self.raycaster.intersectObjects(self.scenechildren);
+      for (var i = 0; i < self.scenechildren.length; i++) {
+        var currObj=self.scenechildren[i];
+        if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
+          if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
+            if(self.seVisible===true){
+              self.sphere.visible = true;
+              self.sphere.position.copy( intersects[ 0 ].point );
+            }
+          } else {
+            self.sphere.visible = false;
+          }
+        }
+      }
+      for(var i=0; i<self.textlabels.length; i++) {
+        self.textlabels[i].updatePosition();
+      }
+      if(self.dataService.selecting.length!=0){
+        self.updateview();
+      }
+      if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
+        self.clickatt=self.dataService.clickshow;
+        self.clickshow();
+      }
+      self.renderer.render( self.scene, self.camera );
+
+    };*/
     self.renderer.render( self.scene, self.camera );
     for(var i=0;i<this.getchildren().length;i++){
       this.getchildren()[i]["material"].transparent=false;
@@ -554,12 +585,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   onDocumentMouseMove(event) {
     this.onResize();
-    if(this.seVisible===false){
+    if(this.seVisible===true){
       this.animate(this);
       this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
       this.mouse.y =-( event.offsetY / this.height ) * 2 + 1;
     }
-    if(this.seVisible===true){
+    if(this.seVisible===false){
       this.render(this);
     }
   }
