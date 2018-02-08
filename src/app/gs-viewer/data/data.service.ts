@@ -117,7 +117,7 @@ export class DataService {
 
     // camera settings
     let aspect_ratio: number = this._width/this._height
-    let camera = new THREE.PerspectiveCamera( 50, aspect_ratio, 0.0001, 100000000 );
+    let camera = new THREE.PerspectiveCamera( 50, aspect_ratio, 0.01, 1000 );//0.0001, 100000000 );
     camera.position.y=10;
     camera.up.set(0,0,1);
     camera.lookAt( scene.position );

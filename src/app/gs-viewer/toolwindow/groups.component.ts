@@ -40,10 +40,14 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
   saturation:number;
   lightness:number;
   alight:THREE.HemisphereLight;
+  renderer: THREE.WebGLRenderer; 
+  camera: THREE.PerspectiveCamera;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
     this.scene=this.dataService.getScene();
+    this.renderer= this.dataService.getRenderer();
+    this.camera= this.dataService.getCamera();
     this.myElement = myElement;
     this._centerx=this.dataService.centerx;
     this._centery=this.dataService.centery;
@@ -130,18 +134,23 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     
   }
 
+   animate(self){
+
+   }
+
   changegrid(){
     this.gridVisible = !this.gridVisible;
     if(this.gridVisible){
-      var gridhelper=new THREE.GridHelper( 100, 100);
+      var gridhelper=new THREE.GridHelper( this._centersize, this._centersize);
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
+      gridhelper.position.set(this._centerx,this._centery,this._centerz);
       this.scene.add( gridhelper);
-
     }else{
       this.scene.remove(this.scene.getObjectByName("GridHelper"));
     }
+    this.renderer.render(this.scene, this.camera);
     this.dataService.addgrid(this.gridVisible);
   }
 
@@ -168,6 +177,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
         children[i]["material"].opacity=0;
       }
     }
+    this.renderer.render(this.scene, this.camera);
     this.dataService.addpoint(this.pointVisible);
   }
 
@@ -180,6 +190,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     }else{
       this.scene.remove(this.scene.getObjectByName("AxisHelper"));
     }
+    this.renderer.render(this.scene, this.camera);
     this.dataService.addaxis(this.axisVisible);
   }
 
@@ -196,6 +207,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
         }
       }
     }
+    this.renderer.render(this.scene, this.camera);
     this.dataService.addshadow(this.shadowVisible);
   }
 
@@ -218,23 +230,66 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       }
     }
   }
+  this.renderer.render(this.scene, this.camera);
    this.dataService.addframe(this.frameVisible);
   }
 
-  changecenter(centerx,centery,centerz,centersize){
+  changecenter(centerx,centery,centerz){
     if(this.gridVisible){
       var gridhelper=this.scene.getObjectByName("GridHelper");
-      gridhelper=new THREE.GridHelper(centersize,centersize);
       gridhelper.position.set(centerx,centery,centerz);
       this._centerx=centerx;
       this._centery=centery;
       this._centerz=centerz;
-      this._centersize=centersize;
       this.dataService.getcenterx(centerx);
       this.dataService.getcentery(centery);
       this.dataService.getcenterz(centerz);
+    }
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  changecentersize(centersize){
+    if(this.gridVisible){
+      this._centersize=centersize;
+      this.scene.remove(this.scene.getObjectByName("GridHelper"));
+      var gridhelper=new THREE.GridHelper(centersize,centersize);
+      gridhelper.name="GridHelper";
+      var vector=new THREE.Vector3(0,1,0);
+      gridhelper.lookAt(vector);
+      gridhelper.position.set(this._centerx,this._centery,this._centerz);
+      this.scene.add(gridhelper);
       this.dataService.getcentersize(centersize);
     }
+    this.renderer.render(this.scene, this.camera);
+  }
+  getcenter(){
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].name==="All points"){
+            var center:THREE.Vector3=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
+            var radius:number=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
+            var max:number=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
+            this._centerx=center.x;
+            this._centery=center.y;
+            this._centerz=center.z;
+            this._centersize=max;
+          }
+        }
+      }
+    }
+    this.scene.remove(this.scene.getObjectByName("GridHelper"));
+    var gridhelper=new THREE.GridHelper(this._centersize,this._centersize);
+    gridhelper.name="GridHelper";
+    var vector=new THREE.Vector3(0,1,0);
+    gridhelper.lookAt(vector);
+    gridhelper.position.set(this._centerx,this._centery,this._centerz);
+    this.scene.add(gridhelper);
+    this.dataService.getcenterx(this._centerx);
+    this.dataService.getcentery(this._centery);
+    this.dataService.getcenterz(this._centerz);
+    this.dataService.getcentersize(this._centersize);
+    this.renderer.render(this.scene, this.camera);
   }
 
   changeline(lineprecision){
@@ -242,6 +297,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this.raycaster=this.dataService.getraycaster();
     this.raycaster.linePrecision=lineprecision;
     this.dataService.addraycaster(this.raycaster);
+    this.renderer.render(this.scene, this.camera);
   }
 
   changepointsize(pointsize){
@@ -255,6 +311,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
         this.scene.children[i]["material"].size=pointsize;
       }
     }
+    this.renderer.render(this.scene, this.camera);
     this.dataService.getpointsize(pointsize);
   }
 
@@ -267,6 +324,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this.dataService.getsaturation(_saturation);
     this.dataService.getlightness(_lightness);
     this.alight.color.setHSL( _hue, _saturation,_lightness );
+    this.renderer.render(this.scene, this.camera);
   }
 
   getgroupname(){
@@ -286,11 +344,13 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       group.object=allgroup[i].getTopos(gs.EGeomType.objs).length;
       this.groups.push(group);
     }
+    //this.renderer.render(this.scene, this.camera);
   }
 
   selectpoint(group){
     var grouppoints:Array<any>=group.points;
     for(var i=0;i<grouppoints.length;i++){
+      var point:any=[];
       var label: string = grouppoints[i].getLabel();
       var id:string=grouppoints[i]._id;
       var verts_xyz: gs.XYZ = grouppoints[i].getLabelCentroid();
@@ -305,6 +365,12 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       points["material"].needsUpdate=true;
       points.name="selects";
       this.scene.add(points);
+      point.label=label;
+      point.id=id;
+      point.label_xyz=verts_xyz;
+      point.path=id;
+      point.type="All points";
+      this.dataService.addclickshow(point);
       //this.addTextLabel(label,verts_xyz,label,null,null,"All points");
       //this.addTextLabel(label,verts_xyz, label,id,label,"All points");
     }

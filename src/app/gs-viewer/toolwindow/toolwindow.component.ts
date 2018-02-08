@@ -427,9 +427,12 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     var selecting=this.dataService.getselecting();
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
+        //if(selecting[i].type==="All edges"){
         for(var j=0;j<edges.length;j++){
-          if(selecting[i]["id"].indexOf(edges[j])>-1){
-            this.attribute.push(edges[j]);
+          if(selecting[i].type==="All edges"){
+            if(selecting[i]["id"].indexOf(edges[j])>-1){
+              this.attribute.push(edges[j]);
+            }
           }
           if(selecting[i]["type"]==="All faces"){
             //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);

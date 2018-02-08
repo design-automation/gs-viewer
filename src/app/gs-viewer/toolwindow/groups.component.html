@@ -1,4 +1,4 @@
-<div id="setandgroup">
+<div id="setandgroup" >
 <mat-tab-group class="mat-tab-group">
   <mat-tab label="Group" >
   	<div id="groupsview">
@@ -27,10 +27,10 @@
 		<input id="frame" class="check" type="checkbox" [checked]="frameVisible" (click)="changeframe()"> <label id="name" value="frameVisible">frame</label><br/>
 		<input id="point" class="check" type="checkbox" [checked]="pointVisible" (click)="changepoint()"> <label id="name" value="pointVisible">point</label><br/>
 		<hr/><label class="name" >Grid Center</label><br/>
-		<label class="name" >X</label><input type="text" name="center" id="centerx" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>
-		<label class="name" >Y</label><input type="text" name="center" #centery id="centery" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>
-		<label class="name" >Z</label><input type="text" name="center"  #centerz id="centerz" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>
-		<label class="name" >Size</label><input type="text" name="center"  #size id="centersize" value={{_centersize}} (change)=changecenter(centerx.value,centery.value,centerz.value,size.value)><br/>
+		<label class="name" >X</label><input type="text" name="center" id="centerx" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>
+		<label class="name" >Y</label><input type="text" name="center" #centery id="centery" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>
+		<label class="name" >Z</label><input type="text" name="center"  #centerz id="centerz" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>
+		<label class="name" >Size</label><input type="text" name="center"  #size id="centersize" value={{_centersize}} (change)=changecentersize(size.value)><br/>
 		<button (click)="getcenter()" style="margin-left: 10px">Get</button><br/>
 		<label class="name" >Line Precision</label>
   		<!-- <label id="name" >{{linepre.value.toPrecision(2)}}</label> -->
