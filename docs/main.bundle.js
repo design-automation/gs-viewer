@@ -63,7 +63,7 @@ var AppComponent = /** @class */ (function () {
         // dummy gs_data
         // to pass to the viewer
         // gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelGroups"](); //gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs(); //gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
+        this.gs_dummy_data = undefined; //gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs(); //gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
         this.test_data1 = {
             "metadata": {
                 "filetype": "gs-json",
@@ -5304,11 +5304,8 @@ var DataService = /** @class */ (function () {
         // this only runs once
         this.selecting = [];
         this.grid = true;
-        this.sprite = [];
-        this.selectedFaces = [];
         this.scenechildren = [];
         this.textlabels = [];
-        this.starsGeometry = new __WEBPACK_IMPORTED_MODULE_2_three__["Geometry"]();
         this.point = true;
         // ---- 
         // Subscription Handling
@@ -5352,9 +5349,6 @@ var DataService = /** @class */ (function () {
         this._renderer = renderer;
         this._camera = camera;
         this._orbitControls = controls;
-        this._hueValue = default_hue;
-        this._saturationValue = default_saturation;
-        this._lightnessValue = default_lightness;
         // add it to alight - what does alight do?
         this._alight = hemi_light;
         //this._alight.push(hemi_light);
@@ -5391,6 +5385,7 @@ var DataService = /** @class */ (function () {
     };
     DataService.prototype.generateSceneMaps = function () {
         var scene_and_maps = __WEBPACK_IMPORTED_MODULE_3_gs_json__["genThreeOptModelAndMaps"](this._gsModel);
+        ;
         this.scenemaps = scene_and_maps;
     };
     DataService.prototype.getscememaps = function () {
@@ -5427,11 +5422,6 @@ var DataService = /** @class */ (function () {
     DataService.prototype.getraycaster = function () {
         return this.raycaster;
     };
-    DataService.prototype.addlightvalue = function (hue, saturation, lightness) {
-        this._hueValue = hue;
-        this._saturationValue = saturation;
-        this._lightnessValue = lightness;
-    };
     DataService.prototype.gethue = function (_hue) {
         this.hue = _hue;
     };
@@ -5440,23 +5430,6 @@ var DataService = /** @class */ (function () {
     };
     DataService.prototype.getlightness = function (_lightness) {
         this.lightness = _lightness;
-    };
-    DataService.prototype.getopacity = function (_opacity) {
-        this.opacity = _opacity;
-    };
-    DataService.prototype.addbackvalue = function (red, green, blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-    };
-    DataService.prototype.getred = function (red) {
-        this.red = red;
-    };
-    DataService.prototype.getgreen = function (green) {
-        this.green = green;
-    };
-    DataService.prototype.getblue = function (blue) {
-        this.blue = blue;
     };
     DataService.prototype.getpointsize = function (pointszie) {
         this.pointsize = pointszie;
@@ -5531,9 +5504,6 @@ var DataService = /** @class */ (function () {
     DataService.prototype.addframe = function (frame) {
         this.frame = frame;
     };
-    DataService.prototype.addselect = function (select) {
-        this.selectcheck = select;
-    };
     DataService.prototype.addpoint = function (point) {
         this.point = point;
     };
@@ -5545,21 +5515,6 @@ var DataService = /** @class */ (function () {
         }
         return -1;
     };
-    DataService.prototype.getFaceIndex = function (name) {
-        for (var i = 0; i < this.selectedFaces.length; i++) {
-            if (this.selectedFaces[i].name == name) {
-                return i;
-            }
-        }
-        return -1;
-    };
-    DataService.prototype.addsprite = function (sprite) {
-        this.sprite.push(sprite);
-        this.sendMessage();
-    };
-    DataService.prototype.pushsprite = function (sprite) {
-        this.sprite = sprite;
-    };
     DataService.prototype.addscenechild = function (scenechildren) {
         this.scenechildren = scenechildren;
         this.sendMessage();
@@ -5567,95 +5522,6 @@ var DataService = /** @class */ (function () {
     DataService.prototype.getscenechild = function () {
         this.sendMessage();
         return this.scenechildren;
-    };
-    //To add text labels just provide label text, label position[x,y,z] and its id
-    DataService.prototype.addTextLabel = function (label, label_xyz, id, index, path) {
-        //console.log(document.getElementsByTagName("app-viewer")[0].children.namedItem("container"));
-        //let container = this.myElement.nativeElement.children.namedItem("container");
-        var container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
-        var star = this.creatStarGeometry(label_xyz);
-        var textLabel = this.createTextLabel(label, star, id, index, path);
-        this.starsGeometry.vertices.push(star);
-        this.textlabels.push(textLabel);
-        this.pushselecting(textLabel);
-        container.appendChild(textLabel.element);
-    };
-    //To remove text labels just provide its id
-    DataService.prototype.removeTextLabel = function (id) {
-        var i = 0;
-        for (i = 0; i < this.textlabels.length; i++) {
-            if (this.textlabels[i].id == id) {
-                // let container = this.myElement.nativeElement.children.namedItem("container");
-                var container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
-                container.removeChild(this.textlabels[i].element);
-                var index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
-                if (index !== -1) {
-                    this.starsGeometry.vertices.splice(index, 1);
-                }
-                break;
-            }
-        }
-        if (i < this.textlabels.length) {
-            this.textlabels.splice(i, 1);
-            this.spliceselecting(i, 1);
-        }
-    };
-    DataService.prototype.creatStarGeometry = function (label_xyz) {
-        var star = new __WEBPACK_IMPORTED_MODULE_2_three__["Vector3"]();
-        star.x = label_xyz[0];
-        star.y = label_xyz[1];
-        star.z = label_xyz[2];
-        return star;
-    };
-    DataService.prototype.createTextLabel = function (label, star, id, index, path) {
-        var div = this.createLabelDiv();
-        var self = this;
-        var textLabel = {
-            id: id,
-            index: index,
-            path: path,
-            element: div,
-            parent: false,
-            position: new __WEBPACK_IMPORTED_MODULE_2_three__["Vector3"](0, 0, 0),
-            setHTML: function (html) {
-                this.element.innerHTML = html;
-            },
-            setParent: function (threejsobj) {
-                this.parent = threejsobj;
-            },
-            updatePosition: function () {
-                if (parent) {
-                    this.position.copy(this.parent);
-                }
-                var coords2d = this.get2DCoords(this.position, this.camera);
-                this.element.style.left = coords2d.x + 'px';
-                this.element.style.top = coords2d.y + 'px';
-            },
-            get2DCoords: function (position, camera) {
-                var vector = position.project(camera);
-                vector.x = (vector.x + 1) / 2 * this.width;
-                vector.y = -(vector.y - 1) / 2 * this.height;
-                return vector;
-            }
-        };
-        textLabel.setHTML(label);
-        textLabel.setParent(star);
-        return textLabel;
-    };
-    DataService.prototype.createLabelDiv = function () {
-        var div = document.createElement("div");
-        div.style.color = '#00f';
-        div.style.fontFamily = '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
-        div.style.margin = '-5px 0 0 15px';
-        div.style.pointerEvents = 'none';
-        div.style.position = 'absolute';
-        div.style.width = '100';
-        div.style.height = '100';
-        div.style.top = '-1000';
-        div.style.left = '-1000';
-        div.style.textShadow = "0px 0px 3px white";
-        div.style.color = "black";
-        return div;
     };
     DataService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Injectable */])(),
@@ -5889,10 +5755,6 @@ var SettingComponent = /** @class */ (function () {
         this.hue = this.dataService.hue;
         this.saturation = this.dataService.saturation;
         this.lightness = this.dataService.lightness;
-        this.opacity = this.dataService.opacity;
-        this.red = this.dataService.red;
-        this.green = this.dataService.green;
-        this.blue = this.dataService.blue;
         this._centerx = this.dataService.centerx;
         this._centery = this.dataService.centery;
         this._centerz = this.dataService.centerz;
@@ -5921,35 +5783,11 @@ var SettingComponent = /** @class */ (function () {
         else {
             this.lightness = this.dataService.lightness;
         }
-        if (this.opacity == undefined) {
-            this.opacity = 1;
-        }
-        else {
-            this.opacity = this.dataService.opacity;
-        }
         this.gridVisible = this.dataService.grid;
         this.axisVisible = this.dataService.axis;
         this.shadowVisible = this.dataService.shadow;
         this.frameVisible = this.dataService.frame;
         this.pointVisible = this.dataService.point;
-        if (this.red == undefined) {
-            this.red = 0.8;
-        }
-        else {
-            this.red = this.dataService.red;
-        }
-        if (this.green == undefined) {
-            this.green = 0.8;
-        }
-        else {
-            this.green = this.dataService.green;
-        }
-        if (this.blue == undefined) {
-            this.blue = 0.8;
-        }
-        else {
-            this.blue = this.dataService.blue;
-        }
         if (this._centerx == undefined) {
             this._centerx = 0;
         }
@@ -6125,26 +5963,6 @@ var SettingComponent = /** @class */ (function () {
             }
         }
         this.dataService.addframe(this.frameVisible);
-    };
-    SettingComponent.prototype.changeopa = function (_opacity) {
-        this.opacity = _opacity;
-        this.dataService.getopacity(_opacity);
-        for (var i = 0; i < this.scene.children.length; i++) {
-            if (this.scene.children[i].type === "Scene") {
-                if (this.scene.children[i].children[0].type === "Mesh") {
-                    this.scene.children[i].children[0]["material"].opacity = _opacity;
-                }
-            }
-        }
-    };
-    SettingComponent.prototype.changeback = function (_red, _green, _blue) {
-        this.red = _red;
-        this.green = _green;
-        this.blue = _blue;
-        this.dataService.getred(_red);
-        this.dataService.getgreen(_green);
-        this.dataService.getblue(_blue);
-        this.scene.background = new __WEBPACK_IMPORTED_MODULE_0_three__["Color"](_red, _green, _blue);
     };
     SettingComponent.prototype.changenormal = function () {
         this.nomalVisible = !this.nomalVisible;
@@ -6570,7 +6388,7 @@ var GroupsComponent = /** @class */ (function (_super) {
             point.label_xyz = verts_xyz;
             point.path = id;
             point.type = "All points";
-            this.dataService.addclickshow(point);
+            //this.dataService.addclickshow(point);
             //this.addTextLabel(label,verts_xyz,label,null,null,"All points");
             //this.addTextLabel(label,verts_xyz, label,id,label,"All points");
         }
@@ -6653,13 +6471,9 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     function ToolwindowComponent(injector, myElement) {
         var _this = _super.call(this, injector) || this;
         _this.Visible = "Objs";
-        _this.textlabels = [];
-        _this.starsGeometry = new __WEBPACK_IMPORTED_MODULE_0_three__["Geometry"]();
         _this.scene = _this.dataService.getScene();
         _this.selectedVisible = false;
         _this.attribute = [];
-        _this.num = [];
-        _this.collection = [];
         _this.selectObj = [];
         _this.myElement = myElement;
         return _this;
@@ -6714,7 +6528,6 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     };
     ToolwindowComponent.prototype.getpoints = function () {
         var attrubtepoints = [];
-        this.point_name = [];
         if (this.scene_and_maps.points_map !== null && this.scene_and_maps.points_map.size !== 0 && this.scene_and_maps.points_map !== undefined) {
             /*const point_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.points) as gs.IEntAttrib[];
             for(var j=0;j<point_attribs.length;j++){
@@ -6741,7 +6554,6 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     ToolwindowComponent.prototype.getvertices = function () {
         var attributevertix = [];
         var points = this.getpoints();
-        this.vertex_name = [];
         if (this.scene_and_maps.vertices_map !== null && this.scene_and_maps.vertices_map.size !== 0 && this.scene_and_maps.vertices_map !== undefined) {
             /*const vertex_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.vertices) as gs.ITopoAttrib[];
             for(var n=0;n<vertex_attribs.length;n++){
@@ -6772,7 +6584,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     };
     ToolwindowComponent.prototype.getedges = function () {
         var attributeedge = [];
-        this.edge_name = [];
+        //this.edge_name=[];
         if (this.scene_and_maps.edges_map !== null && this.scene_and_maps.edges_map.size !== 0 && this.scene_and_maps.edges_map !== undefined) {
             /*const edge_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.edges) as gs.ITopoAttrib[];
              for(var j=0;j<edge_attribs.length;j++){
@@ -6793,7 +6605,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     };
     ToolwindowComponent.prototype.getwires = function () {
         var attributewire = [];
-        this.wire_name = [];
+        //this.wire_name=[];
         if (this.scene_and_maps.wires_map !== null && this.scene_and_maps.wires_map.size !== 0 && this.scene_and_maps.wires_map !== undefined) {
             /*const wire_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.wires) as gs.ITopoAttrib[];
             for(var j=0;j<wire_attribs.length;j++){
@@ -6813,7 +6625,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
     };
     ToolwindowComponent.prototype.getfaces = function () {
         var attributeface = [];
-        this.face_name = [];
+        //this.face_name=[];
         if (this.scene_and_maps.faces_map !== null && this.scene_and_maps.faces_map.size !== 0 && this.scene_and_maps.faces_map !== undefined) {
             /*const face_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.faces) as gs.ITopoAttrib[];
             for(var j=0;j<face_attribs.length;j++){
@@ -6893,14 +6705,14 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         }
         return scenechildren;
     };
-    ToolwindowComponent.prototype.clearsprite = function () {
-        this.dataService.visible = this.Visible;
-        for (var i = 0; i < this.dataService.sprite.length; i++) {
-            this.dataService.sprite[i].visible = false;
-        }
-        var sprite = [];
-        this.dataService.pushsprite(sprite);
-    };
+    /*clearsprite(){
+      this.dataService.visible=this.Visible;
+      for(var i=0;i<this.dataService.sprite.length;i++){
+        this.dataService.sprite[i].visible=false;
+      }
+      var sprite=[];
+      this.dataService.pushsprite(sprite);
+    }*/
     ToolwindowComponent.prototype.point = function (Visible) {
         this.Visible = "Points";
         this.attribute = this.getpoints();
@@ -6908,7 +6720,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.pointcheck();
         }
         this.dataService.visible = this.Visible;
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.pointcheck = function () {
         this.attribute = [];
@@ -6989,7 +6801,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.verticecheck();
         }
         this.dataService.visible = this.Visible;
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.verticecheck = function () {
         this.attribute = this.pointtovertix();
@@ -7002,7 +6814,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.edgecheck();
         }
         this.dataService.visible = this.Visible;
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.edgecheck = function () {
         this.attribute = [];
@@ -7056,7 +6868,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.wirecheck();
         }
         this.dataService.visible = this.Visible;
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.wirecheck = function () {
         this.attribute = [];
@@ -7089,7 +6901,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         if (this.selectedVisible == true) {
             this.facecheck();
         }
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.clicktoshow = function (select) {
         var vertices = this.model.getGeom().getTopo(select.path);
@@ -7103,7 +6915,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         points["material"].needsUpdate = true;
         points.name = "selects";
         this.scene.add(points);
-        this.dataService.addTextLabel(label, verts_xyz, select.id, null, select.path);
+        //this.dataService.addTextLabel(label,verts_xyz, select.id,null,select.path);
     };
     ToolwindowComponent.prototype.facecheck = function () {
         this.attribute = [];
@@ -7137,7 +6949,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.objectcheck();
         }
         this.dataService.visible = this.Visible;
-        this.clearsprite();
+        //this.clearsprite();
     };
     ToolwindowComponent.prototype.objectcheck = function () {
         this.attribute = [];
@@ -7326,13 +7138,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-//import { ResizedEvent } from 'angular-resize-event';
 var ViewerComponent = /** @class */ (function (_super) {
     __extends(ViewerComponent, _super);
     function ViewerComponent(injector, myElement) {
         var _this = _super.call(this, injector) || this;
-        _this.Visible = "Objs";
-        _this.mySprites = [];
         _this.textlabels = [];
         _this.starsGeometry = new __WEBPACK_IMPORTED_MODULE_1_three__["Geometry"]();
         _this.seVisible = false;
@@ -7370,7 +7179,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["Raycaster"]();
         this.raycaster.linePrecision = 0.05;
         this.scenechildren = this.dataService.getscenechild();
-        this.scenechild = new __WEBPACK_IMPORTED_MODULE_1_three__["Scene"]();
         var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](0.3);
         var material = new __WEBPACK_IMPORTED_MODULE_1_three__["MeshBasicMaterial"]({ color: 0x00ff00 });
         this.sphere = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, material);
@@ -7378,47 +7186,13 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.sphere.name = "sphereInter";
         this.scene.add(this.sphere);
         var self = this;
-        //self.animate(self);
-        controls.addEventListener('change', function () {
-            //self.animate(self);
-            self.render(self);
-        });
-        /*function animate() {
-          self.raycaster.setFromCamera(self.mouse,self.camera);
-          self.scenechildren=self.dataService.getscenechild();
-          var intersects = self.raycaster.intersectObjects(self.scenechildren);
-          for (var i = 0; i < self.scenechildren.length; i++) {
-            var currObj=self.scenechildren[i];
-            if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
-              if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
-                if(self.seVisible===true){
-                  self.sphere.visible = true;
-                  self.sphere.position.copy( intersects[ 0 ].point );
-                }
-              } else {
-                self.sphere.visible = false;
-              }
-            }
-          }
-          for(var i=0; i<self.textlabels.length; i++) {
-            self.textlabels[i].updatePosition();
-          }
-          if(self.dataService.selecting.length!=0){
-            self.updateview();
-          }
-          if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
-            self.clickatt=self.dataService.clickshow;
-            self.clickshow();
-          }
-          self.renderer.render( self.scene, self.camera );
-    
-        };*/
-        self.renderer.render(self.scene, self.camera);
+        controls.addEventListener('change', function () { self.render(self); });
         for (var i = 0; i < this.getchildren().length; i++) {
             this.getchildren()[i]["material"].transparent = false;
         }
         this.dataService.addraycaster(this.raycaster);
         this.addgrid();
+        self.renderer.render(self.scene, self.camera);
     };
     //
     //  checks if the data service has a data and calls update function for the viewer
@@ -7449,9 +7223,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         for (var i = 0; i < self.textlabels.length; i++) {
             self.textlabels[i].updatePosition();
         }
-        if (self.dataService.selecting.length != 0) {
-            self.updateview();
-        }
         self.onResize();
         if (self.dataService.clickshow !== undefined && self.clickatt !== self.dataService.clickshow) {
             self.clickatt = self.dataService.clickshow;
@@ -7462,11 +7233,6 @@ var ViewerComponent = /** @class */ (function (_super) {
     ViewerComponent.prototype.render = function (self) {
         self.renderer.render(self.scene, self.camera);
     };
-    /*requestAnimate(self){
-      if(this.seVisible===true){
-        this.animate(self);
-      }
-    }*/
     /// clears all children from the scene
     ViewerComponent.prototype.clearScene = function () {
         /// remove children from scene
@@ -7499,11 +7265,11 @@ var ViewerComponent = /** @class */ (function (_super) {
             return;
         }
         ///
-        var width = container.offsetWidth; //container.clientWidth;
-        var height = container.offsetHeight; //container.clientHeight;
+        var width = container.offsetWidth;
+        var height = container.offsetHeight;
         if (width !== this.width || height !== this.height) {
-            this.width = width; //event.ClientWidth;
-            this.height = height; //event.ClientHeight;
+            this.width = width;
+            this.height = height;
             this.renderer.setSize(this.width, this.height);
             this.camera.aspect = this.width / this.height;
             this.camera.updateProjectionMatrix();
@@ -7521,13 +7287,8 @@ var ViewerComponent = /** @class */ (function (_super) {
             return;
         }
         try {
-            //this.scene_and_maps= gs.genThreeOptModelAndMaps( this._model );
             this.scene_and_maps = this.dataService.getscememaps();
             var scene_data = this.scene_and_maps.scene;
-            //[three_mode, egde_map, tri_map] = genThreeModelandMaps()
-            //[three_mode, label_data] = gs.getThreeWire(labels)
-            //gs.getThreeFace(label)
-            //gs.getThreeObj
             this.clearScene();
             var loader = new __WEBPACK_IMPORTED_MODULE_1_three__["ObjectLoader"]();
             // loading data
@@ -7571,6 +7332,7 @@ var ViewerComponent = /** @class */ (function (_super) {
             this.controls.update();
             // adding the object to the scene
             this.scene.add(objectData);
+            this.render(this);
         }
         catch (ex) {
             console.error("Error displaying model:", ex);
@@ -7609,21 +7371,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         var path = this.clickatt["path"];
         this.addTextLabel(label, label_xyz, id, path, "All points");
     };
-    /*closestpoint():number{
-      var distance:number=0
-      for(var i=0;i<this._model.getGeom().getAllPoints().length-1;i++){
-        for(var j=i+1;j<this._model.getGeom().getAllPoints().length;j++){
-          var dx=this._model.getGeom().getAllPoints()[i].getPosition()[0]-this._model.getGeom().getAllPoints()[j].getPosition()[0];
-          var dy=this._model.getGeom().getAllPoints()[i].getPosition()[1]-this._model.getGeom().getAllPoints()[j].getPosition()[1];
-          var dz=this._model.getGeom().getAllPoints()[i].getPosition()[2]-this._model.getGeom().getAllPoints()[j].getPosition()[2];
-          if(distance<Math.sqrt( dx * dx + dy * dy + dz * dz )){
-            distance=Math.sqrt( dx * dx + dy * dy + dz * dz );
-          }
-        }
-      }
-      distance=Math.round(distance)/50;
-      return distance;
-    }*/
     ViewerComponent.prototype.select = function (seVisible) {
         event.stopPropagation();
         this.seVisible = !this.seVisible;
@@ -7811,7 +7558,6 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
             if (children[i].name === "All vertices") {
                 children[i]["material"].opacity = 1;
-                //scenechildren.push(children[i]);
             }
             if (children[i].name === "All points") {
                 scenechildren.push(children[i]);
@@ -7846,20 +7592,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         }
     };
     ViewerComponent.prototype.addgrid = function () {
-        /*var max=8;
-        var center=new THREE.Vector3(0,0,0);
-        var radius:number=0*/
         for (var i = 0; i < this.scene.children.length; i++) {
-            /*if(this.scene.children[i].type==="Scene"){
-              for(var j=0;j<this.scene.children[i].children.length;j++){
-                if(this.scene.children[i].children[j]["geometry"].boundingSphere.radius>radius){
-                  center=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
-                  radius=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
-                  max=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
-                  break;
-                }
-              }
-            }*/
             if (this.scene.children[i].name === "GridHelper") {
                 this.scene.remove(this.scene.children[i]);
                 i = i - 1;
@@ -8315,9 +8048,9 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
         }
         else {
-            for (var i = 0; i < this.dataService.sprite.length; i++) {
-                this.dataService.sprite[i].visible = false;
-            }
+            /*for(var i=0;i<this.dataService.sprite.length;i++){
+              this.dataService.sprite[i].visible=false;
+            }*/
             for (var i = 0; i < this.scene.children.length; i++) {
                 if (this.scene.children[i].name == "selects") {
                     this.scene.remove(this.scene.children[i]);
@@ -8328,33 +8061,6 @@ var ViewerComponent = /** @class */ (function (_super) {
                 this.removeTextLabel(this.textlabels[i]["id"]);
                 i = i - 1;
             }
-        }
-    };
-    ViewerComponent.prototype.updateview = function () {
-        this.Visible = this.dataService.visible;
-        var intersects = this.raycaster.intersectObjects(this.scenechildren);
-        if (intersects.length > 0) {
-            if (this.dataService.selecting.length != 0) {
-                for (var i = 0; i < this.mySprites.length; i++) {
-                    if (this.mySprites[i].parent.name === this.Visible) {
-                        var spr = this.mySprites[i];
-                        if (Math.abs(intersects[0].point.x - this.mySprites[i].position.x) < 0.05
-                            && Math.abs(intersects[0].point.y - this.mySprites[i].position.y) < 0.05
-                            && Math.abs(intersects[0].point.z - this.mySprites[i].position.z) < 0.05) {
-                            //let spr: THREE.Sprite =this.mySprites[i];
-                            spr.visible = true;
-                        }
-                        else {
-                            //let spr: THREE.Sprite =this.mySprites[i];
-                            spr.visible = false;
-                        }
-                    }
-                }
-            }
-        }
-        for (var i = 0; i < this.dataService.sprite.length; i++) {
-            var spr = this.dataService.sprite[i];
-            spr.visible = true;
         }
     };
     //To add text labels just provide label text, label position[x,y,z] and its id
@@ -8476,7 +8182,7 @@ var ViewerComponent = /** @class */ (function (_super) {
             var center = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"](box["geometry"].boundingSphere.center.x, box["geometry"].boundingSphere.center.y, box["geometry"].boundingSphere.center.z);
             var radius = box["geometry"].boundingSphere.radius;
             if (radius === 0)
-                radius = 4;
+                radius = 1;
             var fov = this.camera.fov * (Math.PI / 180);
             var vec_centre_to_pos = new __WEBPACK_IMPORTED_MODULE_1_three__["Vector3"]();
             vec_centre_to_pos.subVectors(this.camera.position, center);
