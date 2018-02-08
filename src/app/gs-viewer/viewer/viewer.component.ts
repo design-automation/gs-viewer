@@ -589,8 +589,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       this.animate(this);
       this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
       this.mouse.y =-( event.offsetY / this.height ) * 2 + 1;
-    }
-    if(this.seVisible===false){
+    }else{
       this.render(this);
     }
   }
