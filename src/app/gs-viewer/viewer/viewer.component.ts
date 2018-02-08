@@ -1227,7 +1227,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var box:THREE.BoxHelper=this.selectbox();
       var center = new THREE.Vector3(box["geometry"].boundingSphere.center.x,box["geometry"].boundingSphere.center.y,box["geometry"].boundingSphere.center.z);
       var radius=box["geometry"].boundingSphere.radius;
-      if(radius===0) radius=4;
+      if(radius===0) radius=1;
       var fov=this.camera.fov * ( Math.PI / 180 );
       var vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
       vec_centre_to_pos.subVectors(this.camera.position, center);
