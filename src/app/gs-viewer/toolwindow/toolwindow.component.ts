@@ -14,17 +14,12 @@ import {ViewerComponent} from "../viewer/viewer.component";
 })
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
   Visible:string="Objs";
-  boxes:any;
   model:gs.IModel;
   scene:THREE.Scene;
   attribute:Array<any>;
   selectedVisible:boolean;
-  collection:Array<any>;
   myElement;
-  num:Array<any>;
   selectObj:Array<any>;
-  scenechildren:Array<any>;
-  ID:string;
   scene_and_maps: {
           scene: gs.IThreeScene, 
           faces_map: Map<number, gs.ITopoPathData>, 
@@ -32,25 +27,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
           edges_map: Map<number, gs.ITopoPathData>,
           vertices_map: Map<number, gs.ITopoPathData>,
           points_map: Map<number, gs.ITopoPathData>} ;
-  children:Array<any>;
-  SelectVisible:string;//="Faces";
-  FaceColor:THREE.Color;
-  WireColor:THREE.Color;
-  EdgeColor:THREE.Color;
-  textlabels: Array<any>=[];
-  starsGeometry:THREE.Geometry = new THREE.Geometry();
-  message:string;
-  p1:number;
-  p2:number;
-  p3:number;
-  p4:number;
-  p5:number;
-  p6:number;
-  point_name:Array<any>;
-  vertex_name:Array<any>;
-  edge_name:Array<any>;
-  wire_name:Array<any>;
-  face_name:Array<any>;
   obj_name:Array<any>;
   attrib_name:Array<any>;
 
@@ -60,8 +36,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.scene=this.dataService.getScene();
     this.selectedVisible=false;
     this.attribute=[];
-    this.num=[];
-    this.collection=[];
     this.selectObj=[];
     this.myElement = myElement;
   }
@@ -113,7 +87,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getpoints():Array<any>{
     var attrubtepoints=[];
-    this.point_name=[];
     if(this.scene_and_maps.points_map!==null&&this.scene_and_maps.points_map.size!==0&&this.scene_and_maps.points_map!==undefined){
       /*const point_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.points) as gs.IEntAttrib[];
       for(var j=0;j<point_attribs.length;j++){
@@ -141,7 +114,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   getvertices(){
     var attributevertix=[];
     var points=this.getpoints();
-    this.vertex_name=[];
     if(this.scene_and_maps.vertices_map!==null&&this.scene_and_maps.vertices_map.size!==0&&this.scene_and_maps.vertices_map!==undefined){
       /*const vertex_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.vertices) as gs.ITopoAttrib[];
       for(var n=0;n<vertex_attribs.length;n++){
@@ -173,7 +145,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getedges():Array<any>{
     var attributeedge=[];
-    this.edge_name=[];
+    //this.edge_name=[];
     if(this.scene_and_maps.edges_map!==null&&this.scene_and_maps.edges_map.size!==0&&this.scene_and_maps.edges_map!==undefined){
       /*const edge_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.edges) as gs.ITopoAttrib[];
        for(var j=0;j<edge_attribs.length;j++){
@@ -195,7 +167,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getwires():Array<any>{
     var attributewire=[];
-    this.wire_name=[];
+    //this.wire_name=[];
     if(this.scene_and_maps.wires_map!==null&&this.scene_and_maps.wires_map.size!==0&&this.scene_and_maps.wires_map!==undefined){
       /*const wire_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.wires) as gs.ITopoAttrib[];
       for(var j=0;j<wire_attribs.length;j++){
@@ -216,7 +188,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getfaces():Array<any>{
     var attributeface=[];
-    this.face_name=[];
+    //this.face_name=[];
     if(this.scene_and_maps.faces_map!==null&&this.scene_and_maps.faces_map.size!==0&&this.scene_and_maps.faces_map!==undefined){
       /*const face_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.faces) as gs.ITopoAttrib[];
       for(var j=0;j<face_attribs.length;j++){
@@ -299,14 +271,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     }
     return scenechildren;
   }
-  clearsprite(){
+  /*clearsprite(){
     this.dataService.visible=this.Visible;
     for(var i=0;i<this.dataService.sprite.length;i++){
       this.dataService.sprite[i].visible=false;
     }
     var sprite=[];
     this.dataService.pushsprite(sprite);
-  }
+  }*/
 
   
 
@@ -317,7 +289,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.pointcheck();
     }
     this.dataService.visible=this.Visible;
-    this.clearsprite();
+    //this.clearsprite();
   }
 
   pointcheck(){
@@ -402,7 +374,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.verticecheck();
     }
     this.dataService.visible=this.Visible;
-    this.clearsprite();
+    //this.clearsprite();
   }
 
   verticecheck(){
@@ -417,7 +389,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.edgecheck();
     }
     this.dataService.visible=this.Visible;
-    this.clearsprite();
+    //this.clearsprite();
   }
 
 
@@ -474,7 +446,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.wirecheck();
     }
     this.dataService.visible=this.Visible;
-    this.clearsprite();
+    //this.clearsprite();
   }
 
   wirecheck(){
@@ -509,7 +481,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.facecheck();
     }
-    this.clearsprite();
+    //this.clearsprite();
   }
 
   clicktoshow(select){
@@ -524,7 +496,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     points["material"].needsUpdate=true;
     points.name="selects";
     this.scene.add(points);
-    this.dataService.addTextLabel(label,verts_xyz, select.id,null,select.path);
+    //this.dataService.addTextLabel(label,verts_xyz, select.id,null,select.path);
   }
   
   facecheck(){
@@ -560,7 +532,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.objectcheck();
     }
     this.dataService.visible=this.Visible;
-    this.clearsprite();
+    //this.clearsprite();
   }
 
   objectcheck(){
@@ -642,6 +614,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       points.name="selects";
       this.scene.add(points);
       this.dataService.addclickshow(vertice);
+
     }
   	if(this.Visible==="Vertices"){
       var vertice:any=[];
@@ -671,102 +644,4 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
     }
   }
-  /*//To add text labels just provide label text, label position[x,y,z] and its id
-  addTextLabel(label, label_xyz, id,index,path) {
-    //console.log(document.getElementsByTagName("app-viewer")[0].children.namedItem("container"));
-    //let container = this.myElement.nativeElement.children.namedItem("container");
-    let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
-    let star = this.creatStarGeometry(label_xyz);
-    let textLabel=this.createTextLabel(label, star, id,index,path);
-    this.starsGeometry.vertices.push( star );
-    this.textlabels.push(textLabel);
-    this.dataService.pushselecting(textLabel);
-    container.appendChild(textLabel.element);
-    console.log(container);
-  }
-
-  //To remove text labels just provide its id
-  removeTextLabel(id) {
-    let i=0;
-    for(i=0; i<this.textlabels.length; i++) {
-      if(this.textlabels[i].id==id) {
-        // let container = this.myElement.nativeElement.children.namedItem("container");
-        let container = document.getElementsByTagName("app-viewer")[0].children.namedItem("container");
-        container.removeChild(this.textlabels[i].element);
-        let index = this.starsGeometry.vertices.indexOf(this.textlabels[i].parent);
-        if(index !== -1) {
-          this.starsGeometry.vertices.splice(index, 1);
-        }
-        break;
-      }
-    }
-    if(i<this.textlabels.length) {
-      this.textlabels.splice(i, 1);
-      this.dataService.spliceselecting(i, 1);
-    }
-  }
-
-  creatStarGeometry(label_xyz) {
-    let star = new THREE.Vector3();
-    star.x = label_xyz[0];
-    star.y = label_xyz[1];
-    star.z = label_xyz[2];
-    return star;
-  }
-
-  createTextLabel(label, star, id,index,path) {
-    let div = this.createLabelDiv();
-    var self=this;
-    let textLabel= {
-      id: id,
-      index:index,
-      path:path,
-      element: div,
-      parent: false,
-      position: new THREE.Vector3(0,0,0),
-      setHTML: function(html) {
-        this.element.innerHTML = html;
-        console.log(this.element.innerHTML);
-      },
-      setParent: function(threejsobj) {
-        this.parent = threejsobj;
-        console.log(this.parent);
-      },
-      updatePosition: function() {
-        if(parent) {
-          this.position.copy(this.parent);
-          console.log(this.position);
-        }
-        
-        var coords2d = this.get2DCoords(this.position, this.camera);
-        this.element.style.left = coords2d.x + 'px';
-        this.element.style.top = coords2d.y + 'px';
-      },
-      get2DCoords: function(position, camera) {
-        var vector = position.project(camera);
-        vector.x = (vector.x + 1)/2 * this.width;
-        vector.y = -(vector.y - 1)/2 * this.height;
-        return vector;
-      }
-    };
-    textLabel.setHTML(label);
-    textLabel.setParent(star);
-    return textLabel;
-  }
-
-  createLabelDiv() {
-    var div=document.createElement("div");
-    div.style.color= '#00f';
-    div.style.fontFamily= '"Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace';
-    div.style.margin='-5px 0 0 15px';
-    div.style.pointerEvents='none';
-    div.style.position = 'absolute';
-    div.style.width = '100';
-    div.style.height = '100';
-    div.style.top = '-1000';
-    div.style.left = '-1000';
-    div.style.textShadow="0px 0px 3px white";
-    div.style.color="black";
-    return div;
-   }*/
 }
