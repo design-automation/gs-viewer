@@ -5,20 +5,24 @@
   font-family: Roboto,"Helvetica Neue",sans-serif;
   font-size: 12px !important;
   line-height: 14px;
-  /*overflow: hidden;*/
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
 }
 #groupsview{
   color:black;
   background-color: #F1F1F1 !important;
   font-family: Roboto,"Helvetica Neue",sans-serif;
   font-size: 12px !important;
-  /*overflow: hidden;*/
 }
 #settingview{
   font-family: Roboto,"Helvetica Neue",sans-serif;
   background-color: #F1F1F1 !important;
   font-size: 12px !important;
   line-height: 14px;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  width: 240px;
+  height: 600px;
 }
 .check{
   margin-left:10px;

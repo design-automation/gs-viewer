@@ -144,6 +144,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0; i<self.textlabels.length; i++) {
       self.textlabels[i].updatePosition();
     }
+    if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
+      self.clickatt=self.dataService.clickshow;
+      self.clickshow();
+    }
     self.renderer.render( self.scene, self.camera );
     //requestAnimationFrame(self.render);
   }
