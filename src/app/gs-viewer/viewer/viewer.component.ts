@@ -94,7 +94,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scene.add( this.sphere );
 
     let self = this;
-    //controls.addEventListener( 'change', function(){self.render(self);});
+    controls.addEventListener( 'change', function(){self.render( self);});
     
     for(var i=0;i<this.getchildren().length;i++){
       this.getchildren()[i]["material"].transparent=false;
@@ -120,10 +120,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var currObj=self.scenechildren[i];
       if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
         if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
-          if(self.seVisible===true){
+          //if(self.seVisible===true){
             self.sphere.visible = true;
             self.sphere.position.copy( intersects[ 0 ].point );
-          }
+          //}
         } else {
           self.sphere.visible = false;
         }
@@ -132,8 +132,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0; i<self.textlabels.length; i++) {
       self.textlabels[i].updatePosition();
     }
-
-    self.onResize();
+    //self.onResize();
     if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
       self.clickatt=self.dataService.clickshow;
       self.clickshow();
@@ -142,8 +141,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   render(self){
+    for(var i=0; i<self.textlabels.length; i++) {
+      self.textlabels[i].updatePosition();
+    }
     self.renderer.render( self.scene, self.camera );
-    requestAnimationFrame(self.render);
+    //requestAnimationFrame(self.render);
   }
 
   /// clears all children from the scene
