@@ -7186,7 +7186,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.sphere.name = "sphereInter";
         this.scene.add(this.sphere);
         var self = this;
-        controls.addEventListener('change', function () { self.renderer.render(self.scene, self.camera); });
+        controls.addEventListener('change', function () { self.render(self); });
         for (var i = 0; i < this.getchildren().length; i++) {
             this.getchildren()[i]["material"].transparent = false;
         }
@@ -7235,7 +7235,7 @@ var ViewerComponent = /** @class */ (function (_super) {
             self.textlabels[i].updatePosition();
         }
         self.renderer.render(self.scene, self.camera);
-        requestAnimationFrame(self.render);
+        //requestAnimationFrame(self.render);
     };
     /// clears all children from the scene
     ViewerComponent.prototype.clearScene = function () {
