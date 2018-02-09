@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n  <div id=\"input-container\">\r\n    <div class=\"version\" style=\"font-family:sans-serif;\"> v0.0.7</div>\r\n    <input type=\"file\" id=\"files\" name=\"files[]\" style=\"font-family:sans-serif;\" (change)=\"handleFileSelect($event)\" />\r\n  </div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n</div>\r\n"
+module.exports = "<div>\r\n  <div id=\"input-container\">\r\n    <div class=\"version\" style=\"font-family:sans-serif;\"> v0.0.8</div>\r\n    <input type=\"file\" id=\"files\" name=\"files[]\" style=\"font-family:sans-serif;\" (change)=\"handleFileSelect($event)\" />\r\n  </div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -6011,7 +6011,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "#setandgroup{\r\n  background-color: #F1F1F1 !important;\r\n  height: 100%;\r\n  width: 100%;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  /*overflow: hidden;*/\r\n}\r\n#groupsview{\r\n  color:black;\r\n  background-color: #F1F1F1 !important;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  /*overflow: hidden;*/\r\n}\r\n#settingview{\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  background-color: #F1F1F1 !important;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n}\r\n.check{\r\n  margin-left:10px;\r\n}\r\n#GridCenter{\r\n  margin-left: 10px;\r\n  margin-top: 3px !important;\r\n  height: 8px;\r\n  vertical-align: bottom;\r\n}\r\n\r\n#centerx{\r\n  width:50px;\r\n  margin-left: 10px;\r\n/*  margin-left:25px;*/\r\n}\r\n#centery{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centerz{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centersize{\r\n  width:50px;\r\n  margin-left:9px;\r\n}\r\n.name{\r\n  margin-left: 10px;\r\n}\r\n\r\n::ng-deep .mat-accent .mat-slider-thumb {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-thumb-label {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-track-fill {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n}\r\n::ng-deep .mat-expansion-panel {\r\n  margin: 0px !important;\r\n  overflow: hidden !important;\r\n}\r\n\r\n.mat-expansion-panel{\r\n   background-color: #F1F1F1 !important;\r\n   border-color: #395d73;\r\n   line-height: 14px;\r\n   font-weight: bold !important;\r\n   font-size: 12px !important;\r\n}\r\n.mat-tab-group{\r\n/*background-color: #F1F1F1 !important;\r\n  border-color: #395d73;\r\n  line-height: 14px;\r\n  font-weight: bold !important;\r\n  font-size: 12px !important;\r\n  color:#395d73;\r\n  border: 0;*/\r\n  border: 0px solid #F1F1F1;\r\n  color:#395d73;\r\n}\r\n\r\n/deep/.mat-tab-label, /deep/.mat-tab-label-active{\r\n  min-width: 3px!important;\r\n  padding: 3px!important;\r\n  margin: 3px!important;\r\n  color:#395d73;\r\n}\r\n/deep/.mat-tab-label{\r\n  height: 30px !important;\r\n}\r\n/deep/.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination{\r\n  display: none !important;\r\n}\r\n/deep/.mat-ink-bar{\r\n  background-color: #395d73 !important;\r\n}\r\n/*.mat-tab{\r\n  min-width: 30px !important;\r\n}\r\n*/\r\n#groupname{\r\n  margin-right: 0px;\r\n}\r\n.mat-header{\r\n  -webkit-box-orient: horizontal;\r\n  -webkit-box-direction: normal;\r\n      -ms-flex-direction: row;\r\n          flex-direction: row;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  margin-left: 0px;\r\n  color:#395d73;\r\n  border: 0;\r\n}\r\n.mat-list-text{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n.mat-list-text-parent{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n\r\nhr {\r\n  display: block;\r\n  height: 1px;\r\n  border: 0;\r\n  border-top: 1px solid #ccc;\r\n  /*margin: 1em 0;*/\r\n  padding: 0; \r\n  color:#395d73;\r\n  width: 100%;\r\n  background-color: #395d73;\r\n}\r\n\r\n", ""]);
+exports.push([module.i, "#setandgroup{\r\n  background-color: #F1F1F1 !important;\r\n  height: 100%;\r\n  width: 100%;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden;\r\n}\r\n#groupsview{\r\n  color:black;\r\n  background-color: #F1F1F1 !important;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  overflow-x: hidden;\r\n}\r\n#settingview{\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  background-color: #F1F1F1 !important;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden !important;\r\n}\r\n.check{\r\n  margin-left:10px;\r\n}\r\n#GridCenter{\r\n  margin-left: 10px;\r\n  margin-top: 3px !important;\r\n  height: 8px;\r\n  vertical-align: bottom;\r\n}\r\n\r\n#centerx{\r\n  width:50px;\r\n  margin-left: 10px;\r\n/*  margin-left:25px;*/\r\n}\r\n#centery{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centerz{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centersize{\r\n  width:50px;\r\n  margin-left:9px;\r\n}\r\n.name{\r\n  margin-left: 10px;\r\n}\r\n\r\n::ng-deep .mat-accent .mat-slider-thumb {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-thumb-label {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-track-fill {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n}\r\n::ng-deep .mat-expansion-panel {\r\n  margin: 0px !important;\r\n  overflow: hidden !important;\r\n}\r\n\r\n.mat-expansion-panel{\r\n   background-color: #F1F1F1 !important;\r\n   border-color: #395d73;\r\n   line-height: 14px;\r\n   font-weight: bold !important;\r\n   font-size: 12px !important;\r\n}\r\n.mat-tab-group{\r\n/*background-color: #F1F1F1 !important;\r\n  border-color: #395d73;\r\n  line-height: 14px;\r\n  font-weight: bold !important;\r\n  font-size: 12px !important;\r\n  color:#395d73;\r\n  border: 0;*/\r\n  border: 0px solid #F1F1F1;\r\n  color:#395d73;\r\n}\r\n\r\n/deep/.mat-tab-label, /deep/.mat-tab-label-active{\r\n  min-width: 3px!important;\r\n  padding: 3px!important;\r\n  margin: 3px!important;\r\n  color:#395d73;\r\n}\r\n/deep/.mat-tab-label{\r\n  height: 30px !important;\r\n}\r\n/deep/.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination{\r\n  display: none !important;\r\n}\r\n/deep/.mat-ink-bar{\r\n  background-color: #395d73 !important;\r\n}\r\n/*.mat-tab{\r\n  min-width: 30px !important;\r\n}\r\n*/\r\n#groupname{\r\n  margin-right: 0px;\r\n}\r\n.mat-header{\r\n  -webkit-box-orient: horizontal;\r\n  -webkit-box-direction: normal;\r\n      -ms-flex-direction: row;\r\n          flex-direction: row;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  margin-left: 0px;\r\n  color:#395d73;\r\n  border: 0;\r\n}\r\n.mat-list-text{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n.mat-list-text-parent{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n\r\nhr {\r\n  display: block;\r\n  height: 1px;\r\n  border: 0;\r\n  border-top: 1px solid #ccc;\r\n  /*margin: 1em 0;*/\r\n  padding: 0; \r\n  color:#395d73;\r\n  width: 100%;\r\n  background-color: #395d73;\r\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -7186,7 +7186,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.sphere.name = "sphereInter";
         this.scene.add(this.sphere);
         var self = this;
-        controls.addEventListener('change', function () { self.render(self); });
+        controls.addEventListener('change', function () { self.renderer.render(self.scene, self.camera); });
         for (var i = 0; i < this.getchildren().length; i++) {
             this.getchildren()[i]["material"].transparent = false;
         }
@@ -7210,10 +7210,10 @@ var ViewerComponent = /** @class */ (function (_super) {
             var currObj = self.scenechildren[i];
             if (self.dataService.getSelectingIndex(currObj.uuid) < 0) {
                 if (intersects[0] != undefined && intersects[0].object.uuid == currObj.uuid) {
-                    if (self.seVisible === true) {
-                        self.sphere.visible = true;
-                        self.sphere.position.copy(intersects[0].point);
-                    }
+                    //if(self.seVisible===true){
+                    self.sphere.visible = true;
+                    self.sphere.position.copy(intersects[0].point);
+                    //}
                 }
                 else {
                     self.sphere.visible = false;
@@ -7223,7 +7223,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         for (var i = 0; i < self.textlabels.length; i++) {
             self.textlabels[i].updatePosition();
         }
-        self.onResize();
+        //self.onResize();
         if (self.dataService.clickshow !== undefined && self.clickatt !== self.dataService.clickshow) {
             self.clickatt = self.dataService.clickshow;
             self.clickshow();
@@ -7231,7 +7231,11 @@ var ViewerComponent = /** @class */ (function (_super) {
         self.renderer.render(self.scene, self.camera);
     };
     ViewerComponent.prototype.render = function (self) {
+        for (var i = 0; i < self.textlabels.length; i++) {
+            self.textlabels[i].updatePosition();
+        }
         self.renderer.render(self.scene, self.camera);
+        requestAnimationFrame(self.render);
     };
     /// clears all children from the scene
     ViewerComponent.prototype.clearScene = function () {
