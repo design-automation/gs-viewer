@@ -94,7 +94,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scene.add( this.sphere );
 
     let self = this;
-    controls.addEventListener( 'change', function(){self.render(self);});
+    //controls.addEventListener( 'change', function(){self.render(self);});
+    
     for(var i=0;i<this.getchildren().length;i++){
       this.getchildren()[i]["material"].transparent=false;
     }
@@ -142,6 +143,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
 
   render(self){
     self.renderer.render( self.scene, self.camera );
+    requestAnimationFrame(self.render);
   }
 
   /// clears all children from the scene
