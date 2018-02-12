@@ -61,6 +61,7 @@ export class DataService {
   centerz:number;
   centersize:number;
   pointsize:number;
+  materialpoint:number;
   clickshow:Array<any>;
   point:boolean=true;
 
@@ -230,6 +231,9 @@ export class DataService {
   
   getpointsize(pointszie):void{
     this.pointsize=pointszie;
+  }
+  getmaterialpoint(materialpoint):void{
+    this.materialpoint=materialpoint;
   }
 
   getcenterx(centerx):void{
