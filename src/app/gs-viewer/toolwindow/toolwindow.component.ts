@@ -86,7 +86,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       try{
         this.scene_and_maps= this.dataService.getscememaps();
         this.object(this.Visible);
-        this.getvertices();
+        //this.getvertices();
       }catch(ex){
         console.error("Error displaying model:", ex);
       }
@@ -130,7 +130,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         const vertex_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.vertices) as gs.ITopoAttrib[];
         if(vertex_attribs.length!==0){
           for(var n=0;n<vertex_attribs.length;n++){
-            this.vertex_name.push(vertex_attribs[n].getName());  
+            this.vertex_name.push(vertex_attribs[n].getName()); 
+            console.log(this.vertex_name); 
             for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
               const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
               const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
@@ -143,6 +144,9 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
                    attributes.pointid=points[j].id;
                 }
               }
+              //console.log(vertices,vertex_attribs[0]);
+              //console.log(vertices.getAttribValue(vertex_attribs[0]));
+              //console.log(vertices.getAttribValue(vertex_attribs[0]));
               //attributes[n]=vertices.getAttribValue(vertex_attribs[n]);
               attributes.vertixlabel=label;
               attributes.path=path;
@@ -175,6 +179,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               if(edgelable.indexOf(label)===-1){
                 edgelable.push(label);
                 //attributes[j]=edge.getAttribValue(edge_attribs[j]);
+                //console.log(edge.getAttribValue(edge_attribs[j]));
                 attributeedge.push(attributes);
               }
             }

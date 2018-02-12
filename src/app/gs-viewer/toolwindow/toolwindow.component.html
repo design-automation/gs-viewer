@@ -57,17 +57,20 @@
     </div>
     <div *ngIf="Visible === 'Vertices'">
       <!-- <pagination-controls (pageChange)="p2 = $event"></pagination-controls> -->
-      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" width="50%">
+      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" >
         <tr>
-          <td  align=center width="25%">Vertices Label</td>
-          <td  align=center width="25%">Points ID</td>
+          <td  align=center width="100px">Vertices Label</td>
+          <td  align=center width="60px">Points ID</td>
+          <td  align=center width="180px" *ngFor="let name of vertex_name"><div style="width:180px;word-wrap:break-word;" >{{name}}</div></td>
         </tr>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }" width="50%">
+      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }">
         <tr>
           <!-- <button id="numberbutton" [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id)>{{datascale.vertixlabel}}</button> -->
-          <button id="numberbutton" (click)=Onselect(datascale)>{{datascale.vertixlabel}}</button>
-          <td  align=center  width="50%">{{datascale.pointid}}</td>
+          <td name="Number" align=center  width="100px"><div style="width:100px;word-wrap:break-word;" ><button  id="numberbutton">{{datascale.vertixlabel}}</button></div></td>
+          <!-- <td name="Number" align=center  width="60px"><div style="width:100px;word-wrap:break-word;" ><button id="numberbutton" (click)=Onselect(datascale)>{{datascale.vertixlabel}}</button></div></td> -->
+          <td  align=center  width="60px">{{datascale.pointid}}</td>
+          <td  id="attrib" width="180px" align=center *ngFor="let name of vertex_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td> 
         </tr>
       </table>
       <!-- <pagination-controls (pageChange)="p2 = $event"></pagination-controls> -->
