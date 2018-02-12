@@ -131,7 +131,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         if(vertex_attribs.length!==0){
           for(var n=0;n<vertex_attribs.length;n++){
             this.vertex_name.push(vertex_attribs[n].getName()); 
-            console.log(this.vertex_name); 
+            }
+          }
             for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
               const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
               const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
@@ -141,19 +142,19 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               var attributes:any=[];
               for(var j=0;j<points.length;j++){
                 if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
-                   attributes.pointid=points[j].id;
+                  attributes.pointid=points[j].id;
                 }
               }
-              //console.log(vertices,vertex_attribs[0]);
-              //console.log(vertices.getAttribValue(vertex_attribs[0]));
-              //console.log(vertices.getAttribValue(vertex_attribs[0]));
-              //attributes[n]=vertices.getAttribValue(vertex_attribs[n]);
               attributes.vertixlabel=label;
               attributes.path=path;
+              if(vertex_attribs.length!==0){
+                for(var j=0;j<vertex_attribs.length;j++){
+                  attributes[j]=vertices.getAttribValue(vertex_attribs[j]);
+                }
+              }
               attributevertix.push(attributes);
             }
-          }
-        }
+
         this.dataService.addattrvertix(attributevertix);
       }
     }
@@ -170,19 +171,22 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         if(edge_attribs.length!==0){
           for(var j=0;j<edge_attribs.length;j++){
             this.edge_name.push(edge_attribs[j].getName());
-            for(var i =0;i<this.scene_and_maps.edges_map.size;i++){
-              var path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(i);
-              var edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
-              var attributes:any=[];
-              var label: string = edge.getLabel();
-              attributes.label=label;
-              if(edgelable.indexOf(label)===-1){
-                edgelable.push(label);
-                //attributes[j]=edge.getAttribValue(edge_attribs[j]);
-                //console.log(edge.getAttribValue(edge_attribs[j]));
-                attributeedge.push(attributes);
+          }
+        }
+        for(var i =0;i<this.scene_and_maps.edges_map.size;i++){
+          var path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(i);
+          var edge: gs.IEdge = this.model.getGeom().getTopo(path) as gs.IEdge;
+          var attributes:any=[];
+          var label: string = edge.getLabel();
+          attributes.label=label;
+          if(edgelable.indexOf(label)===-1){
+            edgelable.push(label);
+            if(edge_attribs.length!==0){
+              for(var j=0;j<edge_attribs.length;j++){
+                attributes[j]=edge.getAttribValue(edge_attribs[j]);
               }
             }
+            attributeedge.push(attributes);
           }
         }
       }
@@ -200,18 +204,22 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         if(wire_attribs.length!==0){
           for(var j=0;j<wire_attribs.length;j++){
             this.wire_name.push(wire_attribs[j].getName());
-            for(var i =0;i<this.scene_and_maps.wires_map.size;i++){
-              var path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(i);
-              var wire: gs.IWire = this.model.getGeom().getTopo(path) as gs.IWire;
-              var attributes:any=[];
-              var label: string = wire.getLabel();
-              attributes.label=label;
-              if(wirelabel.indexOf(label)===-1){
-                wirelabel.push(label);
+          }
+        }
+        for(var i =0;i<this.scene_and_maps.wires_map.size;i++){
+          var path: gs.ITopoPathData = this.scene_and_maps.wires_map.get(i);
+          var wire: gs.IWire = this.model.getGeom().getTopo(path) as gs.IWire;
+          var attributes:any=[];
+          var label: string = wire.getLabel();
+          attributes.label=label;
+          if(wirelabel.indexOf(label)===-1){
+            wirelabel.push(label);
+            if(wire_attribs.length!==0){
+              for(var j=0;j<wire_attribs.length;j++){
                 attributes[j]=wire.getAttribValue(wire_attribs[j]);
-                attributewire.push(attributes);
               }
             }
+            attributewire.push(attributes);
           }
         }
       }
@@ -226,22 +234,25 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.scene_and_maps!==undefined){
       if(this.scene_and_maps.faces_map!==null&&this.scene_and_maps.faces_map.size!==0&&this.scene_and_maps.faces_map!==undefined){
         const face_attribs: gs.ITopoAttrib[] = this.model.findAttribs(gs.EGeomType.faces) as gs.ITopoAttrib[];
-        console.log(face_attribs);
         if(face_attribs.length!==0){
           for(var j=0;j<face_attribs.length;j++){
             this.face_name.push(face_attribs[j].getName());
-            for(var i =0;i<this.scene_and_maps.faces_map.size;i++){
-              var path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
-              var face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
-              var attributes:any=[];
-              var label: string = face.getLabel();          
-              attributes.label=label;
-              if(facelabel.indexOf(label)===-1){
-                facelabel.push(label);
+          }
+        }
+        for(var i =0;i<this.scene_and_maps.faces_map.size;i++){ 
+          var path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(i);
+          var face: gs.IFace = this.model.getGeom().getTopo(path) as gs.IFace;
+          var attributes:any=[];
+          var label: string = face.getLabel();      
+          attributes.label=label;
+          if(facelabel.indexOf(label)===-1){
+            facelabel.push(label);
+            if(face_attribs.length!==0){
+              for(var j=0;j<face_attribs.length;j++){
                 attributes[j]=face.getAttribValue(face_attribs[j]);
-                attributeface.push(attributes);
               }
             }
+            attributeface.push(attributes);
           }
         }
       }
@@ -432,7 +443,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         //if(selecting[i].type==="All edges"){
         for(var j=0;j<edges.length;j++){
           if(selecting[i].type==="All edges"){
-            if(selecting[i]["id"].indexOf(edges[j])>-1){
+            if(selecting[i]["id"].indexOf(edges[j].label)>-1){
               this.attribute.push(edges[j]);
             }
           }
@@ -444,7 +455,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               //var attributes:any=[];
               var label=verts[n].getLabel();
               //attributes.label=label;
-              if(label===edges[j]&&this.attribute.indexOf(edges[j]) == -1){
+              if(label===edges[j].label&&this.attribute.indexOf(edges[j]) == -1){
                 this.attribute.push(edges[j]);
               }
             }
@@ -457,7 +468,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               const verts: gs.IEdge[] = faces[f].getEdges();
               for(var n=0;n<verts.length;n++){
                 var label=verts[n].getLabel();
-                if(label===edges[j]&&this.attribute.indexOf(edges[j]) == -1){
+                if(label===edges[j].label&&this.attribute.indexOf(edges[j]) == -1){
                   this.attribute.push(edges[j]);
                 }
               }
@@ -486,7 +497,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
         for(var j=0;j<wires.length;j++){
-          if(selecting[i]["id"]===wires[j]){
+          if(selecting[i]["id"]===wires[j].label){
             this.attribute.push(wires[j]);
           }
           if(selecting[i]["type"]==="All objs"){
@@ -494,7 +505,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             const wireses: gs.IWire[]= face.getObj().getWires();
             for(var w=0;w<wireses.length;w++){
               var label=wireses[w].getLabel();
-              if(label===wires[j]&&this.attribute.indexOf(wires[j]) == -1){
+              if(label===wires[j].label&&this.attribute.indexOf(wires[j]) == -1){
                 this.attribute.push(wires[j]);
               }
             }
@@ -520,7 +531,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
         for(var j=0;j<faces.length;j++){
-          if(selecting[i]["id"]===faces[j]){
+          if(selecting[i]["id"]===faces[j].label){
             this.attribute.push(faces[j]);
           }
           if(selecting[i]["type"]==="All objs"){
@@ -528,7 +539,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             const faceses: gs.IFace[]= face.getObj().getFaces();
             for(var f=0;f<faceses.length;f++){
               var label=faceses[f].getLabel();
-              if(label===faces[j]&&this.attribute.indexOf(faces[j]) == -1){
+              if(label===faces[j].label&&this.attribute.indexOf(faces[j]) == -1){
                 this.attribute.push(faces[j]);
               }
             }
