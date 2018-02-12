@@ -25,6 +25,9 @@ html, body {
   height: 90%;
   background-color: white;
 }
+#splittoolwindow{
+  overflow-y:scroll !important;
+}
 
 
 a { text-decoration: none; color: #fff; text-transform: uppercase; }
