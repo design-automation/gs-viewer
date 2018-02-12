@@ -36,6 +36,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
   raycaster:THREE.Raycaster;
   _linepre:number;
   _pointsize:number;
+  _materialpoint:number;
   hue:number;
   saturation:number;
   lightness:number;
@@ -55,6 +56,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this._centersize=this.dataService.centersize;
     this.raycaster=this.dataService.getraycaster();
     this._pointsize=this.dataService.pointsize;
+    this._materialpoint=this.dataService.materialpoint;
     this.alight=this.dataService.getalight();
     this.hue=this.dataService.hue;
     this.saturation=this.dataService.saturation;
@@ -98,6 +100,11 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       this._pointsize=1;
     }else{
       this._pointsize=this.dataService.pointsize;
+    }
+    if(this._materialpoint===undefined||this._materialpoint===0.1){
+      this._materialpoint=0.1;
+    }else{
+      this._materialpoint=this.dataService.materialpoint;
     }
     if(this.hue === undefined||this.hue===0) {
         this.hue = 0;
@@ -313,6 +320,20 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     }
     this.renderer.render(this.scene, this.camera);
     this.dataService.getpointsize(pointsize);
+  }
+  changematerialpoint(materialpoint){
+    this._materialpoint=materialpoint;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].name==="All points"){
+            this.scene.children[i].children[j]["material"].size=materialpoint*30;
+          }
+        }
+      }
+    }
+    this.renderer.render(this.scene, this.camera);
+    this.dataService.getmaterialpoint(materialpoint);
   }
 
   changelight(_hue,_saturation,_lightness){
