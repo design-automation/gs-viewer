@@ -63,7 +63,7 @@ var AppComponent = /** @class */ (function () {
         // dummy gs_data
         // to pass to the viewer
         // gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-        this.gs_dummy_data = undefined; //gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
+        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelBoxWithAttribs"](); //gs.genModelTwoBoxesOpen();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
         this.test_data1 = {
             "metadata": {
                 "filetype": "gs-json",
@@ -5434,6 +5434,9 @@ var DataService = /** @class */ (function () {
     DataService.prototype.getpointsize = function (pointszie) {
         this.pointsize = pointszie;
     };
+    DataService.prototype.getmaterialpoint = function (materialpoint) {
+        this.materialpoint = materialpoint;
+    };
     DataService.prototype.getcenterx = function (centerx) {
         this.centerx = centerx;
     };
@@ -6028,7 +6031,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/toolwindow/groups.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"setandgroup\" >\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Groups\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Settings\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">wireframe</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><div  id=\"GridCenter\" >Grid Center<button (click)=\"getcenter()\" style=\"margin-left: 30px;width: 40px;height: 20px; font-family: sans-serif;font-size: 12px;\">Get</button></div><br/>\r\n\t\t<label class=\"name\" >XYZ</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecentersize(size.value)><br/>\r\n\t\t<hr/><label class=\"name\" >Precision</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Line</label>&nbsp;<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01  value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><br/><hr/>\r\n  \t\t<label class=\"name\" >Points Size</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Selected</label>&nbsp;<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<label class=\"name\" >Unselected</label>&nbsp;<input type=\"text\" value=0  style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value=0 #pointsize1  ></mat-slider><br/>\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Hue</label>&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01  value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t&nbsp;<label class=\"name\" >Saturation</label>&nbsp;\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t&nbsp;&nbsp;<label class=\"name\" >Lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n</div>\r\n"
+module.exports = "<div id=\"setandgroup\" >\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Groups\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Settings\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">wireframe</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><div  id=\"GridCenter\" >Grid Center<button (click)=\"getcenter()\" style=\"margin-left: 30px;width: 40px;height: 20px; font-family: sans-serif;font-size: 12px;\">Get</button></div><br/>\r\n\t\t<label class=\"name\" >XYZ</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecentersize(size.value)><br/>\r\n\t\t<hr/><label class=\"name\" >Precision</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Line</label>&nbsp;<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01  value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><br/><hr/>\r\n  \t\t<label class=\"name\" >Points Size</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Selected</label>&nbsp;<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<label class=\"name\" >Unselected</label>&nbsp;<input type=\"text\" value={{_materialpoint}} #pointtext1 (change)=\"changematerialpoint(pointtext1.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1  value={{_pointsize1}} #pointsize1 (change)=\"changematerialpoint(pointsize1.value.toPrecision(2))\" ></mat-slider><br/>\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Hue</label>&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \"><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01  value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t&nbsp;<label class=\"name\" >Saturation</label>&nbsp;\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n\t\t&nbsp;&nbsp;<label class=\"name\" >Lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \"><mat-slider name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -6080,6 +6083,7 @@ var GroupsComponent = /** @class */ (function (_super) {
         _this._centersize = _this.dataService.centersize;
         _this.raycaster = _this.dataService.getraycaster();
         _this._pointsize = _this.dataService.pointsize;
+        _this._materialpoint = _this.dataService.materialpoint;
         _this.alight = _this.dataService.getalight();
         _this.hue = _this.dataService.hue;
         _this.saturation = _this.dataService.saturation;
@@ -6130,6 +6134,12 @@ var GroupsComponent = /** @class */ (function (_super) {
         }
         else {
             this._pointsize = this.dataService.pointsize;
+        }
+        if (this._materialpoint === undefined || this._materialpoint === 0.1) {
+            this._materialpoint = 0.1;
+        }
+        else {
+            this._materialpoint = this.dataService.materialpoint;
         }
         if (this.hue === undefined || this.hue === 0) {
             this.hue = 0;
@@ -6338,6 +6348,20 @@ var GroupsComponent = /** @class */ (function (_super) {
         }
         this.renderer.render(this.scene, this.camera);
         this.dataService.getpointsize(pointsize);
+    };
+    GroupsComponent.prototype.changematerialpoint = function (materialpoint) {
+        this._materialpoint = materialpoint;
+        for (var i = 0; i < this.scene.children.length; i++) {
+            if (this.scene.children[i].name === "Scene") {
+                for (var j = 0; j < this.scene.children[i].children.length; j++) {
+                    if (this.scene.children[i].children[j].name === "All points") {
+                        this.scene.children[i].children[j]["material"].size = materialpoint * 30;
+                    }
+                }
+            }
+        }
+        this.renderer.render(this.scene, this.camera);
+        this.dataService.getmaterialpoint(materialpoint);
     };
     GroupsComponent.prototype.changelight = function (_hue, _saturation, _lightness) {
         this.hue = _hue;
@@ -6569,28 +6593,28 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                 if (vertex_attribs.length !== 0) {
                     for (var n = 0; n < vertex_attribs.length; n++) {
                         this.vertex_name.push(vertex_attribs[n].getName());
-                        console.log(this.vertex_name);
-                        for (var i = 0; i < this.scene_and_maps.vertices_map.size; i++) {
-                            var path = this.scene_and_maps.vertices_map.get(i);
-                            var vertices = this.model.getGeom().getTopo(path);
-                            var attributes = [];
-                            var label = vertices.getLabel();
-                            var verts_xyz = vertices.getLabelCentroid();
-                            var attributes = [];
-                            for (var j = 0; j < points.length; j++) {
-                                if (points[j].x === verts_xyz[0] && points[j].y === verts_xyz[1] && points[j].z === verts_xyz[2]) {
-                                    attributes.pointid = points[j].id;
-                                }
-                            }
-                            //console.log(vertices,vertex_attribs[0]);
-                            //console.log(vertices.getAttribValue(vertex_attribs[0]));
-                            //console.log(vertices.getAttribValue(vertex_attribs[0]));
-                            //attributes[n]=vertices.getAttribValue(vertex_attribs[n]);
-                            attributes.vertixlabel = label;
-                            attributes.path = path;
-                            attributevertix.push(attributes);
+                    }
+                }
+                for (var i = 0; i < this.scene_and_maps.vertices_map.size; i++) {
+                    var path = this.scene_and_maps.vertices_map.get(i);
+                    var vertices = this.model.getGeom().getTopo(path);
+                    var attributes = [];
+                    var label = vertices.getLabel();
+                    var verts_xyz = vertices.getLabelCentroid();
+                    var attributes = [];
+                    for (var j = 0; j < points.length; j++) {
+                        if (points[j].x === verts_xyz[0] && points[j].y === verts_xyz[1] && points[j].z === verts_xyz[2]) {
+                            attributes.pointid = points[j].id;
                         }
                     }
+                    attributes.vertixlabel = label;
+                    attributes.path = path;
+                    if (vertex_attribs.length !== 0) {
+                        for (var j = 0; j < vertex_attribs.length; j++) {
+                            attributes[j] = vertices.getAttribValue(vertex_attribs[j]);
+                        }
+                    }
+                    attributevertix.push(attributes);
                 }
                 this.dataService.addattrvertix(attributevertix);
             }
@@ -6607,19 +6631,22 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                 if (edge_attribs.length !== 0) {
                     for (var j = 0; j < edge_attribs.length; j++) {
                         this.edge_name.push(edge_attribs[j].getName());
-                        for (var i = 0; i < this.scene_and_maps.edges_map.size; i++) {
-                            var path = this.scene_and_maps.edges_map.get(i);
-                            var edge = this.model.getGeom().getTopo(path);
-                            var attributes = [];
-                            var label = edge.getLabel();
-                            attributes.label = label;
-                            if (edgelable.indexOf(label) === -1) {
-                                edgelable.push(label);
-                                //attributes[j]=edge.getAttribValue(edge_attribs[j]);
-                                //console.log(edge.getAttribValue(edge_attribs[j]));
-                                attributeedge.push(attributes);
+                    }
+                }
+                for (var i = 0; i < this.scene_and_maps.edges_map.size; i++) {
+                    var path = this.scene_and_maps.edges_map.get(i);
+                    var edge = this.model.getGeom().getTopo(path);
+                    var attributes = [];
+                    var label = edge.getLabel();
+                    attributes.label = label;
+                    if (edgelable.indexOf(label) === -1) {
+                        edgelable.push(label);
+                        if (edge_attribs.length !== 0) {
+                            for (var j = 0; j < edge_attribs.length; j++) {
+                                attributes[j] = edge.getAttribValue(edge_attribs[j]);
                             }
                         }
+                        attributeedge.push(attributes);
                     }
                 }
             }
@@ -6636,18 +6663,22 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                 if (wire_attribs.length !== 0) {
                     for (var j = 0; j < wire_attribs.length; j++) {
                         this.wire_name.push(wire_attribs[j].getName());
-                        for (var i = 0; i < this.scene_and_maps.wires_map.size; i++) {
-                            var path = this.scene_and_maps.wires_map.get(i);
-                            var wire = this.model.getGeom().getTopo(path);
-                            var attributes = [];
-                            var label = wire.getLabel();
-                            attributes.label = label;
-                            if (wirelabel.indexOf(label) === -1) {
-                                wirelabel.push(label);
+                    }
+                }
+                for (var i = 0; i < this.scene_and_maps.wires_map.size; i++) {
+                    var path = this.scene_and_maps.wires_map.get(i);
+                    var wire = this.model.getGeom().getTopo(path);
+                    var attributes = [];
+                    var label = wire.getLabel();
+                    attributes.label = label;
+                    if (wirelabel.indexOf(label) === -1) {
+                        wirelabel.push(label);
+                        if (wire_attribs.length !== 0) {
+                            for (var j = 0; j < wire_attribs.length; j++) {
                                 attributes[j] = wire.getAttribValue(wire_attribs[j]);
-                                attributewire.push(attributes);
                             }
                         }
+                        attributewire.push(attributes);
                     }
                 }
             }
@@ -6661,22 +6692,25 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         if (this.scene_and_maps !== undefined) {
             if (this.scene_and_maps.faces_map !== null && this.scene_and_maps.faces_map.size !== 0 && this.scene_and_maps.faces_map !== undefined) {
                 var face_attribs = this.model.findAttribs(__WEBPACK_IMPORTED_MODULE_2_gs_json__["EGeomType"].faces);
-                console.log(face_attribs);
                 if (face_attribs.length !== 0) {
                     for (var j = 0; j < face_attribs.length; j++) {
                         this.face_name.push(face_attribs[j].getName());
-                        for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
-                            var path = this.scene_and_maps.faces_map.get(i);
-                            var face = this.model.getGeom().getTopo(path);
-                            var attributes = [];
-                            var label = face.getLabel();
-                            attributes.label = label;
-                            if (facelabel.indexOf(label) === -1) {
-                                facelabel.push(label);
+                    }
+                }
+                for (var i = 0; i < this.scene_and_maps.faces_map.size; i++) {
+                    var path = this.scene_and_maps.faces_map.get(i);
+                    var face = this.model.getGeom().getTopo(path);
+                    var attributes = [];
+                    var label = face.getLabel();
+                    attributes.label = label;
+                    if (facelabel.indexOf(label) === -1) {
+                        facelabel.push(label);
+                        if (face_attribs.length !== 0) {
+                            for (var j = 0; j < face_attribs.length; j++) {
                                 attributes[j] = face.getAttribValue(face_attribs[j]);
-                                attributeface.push(attributes);
                             }
                         }
+                        attributeface.push(attributes);
                     }
                 }
             }
@@ -6855,7 +6889,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                 //if(selecting[i].type==="All edges"){
                 for (var j = 0; j < edges.length; j++) {
                     if (selecting[i].type === "All edges") {
-                        if (selecting[i]["id"].indexOf(edges[j]) > -1) {
+                        if (selecting[i]["id"].indexOf(edges[j].label) > -1) {
                             this.attribute.push(edges[j]);
                         }
                     }
@@ -6867,7 +6901,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                             //var attributes:any=[];
                             var label = verts[n].getLabel();
                             //attributes.label=label;
-                            if (label === edges[j] && this.attribute.indexOf(edges[j]) == -1) {
+                            if (label === edges[j].label && this.attribute.indexOf(edges[j]) == -1) {
                                 this.attribute.push(edges[j]);
                             }
                         }
@@ -6880,7 +6914,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                             var verts = faces[f].getEdges();
                             for (var n = 0; n < verts.length; n++) {
                                 var label = verts[n].getLabel();
-                                if (label === edges[j] && this.attribute.indexOf(edges[j]) == -1) {
+                                if (label === edges[j].label && this.attribute.indexOf(edges[j]) == -1) {
                                     this.attribute.push(edges[j]);
                                 }
                             }
@@ -6907,7 +6941,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         if (selecting.length !== 0) {
             for (var i = 0; i < selecting.length; i++) {
                 for (var j = 0; j < wires.length; j++) {
-                    if (selecting[i]["id"] === wires[j]) {
+                    if (selecting[i]["id"] === wires[j].label) {
                         this.attribute.push(wires[j]);
                     }
                     if (selecting[i]["type"] === "All objs") {
@@ -6915,7 +6949,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                         var wireses = face.getObj().getWires();
                         for (var w = 0; w < wireses.length; w++) {
                             var label = wireses[w].getLabel();
-                            if (label === wires[j] && this.attribute.indexOf(wires[j]) == -1) {
+                            if (label === wires[j].label && this.attribute.indexOf(wires[j]) == -1) {
                                 this.attribute.push(wires[j]);
                             }
                         }
@@ -6939,7 +6973,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         if (selecting.length !== 0) {
             for (var i = 0; i < selecting.length; i++) {
                 for (var j = 0; j < faces.length; j++) {
-                    if (selecting[i]["id"] === faces[j]) {
+                    if (selecting[i]["id"] === faces[j].label) {
                         this.attribute.push(faces[j]);
                     }
                     if (selecting[i]["type"] === "All objs") {
@@ -6947,7 +6981,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                         var faceses = face.getObj().getFaces();
                         for (var f = 0; f < faceses.length; f++) {
                             var label = faceses[f].getLabel();
-                            if (label === faces[j] && this.attribute.indexOf(faces[j]) == -1) {
+                            if (label === faces[j].label && this.attribute.indexOf(faces[j]) == -1) {
                                 this.attribute.push(faces[j]);
                             }
                         }
