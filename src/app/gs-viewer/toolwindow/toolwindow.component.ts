@@ -34,6 +34,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   wire_name:Array<any>;
   edge_name:Array<any>;
   vertex_name:Array<any>;
+  point_name:Array<any>;
   attrib_name:Array<any>;
 
 
@@ -95,27 +96,33 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
   getpoints():Array<any>{
     var attrubtepoints=[];
+    this.point_name=[];
     if(this.scene_and_maps!==undefined){
       if(this.scene_and_maps.points_map!==null&&this.scene_and_maps.points_map.size!==0&&this.scene_and_maps.points_map!==undefined){
-        /*const point_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.points) as gs.IEntAttrib[];
-        for(var j=0;j<point_attribs.length;j++){
-          this.point_name.push(point_attribs[j].getName());*/
-          for(var i=0;i<this.scene_and_maps.points_map.size;i++){
-            const points: gs.IPoint = this.model.getGeom().getPoint(i) as gs.IPoint;
-            //const points_attrib: gs.IEntAttrib=points.getAttribValue(point_attribs[j]);
-            const label: string = points.getLabel();
-            const verts_xyz: gs.XYZ = points.getLabelCentroid();
-            var attributepoint:any=[];
-            if(verts_xyz!==undefined){
-              attributepoint.id=label;
-              attributepoint.x=verts_xyz[0];
-              attributepoint.y=verts_xyz[1];
-              attributepoint.z=verts_xyz[2];
-              //attributepoint.name=points_attrib;
-              attrubtepoints.push(attributepoint);
-            }
+        const point_attribs: gs.IEntAttrib[] = this.model.findAttribs(gs.EGeomType.points) as gs.IEntAttrib[];
+          if(point_attribs.length!==0){
+          for(var j=0;j<point_attribs.length;j++){
+            this.point_name.push(point_attribs[0].getName());
           }
-        //}
+        }
+        for(var i=0;i<this.scene_and_maps.points_map.size;i++){
+          const points: gs.IPoint = this.model.getGeom().getPoint(i) as gs.IPoint;
+          const label: string = points.getLabel();
+          const verts_xyz: gs.XYZ = points.getLabelCentroid();
+          var attributepoint:any=[];
+          if(verts_xyz!==undefined){
+            attributepoint.id=label;
+            attributepoint.x=verts_xyz[0];
+            attributepoint.y=verts_xyz[1];
+            attributepoint.z=verts_xyz[2];
+            if(point_attribs.length!==0){
+              for(var j=0;j<point_attribs.length;j++){
+                attributepoint[j]=points.getAttribValue(point_attribs[j]);
+              }
+            }
+            attrubtepoints.push(attributepoint);
+          }
+        }
       }
     }
     return attrubtepoints;

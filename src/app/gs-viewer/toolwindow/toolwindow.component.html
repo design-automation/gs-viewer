@@ -27,13 +27,15 @@
           <td width="180px" align=center>X</td>
           <td width="180px" align=center>Y</td>
           <td width="180px" align=center>Z</td>
+          <td  align=center width="180px" *ngFor="let name of point_name"><div style="width:180px;word-wrap:break-word;" >{{name}}</div></td>
       </table>
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }">
         <tr>
           <td name="Number" align=center  width="100px"><div style="width:100px;word-wrap:break-word;" ><button width="100px" id="numberbutton" (click)=Onselect(datascale)>{{datascale.id}}</button></div></td>
-          <td width="180px" align=center>{{datascale.x}}</td>
-          <td width="180px" align=center>{{datascale.y}}</td>
-          <td width="180px" align=center>{{datascale.z}}</td>
+          <td width="180px" align=center><div style="width:180px;word-wrap:break-word;" >{{datascale.x}}</div></td>
+          <td width="180px" align=center><div style="width:180px;word-wrap:break-word;" >{{datascale.y}}</div></td>
+          <td width="180px" align=center><div style="width:180px;word-wrap:break-word;" >{{datascale.z}}</div></td>
+          <td  id="attrib" width="180px" align=center *ngFor="let name of point_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td> 
         <tr>
       </table>
     </div>
