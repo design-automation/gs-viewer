@@ -149,7 +149,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
               attributes.path=path;
               if(vertex_attribs.length!==0){
                 for(var j=0;j<vertex_attribs.length;j++){
-                  attributes[j]=vertices.getAttribValue(vertex_attribs[j]);
+                  //attributes[j]=vertices.getAttribValue(vertex_attribs[j]);
                 }
               }
               attributevertix.push(attributes);
@@ -183,7 +183,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             edgelable.push(label);
             if(edge_attribs.length!==0){
               for(var j=0;j<edge_attribs.length;j++){
-                attributes[j]=edge.getAttribValue(edge_attribs[j]);
+                //attributes[j]=edge.getAttribValue(edge_attribs[j]);
               }
             }
             attributeedge.push(attributes);
