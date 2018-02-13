@@ -1,4 +1,5 @@
 <div id="toolwindow">
+  <div style="position:relative;">
   <div id="toolbar">
     <button id="point" [class.visible]="Visible === 'Points'" (click)="point(Visible)">P</button>
     <button id="vertice" [class.visible]="Visible === 'Vertices'" (click)="vertice(Visible)">V</button>
@@ -8,24 +9,8 @@
     <button id="object" [class.visible]="Visible === 'Objs'" (click)="object(Visible)">O</button>
     <input id="selected" type="checkbox" (click)="changeselected()">
     <label id="selectedname" value="selected">Show selected only</label>
-
-    <!-- <pagination-controls id="pagination" (pageChange)="p = $event"></pagination-controls> -->
-    <!-- <div id="pagination">
-    <ul>
-      <li *ngFor="let item of attribute | paginate: { itemsPerPage: 50, currentPage: p }">{{item}}</li>
-    </ul> 
-   <pagination-controls (pageChange)="p = $event"></pagination-controls>
-  </div> -->
-    <!-- <div id="select">
-      <button id="vertice" [class.selectvisible]="SelectVisible === 'Vertices'" (click)="verticeselect(SelectVisible)">V</button>
-      <button id="edge" [class.selectvisible]="SelectVisible === 'Edges'" (click)="edgeselect(SelectVisible)">E</button>
-      <button id="wire" [class.selectvisible]="SelectVisible === 'Wires'" (click)="wireselect(SelectVisible)">W</button>
-      <button id="face" [class.selectvisible]="SelectVisible === 'Faces'" (click)="faceselect(SelectVisible)">F</button>
-      <button id="object" [class.selectvisible]="SelectVisible === 'Objs'" (click)="objectselect(SelectVisible)"><i class="fa fa-map"></i></button>
-    </div> -->
-
   </div>
-  <div id="pagination">
+  <div id="pagination" >
     <pagination-controls *ngIf="Visible === 'Points'" class="my-pagination" (pageChange)="p1 = $event"></pagination-controls> 
     <pagination-controls *ngIf="Visible === 'Vertices'" class="my-pagination" (pageChange)="p2 = $event"></pagination-controls> 
     <pagination-controls *ngIf="Visible === 'Edges'" class="my-pagination" (pageChange)="p3 = $event"></pagination-controls> 
@@ -33,16 +18,15 @@
     <pagination-controls *ngIf="Visible === 'Faces'" class="my-pagination" (pageChange)="p5 = $event"></pagination-controls>
     <pagination-controls *ngIf="Visible === 'Objs'" class="my-pagination" (pageChange)="p6 = $event"></pagination-controls>  
   </div>
+</div>
   <div id="toolview">
     <div *ngIf="Visible === 'Points'">
-     <!-- <div class="pagination"> <pagination-controls  (pageChange)="p1 = $event"></pagination-controls> </div> -->
       <table border="1" cellspacing="0" cellpadding="0" id="table" name="table" bordercolor="#d0d0d0">
         <tr>
           <td name="Number" align=center width="100px" align=center>ID</td>
           <td width="20%" align=center>X</td>
           <td width="20%" align=center>Y</td>
           <td width="20%" align=center>Z</td>
-          <!-- <td width="100px" align=center *ngFor="let name of point_name">{{name}}</td>  -->
       </table>
       <table border="1" cellspacing="0" cellpadding="0" id="tablename" name="table" bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }">
         <tr>
@@ -82,7 +66,7 @@
           <td  align=center width="180px" *ngFor="let name of edge_name"><div style="width:180px;word-wrap:break-word;" >{{name}}</div></td> 
         </tr>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }" >
+      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p3 }" >
         <tr>
           <td name="Number" align=center  width="60px"><div style="width:100px;word-wrap:break-word;" ><button  id="numberbutton">{{datascale.label}}</button></div></td>
           <td  id="attrib" width="180px" align=center *ngFor="let name of edge_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td>
@@ -96,7 +80,7 @@
           <td  align=center width="180px" *ngFor="let name of wire_name"><div style="width:180px;word-wrap:break-word;" >{{name}}</div></td> 
         </tr>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }" >
+      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p4 }" >
         <tr>
           <td name="Number" align=center  width="60px"><div style="width:100px;word-wrap:break-word;" ><button  id="numberbutton">{{datascale.label}}</button></div></td>
           <td  id="attrib" width="180px" align=center *ngFor="let name of wire_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td>
@@ -118,13 +102,13 @@
       </table>
     </div>
     <div *ngIf="Visible === 'Objs'">
-      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" class="table_ojbs">
+      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" class="table_ojbs" >
         <tr>
           <td name="Number" align=center width="60px"><div style="width:100px;word-wrap:break-word;" >Object ID</div></td>
           <td  align=center width="180px" *ngFor="let name of obj_name" ><div style="width:180px;word-wrap:break-word;" >{{name}}</div></td>
         </tr>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } " class="table_ojbs">
+      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } " class="table_ojbs" >
         <tr>
           <td name="Number" align=center  width="60px"><div style="width:100px;word-wrap:break-word;" ><button  id="numberbutton">{{datascale.label}}</button></div></td>
           <td  id="attrib" width="180px" align=center *ngFor="let name of obj_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td>

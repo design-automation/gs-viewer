@@ -9,11 +9,23 @@
   float: left;
   width: 50%;
   height: 30px;
-  left: 30px;
+  left: 0px;
   margin-top:0px;
   overflow: hidden !important;
   font-family:sans-serif;
+  position: fixed;
+  
 }
+#pagination{
+  float: right;
+  width: 50%;
+  height: 30px;
+  right: 0px;
+  position: fixed !important;
+  top:unset !important;
+  margin-top: 0px;
+}
+
 .table_ojbs{
   table-layout:fixed;
   overflow-x: scroll !important;
@@ -24,6 +36,8 @@
   white-space:nowrap; 
 }
 #toolview{
+  position:relative;
+  margin-top: 30px;
   width: 100%;
   float: left;
 }
