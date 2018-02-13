@@ -14,7 +14,8 @@
   overflow: hidden !important;
   font-family:sans-serif;
   position: fixed;
-  
+  display: flex;
+  align-items: center;
 }
 #pagination{
   float: right;
