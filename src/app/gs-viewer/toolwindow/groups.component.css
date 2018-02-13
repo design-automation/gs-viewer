@@ -75,6 +75,10 @@
     background-color: #395d73;
     font-family:sans-serif;
 }
+
+/deep/.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label {
+    background-color: #395d73;
+}
 /*::ng-deep .mat-expansion-panel {
   margin: 0px !important;
   overflow: hidden !important;
@@ -84,6 +88,7 @@
   vertical-align: unset !important;
   width: unset !important;
 }
+
 
 
 
