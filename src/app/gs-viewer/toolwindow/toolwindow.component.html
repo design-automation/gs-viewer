@@ -21,26 +21,23 @@
 </div>
   <div id="toolview">
     <div *ngIf="Visible === 'Points'">
-      <table border="1" cellspacing="0" cellpadding="0" id="table" name="table" bordercolor="#d0d0d0">
+      <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0">
         <tr>
-          <td name="Number" align=center width="100px" align=center>ID</td>
-          <td width="20%" align=center>X</td>
-          <td width="20%" align=center>Y</td>
-          <td width="20%" align=center>Z</td>
+          <td align=center width="100px">Points ID</td>
+          <td width="180px" align=center>X</td>
+          <td width="180px" align=center>Y</td>
+          <td width="180px" align=center>Z</td>
       </table>
-      <table border="1" cellspacing="0" cellpadding="0" id="tablename" name="table" bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }">
+      <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }">
         <tr>
-          <button id="numberbutton" (click)=Onselect(datascale)>{{datascale.id}}</button>
-          <td width="20%" align=center>{{datascale.x}}</td>
-          <td width="20%" align=center>{{datascale.y}}</td>
-          <td width="20%" align=center>{{datascale.z}}</td>
-          <!-- <td width="20%" align=center>{{datascale.name}}</td> -->
+          <td name="Number" align=center  width="100px"><div style="width:100px;word-wrap:break-word;" ><button width="100px" id="numberbutton" (click)=Onselect(datascale)>{{datascale.id}}</button></div></td>
+          <td width="180px" align=center>{{datascale.x}}</td>
+          <td width="180px" align=center>{{datascale.y}}</td>
+          <td width="180px" align=center>{{datascale.z}}</td>
         <tr>
       </table>
-      <!-- <pagination-controls (pageChange)="p1 = $event"></pagination-controls>  -->
     </div>
     <div *ngIf="Visible === 'Vertices'">
-      <!-- <pagination-controls (pageChange)="p2 = $event"></pagination-controls> -->
       <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" >
         <tr>
           <td  align=center width="100px">Vertices Label</td>
@@ -50,14 +47,11 @@
       </table>
       <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" *ngFor="let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }">
         <tr>
-          <!-- <button id="numberbutton" [class.selectid]="ID == datascale.id" (click)=clicktoshow(datascale.id)>{{datascale.vertixlabel}}</button> -->
           <td name="Number" align=center  width="100px"><div style="width:100px;word-wrap:break-word;" ><button  id="numberbutton">{{datascale.vertixlabel}}</button></div></td>
-          <!-- <td name="Number" align=center  width="60px"><div style="width:100px;word-wrap:break-word;" ><button id="numberbutton" (click)=Onselect(datascale)>{{datascale.vertixlabel}}</button></div></td> -->
           <td  align=center  width="60px">{{datascale.pointid}}</td>
           <td  id="attrib" width="180px" align=center *ngFor="let name of vertex_name; let idx=index"><div style="width:180px;word-wrap:break-word;" >{{datascale[idx]}}</div></td> 
         </tr>
       </table>
-      <!-- <pagination-controls (pageChange)="p2 = $event"></pagination-controls> -->
     </div>
     <div *ngIf="Visible === 'Edges'">
       <table border="1" cellspacing="0" cellpadding="0"  bordercolor="#d0d0d0" >
