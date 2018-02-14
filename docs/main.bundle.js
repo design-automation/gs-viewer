@@ -5307,6 +5307,7 @@ var DataService = /** @class */ (function () {
         this.scenechildren = [];
         this.textlabels = [];
         this.point = true;
+        this.click = false;
         // ---- 
         // Subscription Handling
         // 
@@ -5385,7 +5386,6 @@ var DataService = /** @class */ (function () {
     };
     DataService.prototype.generateSceneMaps = function () {
         var scene_and_maps = __WEBPACK_IMPORTED_MODULE_3_gs_json__["genThreeOptModelAndMaps"](this._gsModel);
-        ;
         this.scenemaps = scene_and_maps;
     };
     DataService.prototype.getscememaps = function () {
@@ -5436,6 +5436,9 @@ var DataService = /** @class */ (function () {
     };
     DataService.prototype.getmaterialpoint = function (materialpoint) {
         this.materialpoint = materialpoint;
+    };
+    DataService.prototype.getradius = function (point) {
+        this.pointradius = point;
     };
     DataService.prototype.getcenterx = function (centerx) {
         this.centerx = centerx;
@@ -6018,7 +6021,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "#setandgroup{\r\n  background-color: #F1F1F1 !important;\r\n  height: 100%;\r\n  width: 100%;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden !important;\r\n  overflow-y: hidden !important;\r\n}\r\n#groupsview{\r\n  color:#395d73;\r\n  background-color: #F1F1F1 !important;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n}\r\n#settingview{\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  background-color: #F1F1F1 !important;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden !important;\r\n  overflow-y: hidden !important;\r\n  width: 500px;\r\n  height: 800px;\r\n  color: #395d73;\r\n}\r\n.check{\r\n  margin-left:10px;\r\n}\r\n#GridCenter{\r\n  margin-left: 10px;\r\n  margin-top: 3px !important;\r\n  height: 8px;\r\n  vertical-align: bottom;\r\n}\r\n\r\n#centerx{\r\n  width:50px;\r\n  margin-left: 10px;\r\n/*  margin-left:25px;*/\r\n}\r\n#centery{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centerz{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centersize{\r\n  width:50px;\r\n  margin-left:9px;\r\n}\r\n.name{\r\n  width: 10px;\r\n  margin-left: 10px;\r\n}\r\n#slider-conainer{\r\n  -webkit-box-align: center !important;\r\n      -ms-flex-align: center !important;\r\n          align-items: center !important;\r\n  display: -webkit-box;\r\n  display: -ms-flexbox;\r\n  display: flex;\r\n  float: right;\r\n}\r\n\r\n::ng-deep .mat-accent .mat-slider-thumb {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-thumb-label {\r\n    background-color: white;\r\n    color:#395d73;\r\n    font-family:sans-serif;\r\n}\r\n::ng-deep .mat-accent .mat-slider-track-fill {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n}\r\n\r\n/deep/.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label {\r\n    background-color: #395d73;\r\n}\r\n/*::ng-deep .mat-expansion-panel {\r\n  margin: 0px !important;\r\n  overflow: hidden !important;\r\n} */\r\n/deep/ .slider {\r\n  height: 25px !important;\r\n  vertical-align: unset !important;\r\n  width: unset !important;\r\n}\r\n\r\n\r\n\r\n\r\n/*.mat-expansion-panel{\r\n   background-color: #F1F1F1 !important;\r\n   border-color: #395d73;\r\n   line-height: 14px;\r\n   font-weight: bold !important;\r\n   font-size: 12px !important;\r\n}\r\n.mat-tab-group{\r\n  border: 0px solid #F1F1F1;\r\n  color:#395d73;\r\n}*/\r\n\r\n/deep/.mat-tab-label, /deep/.mat-tab-label-active{\r\n  min-width: 3px!important;\r\n  padding: 3px!important;\r\n  margin: 3px!important;\r\n  color:#395d73;\r\n}\r\n/deep/.mat-tab-label{\r\n  height: 30px !important;\r\n}\r\n/deep/.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination{\r\n  display: none !important;\r\n}\r\n/deep/.mat-ink-bar{\r\n  background-color: #395d73 !important;\r\n}\r\n.mat-tab{\r\n  min-width: 30px !important;\r\n}\r\n\r\n.mat-expansion-panel-spacing {\r\n  margin-top:0px;\r\n  margin-bottom: 0px;\r\n}\r\n.mat-expansion-panel{\r\n  background-color: #F1F1F1 !important;\r\n  border-color: #395d73;\r\n  line-height: 14px;\r\n  font-weight: bold !important;\r\n  font-size: 12px !important;\r\n  overflow: hidden !important;\r\n}\r\n\r\n#groupname{\r\n  margin-right: 0px;\r\n}\r\n.mat-header{\r\n  -webkit-box-orient: horizontal;\r\n  -webkit-box-direction: normal;\r\n      -ms-flex-direction: row;\r\n          flex-direction: row;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  margin-left: 0px;\r\n  color:#395d73;\r\n  border: 0;\r\n  height: 20px;\r\n}\r\n.mat-list-text{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n.mat-list-text-parent{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n\r\nhr {\r\n  display: block;\r\n  height: 1px;\r\n  border: 0;\r\n  border-top: 1px solid #ccc;\r\n  /*margin: 1em 0;*/\r\n  padding: 0; \r\n  color:#395d73;\r\n  width: 100%;\r\n  background-color: #395d73;\r\n}\r\n\r\n", ""]);
+exports.push([module.i, "#setandgroup{\r\n  background-color: #F1F1F1 !important;\r\n  height: 100%;\r\n  width: 100%;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden !important;\r\n  overflow-y: hidden !important;\r\n}\r\n#groupsview{\r\n  color:#395d73;\r\n  background-color: #F1F1F1 !important;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  font-size: 12px !important;\r\n}\r\n#settingview{\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  background-color: #F1F1F1 !important;\r\n  font-size: 12px !important;\r\n  line-height: 14px;\r\n  overflow-x: hidden !important;\r\n  overflow-y: hidden !important;\r\n  width: 1600px;\r\n  height: 800px;\r\n  color: #395d73;\r\n}\r\n.check{\r\n  margin-left:10px;\r\n}\r\n#GridCenter{\r\n  margin-left: 10px;\r\n  margin-top: 3px !important;\r\n  height: 8px;\r\n  vertical-align: bottom;\r\n}\r\n\r\n#centerx{\r\n  width:50px;\r\n  margin-left: 10px;\r\n/*  margin-left:25px;*/\r\n}\r\n#centery{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centerz{\r\n  width:50px;\r\n  /*margin-left:25px;*/\r\n}\r\n#centersize{\r\n  width:50px;\r\n  margin-left:9px;\r\n}\r\n.name{\r\n  width: 10px;\r\n  margin-left: 10px;\r\n}\r\n#slider-conainer{\r\n  -webkit-box-align: center !important;\r\n      -ms-flex-align: center !important;\r\n          align-items: center !important;\r\n  display: -webkit-box;\r\n  display: -ms-flexbox;\r\n  display: flex;\r\n  float: right;\r\n}\r\n\r\n::ng-deep .mat-accent .mat-slider-thumb {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n} \r\n::ng-deep .mat-accent .mat-slider-thumb-label {\r\n    background-color: white;\r\n    color:#395d73;\r\n    font-family:sans-serif;\r\n}\r\n::ng-deep .mat-accent .mat-slider-track-fill {\r\n    background-color: #395d73;\r\n    font-family:sans-serif;\r\n}\r\n\r\n/deep/.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label {\r\n    background-color: #395d73;\r\n}\r\n/*::ng-deep .mat-expansion-panel {\r\n  margin: 0px !important;\r\n  overflow: hidden !important;\r\n} */\r\n/deep/ .slider {\r\n  height: 25px !important;\r\n  vertical-align: unset !important;\r\n  width: unset !important;\r\n}\r\n\r\n\r\n\r\n\r\n/*.mat-expansion-panel{\r\n   background-color: #F1F1F1 !important;\r\n   border-color: #395d73;\r\n   line-height: 14px;\r\n   font-weight: bold !important;\r\n   font-size: 12px !important;\r\n}\r\n.mat-tab-group{\r\n  border: 0px solid #F1F1F1;\r\n  color:#395d73;\r\n}*/\r\n\r\n/deep/.mat-tab-label, /deep/.mat-tab-label-active{\r\n  min-width: 3px!important;\r\n  padding: 3px!important;\r\n  margin: 3px!important;\r\n  color:#395d73;\r\n}\r\n/deep/.mat-tab-label{\r\n  height: 30px !important;\r\n}\r\n/deep/.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination{\r\n  display: none !important;\r\n}\r\n/deep/.mat-ink-bar{\r\n  background-color: #395d73 !important;\r\n}\r\n.mat-tab{\r\n  min-width: 30px !important;\r\n}\r\n\r\n.mat-expansion-panel-spacing {\r\n  margin-top:0px;\r\n  margin-bottom: 0px;\r\n}\r\n.mat-expansion-panel{\r\n  background-color: #F1F1F1 !important;\r\n  border-color: #395d73;\r\n  line-height: 14px;\r\n  font-weight: bold !important;\r\n  font-size: 12px !important;\r\n  overflow: hidden !important;\r\n}\r\n\r\n#groupname{\r\n  margin-right: 0px;\r\n}\r\n.mat-header{\r\n  -webkit-box-orient: horizontal;\r\n  -webkit-box-direction: normal;\r\n      -ms-flex-direction: row;\r\n          flex-direction: row;\r\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\r\n  margin-left: 0px;\r\n  color:#395d73;\r\n  border: 0;\r\n  height: 20px;\r\n}\r\n.mat-list-text{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n.mat-list-text-parent{\r\n  cursor :pointer;\r\n  color:#f3a32a;\r\n  font-family: sans-serif;\r\n  font-size: 12px;\r\n  font-weight: 700px;\r\n  line-height: 14px;\r\n  border-top: 2px !important;\r\n  /*margin-top: 2px;*/\r\n}\r\n\r\n\r\nhr {\r\n  display: block;\r\n  height: 1px;\r\n  border: 0;\r\n  border-top: 1px solid #ccc;\r\n  /*margin: 1em 0;*/\r\n  padding: 0; \r\n  color:#395d73;\r\n  width: 100%;\r\n  background-color: #395d73;\r\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -6031,7 +6034,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/toolwindow/groups.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"setandgroup\" >\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Groups\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Settings\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">wireframe</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><div  id=\"GridCenter\" >Grid Center<button (click)=\"getcenter()\" style=\"margin-left: 30px;width: 40px;height: 20px; font-family: sans-serif;font-size: 12px;\">Get</button></div><br/>\r\n\t\t<label class=\"name\" >XYZ</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecentersize(size.value)><br/>\r\n\t\t<hr/><label class=\"name\" >Precision</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Line</label>&nbsp;<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01 thumbLabel=true value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><span>1</span><br/><hr/>\r\n  \t\t<label class=\"name\" >Points Size</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Selected</label>&nbsp;<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><span>5</span><br/>\r\n  \t\t<label class=\"name\" >Unselected</label>&nbsp;<input type=\"text\" value={{_materialpoint}} #pointtext1 (change)=\"changematerialpoint(pointtext1.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_pointsize1}} #pointsize1 (change)=\"changematerialpoint(pointsize1.value.toPrecision(2))\" ></mat-slider><span>5</span><br/>\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Hue</label>&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01 thumbLabel=true value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n\t\t&nbsp;<label class=\"name\" >Saturation</label>&nbsp;\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 thumbLabel=true value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n\t\t&nbsp;&nbsp;<label class=\"name\" >Lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 thumbLabel=true value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n</div>\r\n"
+module.exports = "<div id=\"setandgroup\" >\r\n<mat-tab-group class=\"mat-tab-group\">\r\n  <mat-tab label=\"Groups\" >\r\n  \t<div id=\"groupsview\">\r\n\t<mat-accordion>\r\n\t  <mat-expansion-panel *ngFor=\"let group of groups\">\r\n\t  <mat-expansion-panel-header class=\"mat-header\">\r\n\t    <div class=\"mat-header\" ><label id=\"groupname\">{{group.name}}</label></div>\r\n\t  </mat-expansion-panel-header>\r\n\t    <div class=\"mat-list-text-parent\"><span id=\"parent\">parent : {{group.parent}} </span></div>\r\n\t    <div class=\"mat-list-text\"><hr/><span (click)=\"selectpoint(group)\">point : {{group.point}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >vertice : {{group.vertice}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >edge : {{group.edge}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >wire : {{group.wire}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >face : {{group.face}} </span></div>\r\n\t    <div class=\"mat-list-text\"><span >object : {{group.object}} </span><hr/></div>\r\n\t    <div class=\"mat-list-text\" *ngFor=\"let prop of group.props\"><span >{{prop[0]}} : {{prop[1]}} </span></div> \r\n \t\t</mat-expansion-panel>\r\n\t</mat-accordion>\r\n\t</div>\r\n  </mat-tab>\r\n  <mat-tab label=\"Settings\" >\r\n  \t<div id=\"settingview\">\r\n  \t\t<input id=\"grid\" class=\"check\" #grid type=\"checkbox\" [checked]=\"gridVisible\" (click)=\"changegrid()\"> <label id=\"name\" value=\"gridVisible\">grid</label><br/>\r\n\t\t<input id=\"axis\" class=\"check\" type=\"checkbox\" [checked]=\"axisVisible\" (click)=\"changeaxis()\"> <label id=\"name\" value=\"axisVisible\">axis</label><br/>\r\n\t\t<input id=\"shadow\" class=\"check\"  type=\"checkbox\" [checked]=\"shadowVisible\" (click)=\"changeshadow()\"> <label id=\"name\" value=\"shadowVisible\">shadow</label><br/>\r\n\t\t<input id=\"frame\" class=\"check\" type=\"checkbox\" [checked]=\"frameVisible\" (click)=\"changeframe()\"> <label id=\"name\" value=\"frameVisible\">wireframe</label><br/>\r\n\t\t<input id=\"point\" class=\"check\" type=\"checkbox\" [checked]=\"pointVisible\" (click)=\"changepoint()\"> <label id=\"name\" value=\"pointVisible\">point</label><br/>\r\n\t\t<hr/><div  id=\"GridCenter\" >Grid Center<button (click)=\"getcenter()\" style=\"margin-left: 30px;width: 40px;height: 20px; font-family: sans-serif;font-size: 12px;\">Get</button></div><br/>\r\n\t\t<label class=\"name\" >XYZ</label><input type=\"text\" name=\"center\" id=\"centerx\" #centerx value={{_centerx}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\" #centery id=\"centery\" value={{_centery}} (change)=changecenter(centerx.value,centery.value,centerz.value)><input type=\"text\" name=\"center\"  #centerz id=\"centerz\" value={{_centerz}} (change)=changecenter(centerx.value,centery.value,centerz.value)><br/>\r\n\t\t<label class=\"name\" >Size</label><input type=\"text\" name=\"center\"  #size id=\"centersize\" value={{_centersize}} (change)=changecentersize(size.value)><br/>\r\n\t\t<hr/><label class=\"name\" >Selection Settings:</label><br/>\r\n\t\t<label class=\"name\" >Line Precision</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Radius</label>&nbsp;<input type=\"text\" value={{_linepre}} #linetext (change)=\"changeline(linetext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"linerange\" min=0 max=1 step=0.01 thumbLabel=true value={{_linepre}} #linepre (change)=\"changeline(linepre.value.toPrecision(2))\" ></mat-slider><span>1</span><br/>\r\n  \t\t<label class=\"name\" >Points Precision</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Radius</label>&nbsp;<input type=\"text\" value={{_materialpoint}} #pointtext1 (change)=\"changeradius(pointtext1.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_materialpoint}} #pointsize1 (change)=\"changeradius(pointsize1.value.toPrecision(2))\" ></mat-slider><span>5</span><br/>\r\n  \t\t<!-- &nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Selected</label>&nbsp;<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><span>5</span><br/> -->\r\n  \t\t<label class=\"name\" >Points Size</label><br/>\r\n  \t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Size</label>&nbsp;<input type=\"text\" value={{_pointsize}} #pointtext (change)=\"changepointsize(pointtext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_pointsize}} #pointsize (change)=\"changepointsize(pointsize.value.toPrecision(2))\" ></mat-slider><span>5</span><br/><!-- <input type=\"text\" value={{_materialpoint}} #pointtext1 (change)=\"changematerialpoint(pointtext1.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"sizerange\" min=0 max=5 step=0.1 thumbLabel=true value={{_pointsize1}} #pointsize1 (change)=\"changematerialpoint(pointsize1.value.toPrecision(2))\" ></mat-slider><span>5</span><br/> -->\r\n  \t\t<hr/><label class=\"name\" >Hemisphere Light</label>&nbsp;&nbsp;<br/>\r\n\t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"name\" >Hue</label>&nbsp;\r\n\t\t<input type=\"text\" value={{hue}} #huetext (change)=\"changelight(huetext.value,slider1.value,slider2.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"huerange\" min=0 max=1 step=0.01 thumbLabel=true value={{hue}} #slider (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n\t\t&nbsp;<label class=\"name\" >Saturation</label>&nbsp;\r\n\t\t<input type=\"text\" value={{saturation}} #satutext (change)=\"changelight(slider.value,satutext.value,slider2.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"satrange\" min=0 max=1 step=0.01 thumbLabel=true value={{saturation}} #slider1 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n\t\t&nbsp;&nbsp;<label class=\"name\" >Lightness</label>&nbsp;\r\n\t\t<input type=\"text\" value={{lightness}} #lighttext (change)=\"changelight(slider.value,slider1.value,lighttext.value)\" style=\"width: 30px; \">&nbsp;<span>0</span><mat-slider class=\"slider\" name=\"range\" id=\"lirange\" min=0 max=1 step=0.01 thumbLabel=true value={{lightness}} #slider2 (change)=\"changelight(slider.value,slider1.value,slider2.value)\" ></mat-slider><span>1</span><br/>\r\n  \t</div>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -6328,19 +6331,32 @@ var GroupsComponent = /** @class */ (function (_super) {
         this.dataService.getcentersize(this._centersize);
         this.renderer.render(this.scene, this.camera);
     };
+    //chiange line precision
     GroupsComponent.prototype.changeline = function (lineprecision) {
         this._linepre = lineprecision;
         this.raycaster = this.dataService.getraycaster();
         this.raycaster.linePrecision = lineprecision;
         this.dataService.addraycaster(this.raycaster);
+        if (this.dataService.SelectVisible === 'Edges' || this.dataService.SelectVisible === 'Wires') {
+            for (var i = 0; i < this.scene.children.length; i++) {
+                if (this.scene.children[i].name === "sphereInter") {
+                    var geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["SphereGeometry"](lineprecision * 2);
+                    this.scene.children[i]["geometry"] = geometry;
+                }
+            }
+        }
         this.renderer.render(this.scene, this.camera);
     };
+    //change points size
     GroupsComponent.prototype.changepointsize = function (pointsize) {
         this._pointsize = pointsize;
         for (var i = 0; i < this.scene.children.length; i++) {
-            if (this.scene.children[i].name === "sphereInter") {
-                var geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["SphereGeometry"](pointsize / 3);
-                this.scene.children[i]["geometry"] = geometry;
+            if (this.scene.children[i].name === "Scene") {
+                for (var j = 0; j < this.scene.children[i].children.length; j++) {
+                    if (this.scene.children[i].children[j].name === "All points") {
+                        this.scene.children[i].children[j]["material"].size = pointsize * 10;
+                    }
+                }
             }
             if (this.scene.children[i].name === "selects" && this.scene.children[i].type === "Points") {
                 this.scene.children[i]["material"].size = pointsize;
@@ -6348,20 +6364,21 @@ var GroupsComponent = /** @class */ (function (_super) {
         }
         this.renderer.render(this.scene, this.camera);
         this.dataService.getpointsize(pointsize);
+        //this.dataService.getmaterialpoint(pointsize);
     };
-    GroupsComponent.prototype.changematerialpoint = function (materialpoint) {
-        this._materialpoint = materialpoint;
-        for (var i = 0; i < this.scene.children.length; i++) {
-            if (this.scene.children[i].name === "Scene") {
-                for (var j = 0; j < this.scene.children[i].children.length; j++) {
-                    if (this.scene.children[i].children[j].name === "All points") {
-                        this.scene.children[i].children[j]["material"].size = materialpoint * 30;
-                    }
+    //change radius
+    GroupsComponent.prototype.changeradius = function (point) {
+        this._materialpoint = point;
+        if (this.dataService.SelectVisible !== 'Edges' && this.dataService.SelectVisible !== 'Wires') {
+            for (var i = 0; i < this.scene.children.length; i++) {
+                if (this.scene.children[i].name === "sphereInter") {
+                    var geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["SphereGeometry"](point / 4);
+                    this.scene.children[i]["geometry"] = geometry;
                 }
             }
         }
         this.renderer.render(this.scene, this.camera);
-        this.dataService.getmaterialpoint(materialpoint);
+        this.dataService.getradius(point);
     };
     GroupsComponent.prototype.changelight = function (_hue, _saturation, _lightness) {
         this.hue = _hue;
@@ -6471,6 +6488,7 @@ module.exports = "<div id=\"toolwindow\">\r\n  <div style=\"position:relative;\"
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_gs_json__ = __webpack_require__("../../../../gs-json/dist2015/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_gs_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_gs_json__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__data_DataSubscriber__ = __webpack_require__("../../../../../src/app/gs-viewer/data/DataSubscriber.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__viewer_viewer_component__ = __webpack_require__("../../../../../src/app/gs-viewer/viewer/viewer.component.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -6490,6 +6508,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -6892,7 +6911,6 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         var selecting = this.dataService.getselecting();
         if (selecting.length !== 0) {
             for (var i = 0; i < selecting.length; i++) {
-                //if(selecting[i].type==="All edges"){
                 for (var j = 0; j < edges.length; j++) {
                     if (selecting[i].type === "All edges") {
                         if (selecting[i]["id"].indexOf(edges[j].label) > -1) {
@@ -6900,20 +6918,16 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                         }
                     }
                     if (selecting[i]["type"] === "All faces") {
-                        //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
                         var face = this.model.getGeom().getTopo(selecting[i]["path"]);
                         var verts = face.getEdges();
                         for (var n = 0; n < verts.length; n++) {
-                            //var attributes:any=[];
                             var label = verts[n].getLabel();
-                            //attributes.label=label;
                             if (label === edges[j].label && this.attribute.indexOf(edges[j]) == -1) {
                                 this.attribute.push(edges[j]);
                             }
                         }
                     }
                     if (selecting[i]["type"] === "All objs") {
-                        //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
                         var face = this.model.getGeom().getTopo(selecting[i]["path"]);
                         var faces = face.getObj().getFaces();
                         for (var f = 0; f < faces.length; f++) {
@@ -6938,7 +6952,6 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.wirecheck();
         }
         this.dataService.visible = this.Visible;
-        //this.clearsprite();
     };
     ToolwindowComponent.prototype.wirecheck = function () {
         this.attribute = [];
@@ -7004,7 +7017,6 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.objectcheck();
         }
         this.dataService.visible = this.Visible;
-        //this.clearsprite();
     };
     ToolwindowComponent.prototype.objectcheck = function () {
         this.attribute = [];
@@ -7052,6 +7064,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
         }
     };
     ToolwindowComponent.prototype.Onselect = function (datascale) {
+        console.log(__WEBPACK_IMPORTED_MODULE_4__viewer_viewer_component__["a" /* ViewerComponent */]);
         if (this.Visible === "Points") {
             var point = [];
             point.label = datascale.id;
@@ -7161,7 +7174,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/viewer/viewer.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"container\"  \r\n    (mousemove)=\"onDocumentMouseMove($event)\" \r\n    (mousedown)=\"mousedown($event)\"\r\n    (mouseup)=\"mouseup($event)\"\r\n    (click)=\"render(this)\"\r\n\t\t(click)=\"onDocumentMouseDown($event)\">\r\n\r\n\r\n    <!-- (mousemove)=\"requestanimate()\" \r\n    (click)=\"requestanimate()\" -->\r\n\r\n    <!-- (window:resize)=\"onResize($event)\" -->\r\n\r\n\t\r\n  \t\t<!-- <button id=\"rotating\" \r\n  \t\t\t[class.visible]=\"Visible === 'rotate'\" \r\n  \t\t\t(click)=\"rotate()\">\r\n  \t\t\t<i class=\"fa fa-refresh\"></i>\r\n  \t\t</button>\r\n\r\n  \t\t<button id=\"paning\"  \r\n  \t\t\t[class.visible]=\"Visible === 'pan'\" \r\n  \t\t\t(click)=\"pan()\">\r\n  \t\t\t<i class=\"fa fa-hand-paper-o\"></i>\r\n  \t\t</button>\r\n\r\n  \t\t<button id=\"zooming\"  \r\n  \t\t\t[class.visible]=\"Visible === 'zoom'\" \r\n  \t\t\t(click)=\"Visible='zoom'\">\r\n  \t\t\t<i class=\"fa fa-search\"></i>\r\n  \t\t</button>-->\r\n  \t\t\r\n  \t\t<button id=\"zoomingfit\"  \r\n  \t\t\t[class.visible]=\"Visible === 'zoomfit'\" \r\n  \t\t\t(click)=\"zoomfit()\">\r\n  \t\t\t<i class=\"fa fa-arrows-alt\"></i>\r\n  \t\t</button> \r\n  \t\t\r\n  \t\t<!-- <button id=\"selecting\" [class.visible]=\"Visible === 'select'\" (click)= \"select($event, Visible)\" ><i class=\"fa fa-mouse-pointer\"></i></button> -->\r\n  \t\t\r\n  \t\t<!-- <button id=\"setting\" [class.selected]=\"settingVisible\" (click)= \"setting(settingVisible)\"><i class=\"fa fa-cog\"></i></button> -->\r\n\r\n      <button id=\"selecting\" [class.selected]=\"seVisible\" (click)= \"select(seVisible)\" ><i class=\"fa fa-mouse-pointer\"></i></button>\r\n      <div id=\"shownumber\">\r\n        <tr>\r\n        <td  align=left style=\"width: 60px;\">Triangles&nbsp;&nbsp;</td>\r\n        <td  align=left style=\"width: 10px;\">{{renderer.info.render.faces}}</td>\r\n        </tr>\r\n        <tr>\r\n        <td  align=left style=\"width: 60px;\">Lines</td>\r\n        <td  align=left style=\"width: 10px;\">{{LineNo}}</td>\r\n        </tr>\r\n      </div>\r\n\r\n      \t\r\n      \t<!--setting-->\r\n      \t\r\n \t\t<!-- <app-setting *ngIf=\"settingVisible == true\"></app-setting> -->\r\n    <div *ngIf=\"seVisible == true\">\r\n        <button id=\"points\" [class.selectvisible]=\"SelectVisible === 'Points'\" (click)=\"pointselect(SelectVisible)\">P</button>\r\n        <button id=\"vertices\" [class.selectvisible]=\"SelectVisible === 'Vertices'\" (click)=\"verticeselect(SelectVisible)\">V</button>\r\n        <button id=\"edges\" [class.selectvisible]=\"SelectVisible === 'Edges'\" (click)=\"edgeselect(SelectVisible)\">E</button>\r\n        <button id=\"wires\" [class.selectvisible]=\"SelectVisible === 'Wires'\" (click)=\"wireselect(SelectVisible)\">W</button>\r\n        <button id=\"faces\" [class.selectvisible]=\"SelectVisible === 'Faces'\" (click)=\"faceselect(SelectVisible)\">F</button>\r\n        <button id=\"objects\" [class.selectvisible]=\"SelectVisible === 'Objs'\" (click)=\"objectselect(SelectVisible)\">O</button>\r\n      </div>\r\n</div>\r\n\r\n\r\n\t\r\n\r\n\r\n"
+module.exports = "<div id=\"container\"  \r\n    (mousemove)=\"onDocumentMouseMove($event)\" \r\n    (mousedown)=\"mousedown($event)\"\r\n    (mouseup)=\"mouseup($event)\"\r\n    (click)=\"render(this)\"\r\n\t\t(click)=\"onDocumentMouseDown($event)\">\r\n    <div *ngIf=\"_updatemodel === false\" style=\"position:absolute;color:red;margin-top: 50px;left:50%;width: auto;text-align: center;font-family:sans-serif;font-size: 14px;background-color: white;\">Error displaying model:{{text}}</div>\r\n    <div *ngIf=\"_modelshow === false\" style=\"position:absolute;color:red;margin-top: 50px;left:50%;width: auto;text-align: center;font-family:sans-serif;font-size: 14px;background-color: white;\">Model or Scene not defined.</div>\r\n\r\n\r\n    <!-- (mousemove)=\"requestanimate()\" \r\n    (click)=\"requestanimate()\" -->\r\n\r\n    <!-- (window:resize)=\"onResize($event)\" -->\r\n\r\n\t\r\n  \t\t<!-- <button id=\"rotating\" \r\n  \t\t\t[class.visible]=\"Visible === 'rotate'\" \r\n  \t\t\t(click)=\"rotate()\">\r\n  \t\t\t<i class=\"fa fa-refresh\"></i>\r\n  \t\t</button>\r\n\r\n  \t\t<button id=\"paning\"  \r\n  \t\t\t[class.visible]=\"Visible === 'pan'\" \r\n  \t\t\t(click)=\"pan()\">\r\n  \t\t\t<i class=\"fa fa-hand-paper-o\"></i>\r\n  \t\t</button>\r\n\r\n  \t\t<button id=\"zooming\"  \r\n  \t\t\t[class.visible]=\"Visible === 'zoom'\" \r\n  \t\t\t(click)=\"Visible='zoom'\">\r\n  \t\t\t<i class=\"fa fa-search\"></i>\r\n  \t\t</button>-->\r\n  \t\t\r\n  \t\t<button id=\"zoomingfit\"  \r\n  \t\t\t[class.visible]=\"Visible === 'zoomfit'\" \r\n  \t\t\t(click)=\"zoomfit()\">\r\n  \t\t\t<i class=\"fa fa-arrows-alt\"></i>\r\n  \t\t</button> \r\n  \t\t\r\n  \t\t<!-- <button id=\"selecting\" [class.visible]=\"Visible === 'select'\" (click)= \"select($event, Visible)\" ><i class=\"fa fa-mouse-pointer\"></i></button> -->\r\n  \t\t\r\n  \t\t<!-- <button id=\"setting\" [class.selected]=\"settingVisible\" (click)= \"setting(settingVisible)\"><i class=\"fa fa-cog\"></i></button> -->\r\n\r\n      <button id=\"selecting\" [class.selected]=\"seVisible\" (click)= \"select(seVisible)\" ><i class=\"fa fa-mouse-pointer\"></i></button>\r\n      <div id=\"shownumber\">\r\n        <tr>\r\n        <td  align=left style=\"width: 60px;\">Triangles&nbsp;&nbsp;</td>\r\n        <td  align=left style=\"width: 10px;\">{{renderer.info.render.faces}}</td>\r\n        </tr>\r\n        <tr>\r\n        <td  align=left style=\"width: 60px;\">Lines</td>\r\n        <td  align=left style=\"width: 10px;\">{{LineNo}}</td>\r\n        </tr>\r\n      </div>\r\n\r\n      \t\r\n      \t<!--setting-->\r\n      \t\r\n \t\t<!-- <app-setting *ngIf=\"settingVisible == true\"></app-setting> -->\r\n    <div *ngIf=\"seVisible == true\">\r\n        <button id=\"points\" [class.selectvisible]=\"SelectVisible === 'Points'\" (click)=\"pointselect(SelectVisible)\">P</button>\r\n        <button id=\"vertices\" [class.selectvisible]=\"SelectVisible === 'Vertices'\" (click)=\"verticeselect(SelectVisible)\">V</button>\r\n        <button id=\"edges\" [class.selectvisible]=\"SelectVisible === 'Edges'\" (click)=\"edgeselect(SelectVisible)\">E</button>\r\n        <button id=\"wires\" [class.selectvisible]=\"SelectVisible === 'Wires'\" (click)=\"wireselect(SelectVisible)\">W</button>\r\n        <button id=\"faces\" [class.selectvisible]=\"SelectVisible === 'Faces'\" (click)=\"faceselect(SelectVisible)\">F</button>\r\n        <button id=\"objects\" [class.selectvisible]=\"SelectVisible === 'Objs'\" (click)=\"objectselect(SelectVisible)\">O</button>\r\n      </div>\r\n</div>\r\n\r\n\r\n\t\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -7205,6 +7218,8 @@ var ViewerComponent = /** @class */ (function (_super) {
         _this.SelectVisible = 'Objs';
         _this.settingVisible = false;
         _this.LineNo = 0;
+        _this._updatemodel = true;
+        _this._modelshow = true;
         _this.myElement = myElement;
         return _this;
     }
@@ -7236,8 +7251,10 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["Raycaster"]();
         this.raycaster.linePrecision = 0.05;
         this.scenechildren = this.dataService.getscenechild();
-        var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](0.3);
-        var material = new __WEBPACK_IMPORTED_MODULE_1_three__["MeshBasicMaterial"]({ color: 0x00ff00 });
+        this.dataService.SelectVisible = this.SelectVisible;
+        var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](0.1);
+        //var geometry = new THREE.CircleGeometry( 5 );
+        var material = new __WEBPACK_IMPORTED_MODULE_1_three__["MeshBasicMaterial"]({ color: 0x00ff00, transparent: true, opacity: 0.5 });
         this.sphere = new __WEBPACK_IMPORTED_MODULE_1_three__["Mesh"](geometry, material);
         this.sphere.visible = false;
         this.sphere.name = "sphereInter";
@@ -7267,10 +7284,8 @@ var ViewerComponent = /** @class */ (function (_super) {
             var currObj = self.scenechildren[i];
             if (self.dataService.getSelectingIndex(currObj.uuid) < 0) {
                 if (intersects[0] != undefined && intersects[0].object.uuid == currObj.uuid) {
-                    //if(self.seVisible===true){
                     self.sphere.visible = true;
                     self.sphere.position.copy(intersects[0].point);
-                    //}
                 }
                 else {
                     self.sphere.visible = false;
@@ -7280,7 +7295,6 @@ var ViewerComponent = /** @class */ (function (_super) {
         for (var i = 0; i < self.textlabels.length; i++) {
             self.textlabels[i].updatePosition();
         }
-        //self.onResize();
         if (self.dataService.clickshow !== undefined && self.clickatt !== self.dataService.clickshow) {
             self.clickatt = self.dataService.clickshow;
             self.clickshow();
@@ -7296,7 +7310,6 @@ var ViewerComponent = /** @class */ (function (_super) {
             self.clickshow();
         }
         self.renderer.render(self.scene, self.camera);
-        //requestAnimationFrame(self.render);
     };
     /// clears all children from the scene
     ViewerComponent.prototype.clearScene = function () {
@@ -7349,9 +7362,12 @@ var ViewerComponent = /** @class */ (function (_super) {
         this._model = this.dataService.getGsModel();
         if (!this._model || !this.scene) {
             console.warn("Model or Scene not defined.");
+            this._modelshow = false;
             return;
         }
         try {
+            this._updatemodel = true;
+            this._modelshow = true;
             this.scene_and_maps = this.dataService.getscememaps();
             var scene_data = this.scene_and_maps.scene;
             this.clearScene();
@@ -7401,6 +7417,8 @@ var ViewerComponent = /** @class */ (function (_super) {
         }
         catch (ex) {
             console.error("Error displaying model:", ex);
+            this._updatemodel = false;
+            this.text = ex;
         }
     };
     ViewerComponent.prototype.getMaterial = function (name) {
@@ -7506,6 +7524,7 @@ var ViewerComponent = /** @class */ (function (_super) {
                 children[i]["material"].opacity = 0;
         }
         this.dataService.addscenechild(scenechildren);
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     ViewerComponent.prototype.faceselect = function (SelectVisible) {
         event.stopPropagation();
@@ -7534,10 +7553,19 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
         }
         this.dataService.addscenechild(scenechildren);
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     ViewerComponent.prototype.wireselect = function (SelectVisible) {
         event.stopPropagation();
         this.SelectVisible = "Wires";
+        var lineprecision = this.raycaster.linePrecision;
+        for (var i = 0; i < this.scene.children.length; i++) {
+            if (this.scene.children[i].name === "sphereInter") {
+                var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](lineprecision * 2);
+                this.scene.children[i]["geometry"] = geometry;
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
         document.getElementById("object").style.color = "grey";
         document.getElementById("face").style.color = "grey";
         document.getElementById("wire").style.color = null;
@@ -7560,10 +7588,19 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
         }
         this.dataService.addscenechild(scenechildren);
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     ViewerComponent.prototype.edgeselect = function (SelectVisible) {
         event.stopPropagation();
         this.SelectVisible = "Edges";
+        var lineprecision = this.raycaster.linePrecision;
+        for (var i = 0; i < this.scene.children.length; i++) {
+            if (this.scene.children[i].name === "sphereInter") {
+                var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](lineprecision * 2);
+                this.scene.children[i]["geometry"] = geometry;
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
         document.getElementById("object").style.color = "grey";
         document.getElementById("face").style.color = "grey";
         document.getElementById("wire").style.color = "grey";
@@ -7601,10 +7638,20 @@ var ViewerComponent = /** @class */ (function (_super) {
                 children[i]["material"].opacity = 0.1;
         }
         this.dataService.addscenechild(scenechildren);
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     ViewerComponent.prototype.verticeselect = function (SelectVisible) {
         event.stopPropagation();
         this.SelectVisible = "Vertices";
+        var pointradius = this.dataService.pointradius;
+        ;
+        for (var i = 0; i < this.scene.children.length; i++) {
+            if (this.scene.children[i].name === "sphereInter") {
+                var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](pointradius / 4);
+                this.scene.children[i]["geometry"] = geometry;
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
         document.getElementById("object").style.color = "grey";
         document.getElementById("face").style.color = "grey";
         document.getElementById("wire").style.color = "grey";
@@ -7629,11 +7676,13 @@ var ViewerComponent = /** @class */ (function (_super) {
             }
         }
         this.dataService.addscenechild(scenechildren);
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     ViewerComponent.prototype.pointselect = function (SelectVisible) {
         event.stopPropagation();
         this.verticeselect("Vertices");
         this.SelectVisible = "Points";
+        this.dataService.SelectVisible = this.SelectVisible;
     };
     //
     //  events
