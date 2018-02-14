@@ -29,9 +29,6 @@ export class DataService {
   _saturation:any;
   _lightness:any;
   _alight:any;
-  /*_hueValue:number;
-  _saturationValue:number;
-  _lightnessValue:number;*/
   _Geom:any;
   hue: number;
   saturation:number;
@@ -64,6 +61,10 @@ export class DataService {
   materialpoint:number;
   clickshow:Array<any>;
   point:boolean=true;
+  click:boolean=false;
+  SelectVisible:string;
+  pointradius:number;
+
 
   // ---- 
   // Subscription Handling
@@ -173,7 +174,7 @@ export class DataService {
           edges_map: Map<number, gs.ITopoPathData>,
           vertices_map: Map<number, gs.ITopoPathData>,
           points_map: Map<number, gs.ITopoPathData>}*/= gs.genThreeOptModelAndMaps( this._gsModel );
-    ;this.scenemaps=scene_and_maps;
+    this.scenemaps=scene_and_maps;
   }
   getscememaps():any{
     return this.scenemaps;
@@ -234,6 +235,9 @@ export class DataService {
   }
   getmaterialpoint(materialpoint):void{
     this.materialpoint=materialpoint;
+  }
+  getradius(point):void{
+    this.pointradius=point;
   }
 
   getcenterx(centerx):void{
