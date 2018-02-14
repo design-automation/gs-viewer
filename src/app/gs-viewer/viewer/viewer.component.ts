@@ -46,6 +46,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   settingVisible:boolean=false;
   LineNo:number=0;
   clickatt:Array<any>;
+  _updatemodel:boolean=true;
+  text:string;
+  _modelshow:boolean=true;
 
   constructor(injector: Injector, myElement: ElementRef) { 
     super(injector);
@@ -85,9 +88,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.raycaster = new THREE.Raycaster();
     this.raycaster.linePrecision=0.05;
     this.scenechildren=this.dataService.getscenechild();
+    this.dataService.SelectVisible=this.SelectVisible;
 
-    var geometry = new THREE.SphereGeometry( 0.3 );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    var geometry = new THREE.SphereGeometry( 0.1 );
+    //var geometry = new THREE.CircleGeometry( 5 );
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00,transparent:true,opacity:0.5 } );
     this.sphere = new THREE.Mesh( geometry, material );
     this.sphere.visible = false;
     this.sphere.name="sphereInter";
@@ -120,10 +125,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       var currObj=self.scenechildren[i];
       if(self.dataService.getSelectingIndex(currObj.uuid)<0) {
         if ( intersects[ 0 ]!=undefined&&intersects[ 0 ].object.uuid==currObj.uuid) {
-          //if(self.seVisible===true){
-            self.sphere.visible = true;
-            self.sphere.position.copy( intersects[ 0 ].point );
-          //}
+          self.sphere.visible = true;
+          self.sphere.position.copy( intersects[ 0 ].point );
         } else {
           self.sphere.visible = false;
         }
@@ -132,7 +135,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     for(var i=0; i<self.textlabels.length; i++) {
       self.textlabels[i].updatePosition();
     }
-    //self.onResize();
     if(self.dataService.clickshow!==undefined&&self.clickatt!==self.dataService.clickshow){
       self.clickatt=self.dataService.clickshow;
       self.clickshow();
@@ -149,7 +151,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       self.clickshow();
     }
     self.renderer.render( self.scene, self.camera );
-    //requestAnimationFrame(self.render);
   }
 
   /// clears all children from the scene
@@ -204,9 +205,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this._model = this.dataService.getGsModel(); 
     if( !this._model || !this.scene ){
       console.warn("Model or Scene not defined.");
+      this._modelshow=false;
       return;
     }
     try{
+      this._updatemodel=true;
+      this._modelshow=true;
       this.scene_and_maps= this.dataService.getscememaps();
       const scene_data = this.scene_and_maps.scene;
       this.clearScene();
@@ -255,6 +259,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     catch(ex){
       console.error("Error displaying model:", ex);
+      this._updatemodel=false;
+      this.text=ex;
     }
   }
 
@@ -352,6 +358,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(children[i].name==="All vertices") children[i]["material"].opacity=0;
     }
     this.dataService.addscenechild(scenechildren);
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   faceselect(SelectVisible){
@@ -376,6 +383,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     }
     this.dataService.addscenechild(scenechildren);
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   wireselect(SelectVisible){
@@ -398,6 +406,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     }
     this.dataService.addscenechild(scenechildren);
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   edgeselect(SelectVisible){
@@ -437,6 +446,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       
     }
     this.dataService.addscenechild(scenechildren);
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   verticeselect(SelectVisible){
@@ -461,12 +471,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       }
     }
     this.dataService.addscenechild(scenechildren);
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   pointselect(SelectVisible){
     event.stopPropagation();
     this.verticeselect("Vertices");
     this.SelectVisible="Points";
+    this.dataService.SelectVisible=this.SelectVisible;
   }
 
   //
