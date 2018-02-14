@@ -56,7 +56,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this._centersize=this.dataService.centersize;
     this.raycaster=this.dataService.getraycaster();
     this._pointsize=this.dataService.pointsize;
-    this._materialpoint=this.dataService.materialpoint;
+    this._materialpoint=this.dataService.pointradius;
     this.alight=this.dataService.getalight();
     this.hue=this.dataService.hue;
     this.saturation=this.dataService.saturation;
@@ -104,7 +104,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     if(this._materialpoint===undefined||this._materialpoint===0.1){
       this._materialpoint=0.1;
     }else{
-      this._materialpoint=this.dataService.materialpoint;
+      this._materialpoint=this.dataService.pointradius;
     }
     if(this.hue === undefined||this.hue===0) {
         this.hue = 0;
