@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n  <div id=\"input-container\">\r\n    <div class=\"version\" style=\"font-family:sans-serif;\"> v0.0.9</div>\r\n    <input type=\"file\" id=\"files\" name=\"files[]\" style=\"font-family:sans-serif;\" (change)=\"handleFileSelect($event)\" />\r\n  </div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n</div>\r\n"
+module.exports = "<div>\r\n  <div id=\"input-container\">\r\n    <div class=\"version\" style=\"font-family:sans-serif;\"> v0.0.10</div>\r\n    <input type=\"file\" id=\"files\" name=\"files[]\" style=\"font-family:sans-serif;\" (change)=\"handleFileSelect($event)\" />\r\n  </div>\r\n  <!-- gs-viewer demo -->\r\n  <gs-viewer [data]=\"gs_dummy_data\"></gs-viewer>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -6086,7 +6086,7 @@ var GroupsComponent = /** @class */ (function (_super) {
         _this._centersize = _this.dataService.centersize;
         _this.raycaster = _this.dataService.getraycaster();
         _this._pointsize = _this.dataService.pointsize;
-        _this._materialpoint = _this.dataService.materialpoint;
+        _this._materialpoint = _this.dataService.pointradius;
         _this.alight = _this.dataService.getalight();
         _this.hue = _this.dataService.hue;
         _this.saturation = _this.dataService.saturation;
@@ -6142,7 +6142,7 @@ var GroupsComponent = /** @class */ (function (_super) {
             this._materialpoint = 0.1;
         }
         else {
-            this._materialpoint = this.dataService.materialpoint;
+            this._materialpoint = this.dataService.pointradius;
         }
         if (this.hue === undefined || this.hue === 0) {
             this.hue = 0;
