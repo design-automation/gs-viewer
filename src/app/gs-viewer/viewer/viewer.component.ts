@@ -389,6 +389,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   wireselect(SelectVisible){
     event.stopPropagation();
     this.SelectVisible="Wires";
+    var lineprecision=this.raycaster.linePrecision;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="sphereInter"){
+        var geometry = new THREE.SphereGeometry( lineprecision*2);
+        this.scene.children[i]["geometry"]=geometry;
+        this.renderer.render(this.scene, this.camera);
+      }
+    }
     document.getElementById("object").style.color="grey";
     document.getElementById("face").style.color="grey";
     document.getElementById("wire").style.color=null;
@@ -412,6 +420,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   edgeselect(SelectVisible){
     event.stopPropagation();
     this.SelectVisible="Edges";
+    var lineprecision=this.raycaster.linePrecision;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="sphereInter"){
+        var geometry = new THREE.SphereGeometry( lineprecision*2);
+        this.scene.children[i]["geometry"]=geometry;
+        this.renderer.render(this.scene, this.camera);
+      }
+    }
     document.getElementById("object").style.color="grey";
     document.getElementById("face").style.color="grey";
     document.getElementById("wire").style.color="grey";
@@ -442,8 +458,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
       if(children[i].name==="All vertices") children[i]["material"].opacity=0.1;
-
-      
     }
     this.dataService.addscenechild(scenechildren);
     this.dataService.SelectVisible=this.SelectVisible;
@@ -452,6 +466,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   verticeselect(SelectVisible){
     event.stopPropagation();
     this.SelectVisible="Vertices";
+    var pointradius=this.dataService.pointradius;;
+    for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].name==="sphereInter"){
+        var geometry = new THREE.SphereGeometry( pointradius/4);
+        this.scene.children[i]["geometry"]=geometry;
+        this.renderer.render(this.scene, this.camera);
+      }
+    }
     document.getElementById("object").style.color="grey";
     document.getElementById("face").style.color="grey";
     document.getElementById("wire").style.color="grey";
