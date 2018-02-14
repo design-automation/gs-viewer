@@ -298,21 +298,32 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this.dataService.getcentersize(this._centersize);
     this.renderer.render(this.scene, this.camera);
   }
-
+  //chiange line precision
   changeline(lineprecision){
     this._linepre=lineprecision;
     this.raycaster=this.dataService.getraycaster();
     this.raycaster.linePrecision=lineprecision;
     this.dataService.addraycaster(this.raycaster);
+    if(this.dataService.SelectVisible === 'Edges'||this.dataService.SelectVisible === 'Wires'){
+      for(var i=0;i<this.scene.children.length;i++){
+        if(this.scene.children[i].name==="sphereInter"){
+          var geometry = new THREE.SphereGeometry( lineprecision*2);
+          this.scene.children[i]["geometry"]=geometry;
+        }
+      }
+    }
     this.renderer.render(this.scene, this.camera);
   }
-
+  //change points size
   changepointsize(pointsize){
     this._pointsize=pointsize;
     for(var i=0;i<this.scene.children.length;i++){
-      if(this.scene.children[i].name==="sphereInter"){
-        var geometry = new THREE.SphereGeometry( pointsize/3);
-        this.scene.children[i]["geometry"]=geometry;
+      if(this.scene.children[i].name==="Scene"){
+        for(var j=0;j<this.scene.children[i].children.length;j++){
+          if(this.scene.children[i].children[j].name==="All points"){
+            this.scene.children[i].children[j]["material"].size=pointsize*10;
+          }
+        }
       }
       if(this.scene.children[i].name==="selects"&&this.scene.children[i].type==="Points"){
         this.scene.children[i]["material"].size=pointsize;
@@ -320,20 +331,22 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     }
     this.renderer.render(this.scene, this.camera);
     this.dataService.getpointsize(pointsize);
+    //this.dataService.getmaterialpoint(pointsize);
   }
-  changematerialpoint(materialpoint){
-    this._materialpoint=materialpoint;
-    for(var i=0;i<this.scene.children.length;i++){
-      if(this.scene.children[i].name==="Scene"){
-        for(var j=0;j<this.scene.children[i].children.length;j++){
-          if(this.scene.children[i].children[j].name==="All points"){
-            this.scene.children[i].children[j]["material"].size=materialpoint*30;
-          }
+
+  //change radius
+  changeradius(point){
+    this._materialpoint=point;
+    if(this.dataService.SelectVisible !== 'Edges'&&this.dataService.SelectVisible !== 'Wires'){
+      for(var i=0;i<this.scene.children.length;i++){
+        if(this.scene.children[i].name==="sphereInter"){
+          var geometry = new THREE.SphereGeometry( point/4);
+          this.scene.children[i]["geometry"]=geometry;
         }
       }
     }
     this.renderer.render(this.scene, this.camera);
-    this.dataService.getmaterialpoint(materialpoint);
+    this.dataService.getradius(point);
   }
 
   changelight(_hue,_saturation,_lightness){

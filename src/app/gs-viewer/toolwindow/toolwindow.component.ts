@@ -447,7 +447,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     var selecting=this.dataService.getselecting();
     if(selecting.length!==0){
       for(var i=0;i<selecting.length;i++){
-        //if(selecting[i].type==="All edges"){
         for(var j=0;j<edges.length;j++){
           if(selecting[i].type==="All edges"){
             if(selecting[i]["id"].indexOf(edges[j].label)>-1){
@@ -455,20 +454,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             }
           }
           if(selecting[i]["type"]==="All faces"){
-            //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
             const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const verts: gs.IEdge[] = face.getEdges();
             for(var n=0;n<verts.length;n++){
-              //var attributes:any=[];
               var label=verts[n].getLabel();
-              //attributes.label=label;
               if(label===edges[j].label&&this.attribute.indexOf(edges[j]) == -1){
                 this.attribute.push(edges[j]);
               }
             }
           }
           if(selecting[i]["type"]==="All objs"){
-            //const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(selecting[i]["index"]);
             const face: gs.IFace = this.model.getGeom().getTopo(selecting[i]["path"]) as gs.IFace;
             const faces: gs.IFace[]= face.getObj().getFaces();
             for(var f=0;f<faces.length;f++){
@@ -494,7 +489,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.wirecheck();
     }
     this.dataService.visible=this.Visible;
-    //this.clearsprite();
   }
 
   wirecheck(){
@@ -564,7 +558,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.objectcheck();
     }
     this.dataService.visible=this.Visible;
-    //this.clearsprite();
   }
 
   objectcheck(){
@@ -603,6 +596,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   Onselect(datascale){
+    console.log(ViewerComponent)
     if(this.Visible==="Points"){
       var point:any=[];
       point.label=datascale.id;
