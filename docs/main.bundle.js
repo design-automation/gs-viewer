@@ -63,7 +63,7 @@ var AppComponent = /** @class */ (function () {
         // dummy gs_data
         // to pass to the viewer
         // gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelTwoBoxesOpen"](); //gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
+        this.gs_dummy_data = __WEBPACK_IMPORTED_MODULE_1_gs_json__["genModelBoxWithAttribs"](); //gs.genModelTwoBoxesOpen();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
         this.test_data1 = {
             "metadata": {
                 "filetype": "gs-json",
@@ -6490,7 +6490,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/gs-viewer/toolwindow/toolwindow.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"toolwindow\">\r\n  <div style=\"position:relative;\">\r\n  <div id=\"toolbar\">\r\n    <button id=\"point\" [class.visible]=\"Visible === 'Points'\" (click)=\"point(Visible)\">P</button>\r\n    <button id=\"vertice\" [class.visible]=\"Visible === 'Vertices'\" (click)=\"vertice(Visible)\">V</button>\r\n    <button id=\"edge\" [class.visible]=\"Visible === 'Edges'\" (click)=\"edge(Visible)\">E</button>\r\n    <button id=\"wire\" [class.visible]=\"Visible === 'Wires'\" (click)=\"wire(Visible)\">W</button>\r\n    <button id=\"face\" [class.visible]=\"Visible === 'Faces'\" (click)=\"face(Visible)\">F</button>\r\n    <button id=\"object\" [class.visible]=\"Visible === 'Objs'\" (click)=\"object(Visible)\">O</button>\r\n    <input id=\"selected\" type=\"checkbox\" (click)=\"changeselected()\">\r\n    <label id=\"selectedname\" value=\"selected\">Show selected only</label>\r\n  </div>\r\n  <div id=\"pagination\" >\r\n    <pagination-controls *ngIf=\"Visible === 'Points'\" class=\"my-pagination\" (pageChange)=\"p1 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Vertices'\" class=\"my-pagination\" (pageChange)=\"p2 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Edges'\" class=\"my-pagination\" (pageChange)=\"p3 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Wires'\" class=\"my-pagination\" (pageChange)=\"p4 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Faces'\" class=\"my-pagination\" (pageChange)=\"p5 = $event\"></pagination-controls>\r\n    <pagination-controls *ngIf=\"Visible === 'Objs'\" class=\"my-pagination\" (pageChange)=\"p6 = $event\"></pagination-controls>  \r\n  </div>\r\n</div>\r\n  <div id=\"toolview\">\r\n    <div *ngIf=\"Visible === 'Points'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\">\r\n        <tr>\r\n          <td align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Points ID<!-- <input type=\"checkbox\" id=\"id\" class=\"checkbox\" style=\"float:right\" checked=true (click)=\"checkbox()\"> --></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >X<input type=\"checkbox\" style=\"float:right\" id=\"X\"  class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >Y<input type=\"checkbox\" style=\"float:right\" id=\"Y\" class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >Z<input type=\"checkbox\" style=\"float:right\" id=\"Z\" class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" class=\"checkbox\" *ngFor=\"let name of point_name;let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" id={{name}} style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button width=\"180px\" id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.id}}</button></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.x}}</div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.y}}</div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.z}}</div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of point_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td> \r\n        <tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Vertices'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Vertices Label<!-- <input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"> --></div></td>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Points ID<input type=\"checkbox\" style=\"float:right\" id=\"id\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of vertex_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" id={{name}} style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.vertixlabel}}</button></div></td>\r\n          <td  align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.pointid}}</div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of vertex_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td> \r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Edges'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Edge ID<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of edge_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p3 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of edge_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Wires'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Wire ID<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of wire_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p4 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of wire_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Faces'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Face ID<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of face_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of face_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Objs'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" class=\"table_ojbs\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Object ID<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of obj_name\" ><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"></div></td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } \" class=\"table_ojbs\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of obj_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n"
+module.exports = "<div id=\"toolwindow\">\r\n  <div style=\"position:relative;\">\r\n  <div id=\"toolbar\">\r\n    <button id=\"point\" [class.visible]=\"Visible === 'Points'\" (click)=\"point(Visible)\">P</button>\r\n    <button id=\"vertice\" [class.visible]=\"Visible === 'Vertices'\" (click)=\"vertice(Visible)\">V</button>\r\n    <button id=\"edge\" [class.visible]=\"Visible === 'Edges'\" (click)=\"edge(Visible)\">E</button>\r\n    <button id=\"wire\" [class.visible]=\"Visible === 'Wires'\" (click)=\"wire(Visible)\">W</button>\r\n    <button id=\"face\" [class.visible]=\"Visible === 'Faces'\" (click)=\"face(Visible)\">F</button>\r\n    <button id=\"object\" [class.visible]=\"Visible === 'Objs'\" (click)=\"object(Visible)\">O</button>\r\n    <input id=\"selected\" type=\"checkbox\" (click)=\"changeselected()\">\r\n    <label id=\"selectedname\" value=\"selected\">Show selected only</label>\r\n  </div>\r\n  <div id=\"pagination\" >\r\n    <pagination-controls *ngIf=\"Visible === 'Points'\" class=\"my-pagination\" (pageChange)=\"p1 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Vertices'\" class=\"my-pagination\" (pageChange)=\"p2 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Edges'\" class=\"my-pagination\" (pageChange)=\"p3 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Wires'\" class=\"my-pagination\" (pageChange)=\"p4 = $event\"></pagination-controls> \r\n    <pagination-controls *ngIf=\"Visible === 'Faces'\" class=\"my-pagination\" (pageChange)=\"p5 = $event\"></pagination-controls>\r\n    <pagination-controls *ngIf=\"Visible === 'Objs'\" class=\"my-pagination\" (pageChange)=\"p6 = $event\"></pagination-controls>  \r\n  </div>\r\n</div>\r\n  <div id=\"toolview\">\r\n    <div *ngIf=\"Visible === 'Points'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\">\r\n        <tr>\r\n          <td align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Points ID <!-- <input type=\"checkbox\" id=\"id\" class=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"> --></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >X<input type=\"checkbox\" style=\"float:right\" id=\"X\"  class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >Y<input type=\"checkbox\" style=\"float:right\" id=\"Y\" class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >Z<input type=\"checkbox\" style=\"float:right\" id=\"Z\" class=\"checkbox\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" class=\"checkbox\" *ngFor=\"let name of point_name;let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" id={{name}} style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p1 }\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button width=\"180px\" id=\"numberbutton\" (click)=Onselect(datascale)>{{datascale.id}}</button></div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.x}}</div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.y}}</div></td>\r\n          <td width=\"180px\" align=center><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.z}}</div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of point_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td> \r\n        <tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Vertices'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Vertices Label<!-- <input type=\"checkbox\" style=\"float:right\" (click)=\"changeselected()\"> --></div></td>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Points ID<input type=\"checkbox\" style=\"float:right\" id=\"id\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of vertex_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" id={{name}} style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p2 }\">\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.vertixlabel}}</button></div></td>\r\n          <td  align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale.pointid}}</div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of vertex_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td> \r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Edges'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Edge ID<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of edge_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p3 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of edge_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Wires'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Wire ID<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of wire_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p4 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of wire_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Faces'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" >\r\n        <tr>\r\n          <td  align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Face ID<input type=\"checkbox\" style=\"float:right\" id=\"checkface\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of face_name\"><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" id={{name}} (click)=\"checkbox()\"></div></td> \r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p5 }\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of face_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n    <div *ngIf=\"Visible === 'Objs'\">\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" class=\"table_ojbs\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" >Object ID<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n          <td  align=center width=\"180px\" *ngFor=\"let name of obj_name\" ><div style=\"width:180px;word-wrap:break-word;\" >{{name}}<input type=\"checkbox\" style=\"float:right\" (click)=\"checkbox()\"></div></td>\r\n        </tr>\r\n      </table>\r\n      <table border=\"1\" cellspacing=\"0\" cellpadding=\"0\"  bordercolor=\"#d0d0d0\" *ngFor=\"let datascale of attribute| paginate: { itemsPerPage: 50, currentPage: p6 } \" class=\"table_ojbs\" >\r\n        <tr>\r\n          <td name=\"Number\" align=center  width=\"180px\"><div style=\"width:180px;word-wrap:break-word;\" ><button  id=\"numberbutton\">{{datascale.label}}</button></div></td>\r\n          <td  id=\"attrib\" width=\"180px\" align=center *ngFor=\"let name of obj_name; let idx=index\"><div style=\"width:180px;word-wrap:break-word;\" >{{datascale[idx]}}</div></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n"
 
 /***/ }),
 
@@ -7196,6 +7196,7 @@ var ToolwindowComponent = /** @class */ (function (_super) {
             this.dataService.checkX = document.getElementById("X")["checked"];
             this.dataService.checkY = document.getElementById("Y")["checked"];
             this.dataService.checkZ = document.getElementById("Z")["checked"];
+            //this.dataService.checkpointid=document.getElementById("id")["checked"];
             for (var n = 0; n < this.point_name.length; n++) {
                 this.dataService.checkname[n] = document.getElementById(this.point_name[n])["checked"];
             }
@@ -7208,6 +7209,14 @@ var ToolwindowComponent = /** @class */ (function (_super) {
                 this.dataService.checkname[n] = document.getElementById(this.vertex_name[n])["checked"];
             }
             this.dataService.addpointname(this.vertex_name);
+        }
+        if (this.Visible === "Faces") {
+            this.dataService.addgetpoints(this.getfaces());
+            this.dataService.checkface = document.getElementById("checkface")["checked"];
+            for (var n = 0; n < this.face_name.length; n++) {
+                this.dataService.checkname[n] = document.getElementById(this.face_name[n])["checked"];
+            }
+            this.dataService.addpointname(this.face_name);
         }
     };
     ToolwindowComponent = __decorate([
@@ -7941,7 +7950,23 @@ var ViewerComponent = /** @class */ (function (_super) {
                 var index_2 = Math.floor(intersects[0].faceIndex);
                 var path_2 = this.scene_and_maps.faces_map.get(index_2);
                 var face = this._model.getGeom().getTopo(path_2);
-                var label_2 = face.getLabel();
+                var label = "";
+                var getpoints;
+                var getpoints = this.dataService.getpoints;
+                var pointname = this.dataService.pointname;
+                if (getpoints !== undefined && getpoints.length !== 0) {
+                    for (var i = 0; i < getpoints.length; i++) {
+                        if (face.getLabel() === getpoints[i].label) {
+                            for (var n = 0; n < pointname.length; n++) {
+                                if (this.dataService.checkface === true)
+                                    label = face.getLabel();
+                                if (this.dataService.checkname[n] === true) {
+                                    label = label.concat('<br/>', pointname[n], ":", getpoints[i][n]);
+                                }
+                            }
+                        }
+                    }
+                }
                 var label_xyz = face.getLabelCentroid();
                 var verts_1 = face.getVertices();
                 var verts_xyz_1 = verts_1.map(function (v) { return v.getPoint().getPosition(); });
@@ -7966,21 +7991,21 @@ var ViewerComponent = /** @class */ (function (_super) {
                     this.scene.add(mesh);*/
                     var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
                     var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
-                    line.userData.id = label_2;
+                    line.userData.id = label;
                     line["material"].needsUpdate = true;
                     line.name = "selects";
                     this.scene.add(line);
-                    this.addTextLabel(label_2, label_xyz, label_2, path_2, "All faces");
+                    this.addTextLabel(label, label_xyz, label, path_2, "All faces");
                 }
                 else {
                     for (var j = 0; j < this.scene.children.length; j++) {
-                        if (label_2 === this.scene.children[j].userData.id) {
+                        if (label === this.scene.children[j].userData.id) {
                             select = true;
                             this.scene.remove(this.scene.children[j]);
                         }
                     }
                     for (var j = 0; j < this.textlabels.length; j++) {
-                        if (label_2 === this.textlabels[j]["id"]) {
+                        if (label === this.textlabels[j]["id"]) {
                             select = true;
                             this.removeTextLabel(this.textlabels[j]["id"]);
                         }
@@ -8004,11 +8029,11 @@ var ViewerComponent = /** @class */ (function (_super) {
                         this.scene.add(mesh);*/
                         var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
                         var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
-                        line.userData.id = label_2;
+                        line.userData.id = label;
                         line["material"].needsUpdate = true;
                         line.name = "selects";
                         this.scene.add(line);
-                        this.addTextLabel(label_2, label_xyz, label_2, path_2, "All faces");
+                        this.addTextLabel(label, label_xyz, label, path_2, "All faces");
                     }
                 }
             }
@@ -8016,7 +8041,7 @@ var ViewerComponent = /** @class */ (function (_super) {
                 var index_3 = Math.floor(intersects[0].index / 2);
                 var path_3 = this.scene_and_maps.wires_map.get(index_3);
                 var wire = this._model.getGeom().getTopo(path_3);
-                var label_3 = wire.getLabel();
+                var label_2 = wire.getLabel();
                 var label_xyz = wire.getLabelCentroid();
                 var verts_2 = wire.getVertices();
                 var verts_xyz_2 = verts_2.map(function (v) { return v.getPoint().getPosition(); });
@@ -8030,21 +8055,21 @@ var ViewerComponent = /** @class */ (function (_super) {
                     }
                     var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
                     var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
-                    line.userData.id = label_3;
+                    line.userData.id = label_2;
                     line["material"].needsUpdate = true;
                     line.name = "selects";
                     this.scene.add(line);
-                    this.addTextLabel(label_3, label_xyz, label_3, path_3, "All wires");
+                    this.addTextLabel(label_2, label_xyz, label_2, path_3, "All wires");
                 }
                 else {
                     for (var j = 0; j < this.scene.children.length; j++) {
-                        if (label_3 === this.scene.children[j].userData.id) {
+                        if (label_2 === this.scene.children[j].userData.id) {
                             select = true;
                             this.scene.remove(this.scene.children[j]);
                         }
                     }
                     for (var j = 0; j < this.textlabels.length; j++) {
-                        if (label_3 === this.textlabels[j]["id"]) {
+                        if (label_2 === this.textlabels[j]["id"]) {
                             select = true;
                             this.removeTextLabel(this.textlabels[j]["id"]);
                         }
@@ -8056,11 +8081,11 @@ var ViewerComponent = /** @class */ (function (_super) {
                         }
                         var material = new __WEBPACK_IMPORTED_MODULE_1_three__["LineBasicMaterial"]({ color: 0x00ff00, side: __WEBPACK_IMPORTED_MODULE_1_three__["DoubleSide"] });
                         var line = new __WEBPACK_IMPORTED_MODULE_1_three__["Line"](geometry, material);
-                        line.userData.id = label_3;
+                        line.userData.id = label_2;
                         line["material"].needsUpdate = true;
                         line.name = "selects";
                         this.scene.add(line);
-                        this.addTextLabel(label_3, label_xyz, label_3, path_3, "All wires");
+                        this.addTextLabel(label_2, label_xyz, label_2, path_3, "All wires");
                     }
                 }
             }
@@ -8200,18 +8225,18 @@ var ViewerComponent = /** @class */ (function (_super) {
                 var attributevertix = this.dataService.getattrvertix();
                 var id = this._model.getGeom().getAllPoints()[index].getLabel();
                 var label = "";
-                if (this.SelectVisible == "Points") {
-                    label = id;
-                    for (var i = 1; i < intersects.length; i++) {
-                        if (intersects[0].distance === intersects[i].distance) {
-                            var index = intersects[i].index;
-                            var attributevertix = this.dataService.getattrvertix();
-                            var id = this._model.getGeom().getAllPoints()[index].getLabel();
-                            if (label !== id)
-                                label = label + "<br/>" + id;
-                        }
+                //if(this.SelectVisible=="Points"){
+                label = id;
+                for (var i = 1; i < intersects.length; i++) {
+                    if (intersects[0].distance === intersects[i].distance) {
+                        var index = intersects[i].index;
+                        var attributevertix = this.dataService.getattrvertix();
+                        var id = this._model.getGeom().getAllPoints()[index].getLabel();
+                        if (label !== id)
+                            label = label + "<br/>" + id;
                     }
                 }
+                //}
                 var getpoints;
                 var getpoints = this.dataService.getpoints;
                 var pointname = this.dataService.pointname;
@@ -8224,6 +8249,19 @@ var ViewerComponent = /** @class */ (function (_super) {
                                 label = label.concat('<br/>', "Y:", getpoints[i].y);
                             if (this.dataService.checkZ === true)
                                 label = label.concat('<br/>', "Z:", getpoints[i].z);
+                            if (this.dataService.checkid === false) {
+                                label = "";
+                                /*id=this._model.getGeom().getAllPoints()[index].getLabel();
+                                label=id;
+                                for(var i=1;i<intersects.length;i++){
+                                  if(intersects[0].distance===intersects[i].distance){
+                                    var index:number=intersects[ i ].index;
+                                    var attributevertix=this.dataService.getattrvertix();
+                                    var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
+                                    if(label!==id) label=label+"<br/>"+id;
+                                  }
+                                }*/
+                            }
                             for (var n = 0; n < pointname.length; n++) {
                                 if (this.dataService.checkname[n] === true) {
                                     label = label.concat('<br/>', pointname[n], ":", getpoints[i][n]);
@@ -8294,6 +8332,22 @@ var ViewerComponent = /** @class */ (function (_super) {
                     if (id === attributevertix[i].pointid) {
                         var str = attributevertix[i].vertixlabel;
                         label = label + "<br/>" + str;
+                    }
+                }
+                var getpoints;
+                var getpoints = this.dataService.getpoints;
+                var pointname = this.dataService.pointname;
+                if (getpoints !== undefined && getpoints.length !== 0) {
+                    for (var i = 0; i < getpoints.length; i++) {
+                        if (id === getpoints[i].pointid) {
+                            if (this.dataService.checkid === true)
+                                label = label.concat('<br/>', "Pointid:", getpoints[i].pointid);
+                            for (var n = 0; n < pointname.length; n++) {
+                                if (this.dataService.checkname[n] === true) {
+                                    label = label.concat('<br/>', pointname[n], ":", getpoints[i][n]);
+                                }
+                            }
+                        }
                     }
                 }
                 var verts_xyz_6 = this._model.getGeom().getAllPoints()[index].getPosition(); //vertices.getPoint().getPosition();
