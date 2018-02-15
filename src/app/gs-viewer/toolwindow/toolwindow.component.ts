@@ -36,6 +36,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   vertex_name:Array<any>;
   point_name:Array<any>;
   attrib_name:Array<any>;
+  checked:boolean;
 
 
   constructor(injector: Injector, myElement: ElementRef){
@@ -79,7 +80,15 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       if(this.Visible==="Vertices") this.verticecheck();
       if(this.Visible==="Points") this.pointcheck();
     }
-    this.dataService.visible=this.Visible;
+    /*this.dataService.visible=this.Visible;
+    for(var i=2;i<document.getElementsByTagName("input").length;i++){
+      if(document.getElementsByTagName("input")[i]["checked"]===true){
+        //console.log(document.getElementsByTagName("input")[i]);
+        this.pointcheckbox();
+      }
+    }*/
+    //if(this.Visible==="Points"){}
+    //this.checkbox();
   }
 
   updateModel():void{
@@ -87,7 +96,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       try{
         this.scene_and_maps= this.dataService.getscememaps();
         this.object(this.Visible);
-        //this.getvertices();
+        this.getvertices();
+        //this.checkbox();
       }catch(ex){
         console.error("Error displaying model:", ex);
       }
@@ -596,7 +606,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   }
 
   Onselect(datascale){
-    console.log(ViewerComponent)
     if(this.Visible==="Points"){
       var point:any=[];
       point.label=datascale.id;
@@ -672,4 +681,70 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
 
     }
   }
+
+  pointcheckbox(){
+    var index=[];
+      for(var i=0;i<this.getpoints().length;i++){
+        if(this.dataService.selecting.length!==0){
+          for(var j=0;j<this.dataService.selecting.length;j++){
+            if(this.dataService.selecting[j].type==="All points"){
+              var label:string="";
+              if(this.getpoints()[i].id===this.dataService.selecting[j]["id"]){
+                if(document.getElementById("X")["checked"]===true){
+                  label=label.concat("X:",this.getpoints()[i].x,'\n');
+                }
+                if(document.getElementById("Y")["checked"]===true){
+                  label=label.concat("Y:",this.getpoints()[i].y,'\n');
+                }
+                if(document.getElementById("Z")["checked"]===true){
+                  label=label.concat("Z:",this.getpoints()[i].z,'\n');
+                }
+                for(var n=0;n<this.point_name.length;n++){
+                  if(document.getElementById(this.point_name[n])["checked"]==true){
+                    label=label.concat(this.point_name[n],":",this.getpoints()[i][n]);
+                  }
+                }
+                //console.log(label);
+                this.dataService.addlabel(label);
+                }
+              }
+            }
+            
+          }
+        }
+
+  }
+
+  checkbox(){
+    if(this.Visible==="Points"){
+      this.dataService.addgetpoints(this.getpoints());
+      this.dataService.checkX=document.getElementById("X")["checked"];
+      this.dataService.checkY=document.getElementById("Y")["checked"];
+      this.dataService.checkZ=document.getElementById("Z")["checked"];
+      //this.dataService.checkpointid=document.getElementById("id")["checked"];
+      for(var n=0;n<this.point_name.length;n++){
+        this.dataService.checkname[n]=document.getElementById(this.point_name[n])["checked"];
+      }
+      this.dataService.addpointname(this.point_name);
+    }
+    if(this.Visible==="Vertices"){
+      this.dataService.addgetpoints(this.getvertices());
+      this.dataService.checkid=document.getElementById("id")["checked"];
+      for(var n=0;n<this.vertex_name.length;n++){
+        this.dataService.checkname[n]=document.getElementById(this.vertex_name[n])["checked"];
+      }
+      this.dataService.addpointname(this.vertex_name);
+    }
+    if(this.Visible==="Faces"){
+      this.dataService.addgetpoints(this.getfaces());
+      this.dataService.checkface=document.getElementById("checkface")["checked"];
+      for(var n=0;n<this.face_name.length;n++){
+        this.dataService.checkname[n]=document.getElementById(this.face_name[n])["checked"];
+      }
+      this.dataService.addpointname(this.face_name);
+    }
+
+
+  }
+ 
 }
