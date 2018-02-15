@@ -64,7 +64,16 @@ export class DataService {
   click:boolean=false;
   SelectVisible:string;
   pointradius:number;
-
+  label:Array<any>;
+  checkX:boolean;
+  checkY:boolean;
+  checkZ:boolean;
+  checkid:boolean;
+  checkface:boolean;
+  checkpointid:boolean;
+  checkname:Array<any>;
+  getpoints:Array<any>;
+  pointname:Array<any>;
 
   // ---- 
   // Subscription Handling
@@ -140,6 +149,8 @@ export class DataService {
     // add it to alight - what does alight do?
     this._alight = hemi_light;
     //this._alight.push(hemi_light);
+    this.checkname=[];
+    this.pointname=[];
     
   }
 
@@ -336,6 +347,21 @@ export class DataService {
    this.sendMessage();
    return this.scenechildren;
  }
+ addlabel(label){
+   this.label=label;
+   this.sendMessage();
+ }
+ getlabel(){
+   this.sendMessage();
+   return this.label;
+ }
+ addgetpoints(getpoints){
+   this.getpoints=getpoints;
+ }
+ addpointname(pointname){
+   this.pointname=pointname;
+ }
+
 
  //To add text labels just provide label text, label position[x,y,z] and its id
   /*addTextLabel(label, label_xyz, id,index,path) {
