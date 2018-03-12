@@ -37,6 +37,13 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   point_name:Array<any>;
   attrib_name:Array<any>;
   checked:boolean;
+  checkface:boolean;
+  checkpointid:boolean;
+  checkX:boolean;
+  checkY:boolean;
+  checkZ:boolean;
+  checkobj:boolean;
+  checkname:Array<any>;
 
 
   constructor(injector: Injector, myElement: ElementRef){
@@ -47,6 +54,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.selectedVisible=false;
     this.attribute=[];
     this.selectObj=[];
+    this.checkname=[];
     this.myElement = myElement;
   }
 
@@ -54,7 +62,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.model= this.dataService.getGsModel(); 
     this.Visible=this.dataService.visible;
     this.updateModel();
-    
   }
 
   notify(message: string):void{ 
@@ -80,15 +87,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       if(this.Visible==="Vertices") this.verticecheck();
       if(this.Visible==="Points") this.pointcheck();
     }
-    /*this.dataService.visible=this.Visible;
-    for(var i=2;i<document.getElementsByTagName("input").length;i++){
-      if(document.getElementsByTagName("input")[i]["checked"]===true){
-        //console.log(document.getElementsByTagName("input")[i]);
-        this.pointcheckbox();
-      }
-    }*/
-    //if(this.Visible==="Points"){}
-    //this.checkbox();
   }
 
   updateModel():void{
@@ -97,7 +95,6 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
         this.scene_and_maps= this.dataService.getscememaps();
         this.object(this.Visible);
         this.getvertices();
-        //this.checkbox();
       }catch(ex){
         console.error("Error displaying model:", ex);
       }
@@ -150,28 +147,27 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
             this.vertex_name.push(vertex_attribs[n].getName()); 
             }
           }
-            for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
-              const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
-              const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
-              var attributes:any=[];
-              const label: string = vertices.getLabel();
-              const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
-              var attributes:any=[];
-              for(var j=0;j<points.length;j++){
-                if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
-                  attributes.pointid=points[j].id;
-                }
-              }
-              attributes.vertixlabel=label;
-              attributes.path=path;
-              if(vertex_attribs.length!==0){
-                for(var j=0;j<vertex_attribs.length;j++){
-                  //attributes[j]=vertices.getAttribValue(vertex_attribs[j]);
-                }
-              }
-              attributevertix.push(attributes);
+        for(var i =0;i<this.scene_and_maps.vertices_map.size;i++){
+          const path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(i);
+          const vertices: gs.IVertex = this.model.getGeom().getTopo(path) as gs.IVertex;
+          var attributes:any=[];
+          const label: string = vertices.getLabel();
+          const verts_xyz: gs.XYZ = vertices.getLabelCentroid();
+          var attributes:any=[];
+          for(var j=0;j<points.length;j++){
+            if(points[j].x===verts_xyz[0]&&points[j].y===verts_xyz[1]&&points[j].z===verts_xyz[2]){
+              attributes.pointid=points[j].id;
             }
-
+          }
+          attributes.vertixlabel=label;
+          attributes.path=path;
+          if(vertex_attribs.length!==0){
+            for(var j=0;j<vertex_attribs.length;j++){
+              //attributes[j]=vertices.getAttribValue(vertex_attribs[j]);
+            }
+          }
+          attributevertix.push(attributes);
+        }
         this.dataService.addattrvertix(attributevertix);
       }
     }
@@ -345,6 +341,26 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.attribute=this.getpoints();
     if(this.selectedVisible==true){
       this.pointcheck();
+    }
+    if(this.dataService.checkpointid == undefined) {
+        this.dataService.checkpointid = false;
+    } else {
+      this.checkpointid=this.dataService.checkpointid;
+    }
+    if(this.dataService.checkX == undefined) {
+        this.dataService.checkX = false;
+    } else {
+      this.checkX=this.dataService.checkX;
+    }
+    if(this.dataService.checkY == undefined) {
+        this.dataService.checkY = false;
+    } else {
+      this.checkY=this.dataService.checkY;
+    }
+    if(this.dataService.checkZ == undefined) {
+        this.dataService.checkZ = false;
+    } else {
+      this.checkZ=this.dataService.checkZ;
     }
     this.dataService.visible=this.Visible;
     //this.clearsprite();
@@ -533,6 +549,19 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.facecheck();
     }
+    if(this.dataService.checkface == undefined) {
+        this.dataService.checkface = false;
+    } else {
+      this.checkface=this.dataService.checkface;
+    }
+    for(var n=0;n<this.face_name.length;n++){
+      if(this.dataService.checkname[n]===undefined){
+        this.dataService.checkname[n]=false;
+      }
+      /*else{
+        this.face_name[n]=this.dataService.checkname[n];
+      }*/
+    }
   }
 
   facecheck(){
@@ -566,6 +595,11 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     this.attribute=this.getoject();
     if(this.selectedVisible==true){
       this.objectcheck();
+    }
+    if(this.dataService.checkobj == undefined) {
+        this.dataService.checkobj = false;
+    } else {
+      this.checkobj=this.dataService.checkobj;
     }
     this.dataService.visible=this.Visible;
   }
@@ -721,7 +755,7 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       this.dataService.checkX=document.getElementById("X")["checked"];
       this.dataService.checkY=document.getElementById("Y")["checked"];
       this.dataService.checkZ=document.getElementById("Z")["checked"];
-      //this.dataService.checkpointid=document.getElementById("id")["checked"];
+      this.dataService.checkpointid=document.getElementById("id")["checked"];
       for(var n=0;n<this.point_name.length;n++){
         this.dataService.checkname[n]=document.getElementById(this.point_name[n])["checked"];
       }
@@ -735,6 +769,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
       this.dataService.addpointname(this.vertex_name);
     }
+    if(this.Visible==="Edges"){
+      this.dataService.addgetpoints(this.getedges());
+      this.dataService.checkedgeid=document.getElementById("edgeid")["checked"];
+      for(var n=0;n<this.edge_name.length;n++){
+        this.dataService.checkname[n]=document.getElementById(this.edge_name[n])["checked"];
+      }
+      this.dataService.addpointname(this.edge_name);
+    }
     if(this.Visible==="Faces"){
       this.dataService.addgetpoints(this.getfaces());
       this.dataService.checkface=document.getElementById("checkface")["checked"];
@@ -743,8 +785,14 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
       }
       this.dataService.addpointname(this.face_name);
     }
-
-
+    if(this.Visible==="Objs"){
+      this.dataService.addgetpoints(this.getoject());
+      this.dataService.checkobj=document.getElementById("checkobj")["checked"];
+      for(var n=0;n<this.obj_name.length;n++){
+        this.dataService.checkname[n]=document.getElementById(this.obj_name[n])["checked"];
+      }
+      this.dataService.addpointname(this.obj_name);
+    }
   }
  
 }

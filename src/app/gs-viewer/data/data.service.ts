@@ -70,7 +70,13 @@ export class DataService {
   checkZ:boolean;
   checkid:boolean;
   checkface:boolean;
-  checkpointid:boolean;
+  checkpoint:boolean;
+  checkobj:boolean;
+  checkx:boolean;
+  checky:boolean;
+  checkz:boolean;
+  checkpointid:boolean=false;
+  checkedgeid:boolean=false;
   checkname:Array<any>;
   getpoints:Array<any>;
   pointname:Array<any>;

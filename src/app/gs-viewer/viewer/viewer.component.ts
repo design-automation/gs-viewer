@@ -609,7 +609,23 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         const index:number=Math.floor(intersects[ 0 ].faceIndex);
         const path: gs.ITopoPathData = this.scene_and_maps.faces_map.get(index);
         const face: gs.IFace = this._model.getGeom().getTopo(path) as gs.IFace;
-        const label: string = "o"+path.id;
+        var label: string ="";
+        const id: string = "o"+path.id;
+        var getpoints:Array<any>;
+        var getpoints=this.dataService.getpoints;
+        var pointname=this.dataService.pointname;
+        if(getpoints!==undefined&&getpoints.length!==0){
+          for(var i=0;i<getpoints.length;i++){
+            if(id===getpoints[i].label){
+              if(this.dataService.checkobj===true) label= id;
+              for(var n=0;n<pointname.length;n++){
+                if(this.dataService.checkname[n]===true){
+                  label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
+                }
+              }
+            }
+          }
+        }
         const label_xyz: gs.XYZ = face.getLabelCentroid();
         const faces: gs.IFace[]= face.getObj().getFaces();
         if(this.textlabels.length===0) {
@@ -633,7 +649,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             this.scene.add(mesh);*/
             var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
-            line.userData.id=label;
+            line.userData.id=id;
             line["material"].needsUpdate=true;
             line.name="selects";
             this.scene.add(line);
@@ -641,14 +657,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
            this.addTextLabel(label,label_xyz, label,path,"All objs");
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-            if(label===this.scene.children[j].userData.id){
+            if(id===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
               j=j-1;
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-            if(label===this.textlabels[j]["id"]){
+            if(id===this.textlabels[j]["id"]){
               select=true;
               this.removeTextLabel(this.textlabels[j]["id"]);
               j=j-1;
@@ -662,25 +678,14 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               for(var i=0;i<verts_xyz.length;i++){
                 geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
               }
-              if(verts.length===4){
-                geometry.faces.push(new THREE.Face3(0,2,1));
-                geometry.faces.push(new THREE.Face3(0,3,2));
-              }else if(verts.length===3){
-                geometry.faces.push(new THREE.Face3(0,2,1));
-              }
-              /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-              mesh.userData.id=label;
-              mesh["geometry"].computeVertexNormals();
-              mesh.name="selects";
-              this.scene.add(mesh);*/
               var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
               const line = new THREE.Line( geometry, material);
-              line.userData.id=label;
+              line.userData.id=id;
               line["material"].needsUpdate=true;
               line.name="selects";
               this.scene.add(line);
             }
-            this.addTextLabel(label,label_xyz, label,path,"All objs");
+            this.addTextLabel(label,label_xyz, id,path,"All objs");
           }
         }
 
@@ -714,37 +719,22 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           for(var i=0;i<verts_xyz.length;i++){
             geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
           }
-          /*if(verts.length===4){
-            geometry.faces.push(new THREE.Face3(0,2,1));
-            geometry.faces.push(new THREE.Face3(0,3,2));
-          }else if(verts.length===3){
-            geometry.faces.push(new THREE.Face3(0,2,1));
-          }
-          for(var i=2;i<verts.length;i++){
-            geometry.faces.push(new THREE.Face3(0,2,1));
-          }
-          var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-          mesh.userData.id=label;
-          mesh["geometry"].computeVertexNormals();
-          mesh.name="selects";
-          this.scene.add(mesh);*/
           var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
           const line = new THREE.Line( geometry, material);
-          line.userData.id=label;
+          line.userData.id=face.getLabel();
           line["material"].needsUpdate=true;
           line.name="selects";
           this.scene.add(line);
-          this.addTextLabel(label,label_xyz, label,path, "All faces");
+          this.addTextLabel(label,label_xyz, face.getLabel(),path, "All faces");
         }else{
           for(var j=0;j<this.scene.children.length;j++){
-
-            if(label===this.scene.children[j].userData.id){
+            if(face.getLabel()===this.scene.children[j].userData.id){
               select=true;
               this.scene.remove(this.scene.children[j]);
             }
           }
           for(var j=0;j<this.textlabels.length;j++){
-            if(label===this.textlabels[j]["id"]){
+            if(face.getLabel()===this.textlabels[j]["id"]){
               select=true;
               this.removeTextLabel(this.textlabels[j]["id"]);
             }
@@ -754,24 +744,13 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             for(var i=0;i<verts_xyz.length;i++){
               geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
             }
-            if(verts.length===4){
-            geometry.faces.push(new THREE.Face3(0,2,1));
-            geometry.faces.push(new THREE.Face3(0,3,2));
-            }else if(verts.length===3){
-              geometry.faces.push(new THREE.Face3(0,2,1));
-            }
-            /*var mesh=new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color:0x00ff00,side:THREE.DoubleSide} ));
-            mesh.userData.id=label;
-            mesh["geometry"].computeVertexNormals();
-            mesh.name="selects";
-            this.scene.add(mesh);*/
             var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
-            line.userData.id=label;
+            line.userData.id=face.getLabel();
             line["material"].needsUpdate=true;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz,label,path, "All faces");
+            this.addTextLabel(label,label_xyz,face.getLabel(),path, "All faces");
           }
         }
       }
@@ -831,14 +810,31 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
           var path: gs.ITopoPathData = this.scene_and_maps.edges_map.get(index);
           var edge: gs.IEdge = this._model.getGeom().getTopo(path) as gs.IEdge;
           var id: string = edge.getLabel();
-          label=id;
+          var label_show=id;
           for(var i=1;i<intersects.length;i++){
             if(intersects[0].distance===intersects[i].distance){
               index=Math.floor(intersects[ i ].index/2);
               path = this.scene_and_maps.edges_map.get(index);
               edge= this._model.getGeom().getTopo(path) as gs.IEdge;
               id=edge.getLabel();
-              if(label!==id) label=label+"<br/>"+id;
+              if(label_show!==id) label_show=label_show+"<br/>"+id;
+            }
+          }
+          var getpoints:Array<any>;
+          var getpoints=this.dataService.getpoints;
+          var pointname=this.dataService.pointname;
+          if(getpoints!==undefined&&getpoints.length!==0){
+            for(var i=0;i<getpoints.length;i++){
+              if(edge.getLabel()===getpoints[i].label){
+                if(this.dataService.checkedgeid===true) {
+                  label=label_show;
+                }
+                for(var n=0;n<pointname.length;n++){
+                  if(this.dataService.checkname[n]===true){
+                    label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
+                  }
+                }
+              }
             }
           }
           const label_xyz: gs.XYZ = edge.getLabelCentroid();
@@ -851,20 +847,20 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             }
             var material=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
             const line = new THREE.Line( geometry, material);
-            line.userData.id=label;
+            line.userData.id=edge.getLabel();
             line["material"].needsUpdate=true;
             line.name="selects";
             this.scene.add(line);
-            this.addTextLabel(label,label_xyz, label,path,"All edges");
+            this.addTextLabel(label,label_xyz, edge.getLabel(),path,"All edges");
           }else{
             for(var j=0;j<this.scene.children.length;j++){
-              if(label===this.scene.children[j].userData.id){
+              if(edge.getLabel()===this.scene.children[j].userData.id){
                 select=true;
                 this.scene.remove(this.scene.children[j]);
               }
             }
             for(var j=0;j<this.textlabels.length;j++){
-              if(label===this.textlabels[j]["id"]){
+              if(edge.getLabel()===this.textlabels[j]["id"]){
                 select=true;
                 this.removeTextLabel(this.textlabels[j]["id"]);
               }
@@ -876,10 +872,10 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               }
               var material= new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
               const line = new THREE.Line( geometry, material );
-              line.userData.id=label;
+              line.userData.id=edge.getLabel();
               line.name="selects";
               this.scene.add(line);
-              this.addTextLabel(label,label_xyz, label,path,"All edges");
+              this.addTextLabel(label,label_xyz, edge.getLabel(),path,"All edges");
             }
           }
         }
@@ -956,50 +952,35 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         var attributevertix=this.dataService.getattrvertix();
         var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
         var label:string="";
-        //if(this.SelectVisible=="Points"){
-          label=id;
-          for(var i=1;i<intersects.length;i++){
-            if(intersects[0].distance===intersects[i].distance){
-              var index:number=intersects[ i ].index;
-              var attributevertix=this.dataService.getattrvertix();
-              var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
-              if(label!==id) label=label+"<br/>"+id;
-            }
-          }
-        //}
         var getpoints:Array<any>;
         var getpoints=this.dataService.getpoints;
         var pointname=this.dataService.pointname;
         if(getpoints!==undefined&&getpoints.length!==0){
           for(var i=0;i<getpoints.length;i++){
             if(id===getpoints[i].id){
-              if(this.dataService.checkX===true) label=label.concat('<br/>',"X:",getpoints[i].x);
-              if(this.dataService.checkY===true) label=label.concat('<br/>',"Y:",getpoints[i].y);
-              if(this.dataService.checkZ===true) label=label.concat('<br/>',"Z:",getpoints[i].z);
-              if(this.dataService.checkid===false) {
-                label="";
-                /*id=this._model.getGeom().getAllPoints()[index].getLabel();
+              if(this.dataService.checkpointid===true) {
                 label=id;
-                for(var i=1;i<intersects.length;i++){
-                  if(intersects[0].distance===intersects[i].distance){
-                    var index:number=intersects[ i ].index;
-                    var attributevertix=this.dataService.getattrvertix();
+                for(var j=1;j<intersects.length;j++){
+                  if(intersects[0].distance===intersects[j].distance){
+                    var index:number=intersects[ j ].index;
                     var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
                     if(label!==id) label=label+"<br/>"+id;
                   }
-                }*/
+                }
               }
+              if(this.dataService.checkX===true) label=label.concat('<br/>',"X:",getpoints[i].x);
+              if(this.dataService.checkY===true) label=label.concat('<br/>',"Y:",getpoints[i].y);
+              if(this.dataService.checkZ===true) label=label.concat('<br/>',"Z:",getpoints[i].z);
               for(var n=0;n<pointname.length;n++){
                 if(this.dataService.checkname[n]===true){
                   label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
                 }
               }
-              
             }
           }
         }
         const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[index].getPosition();//vertices.getPoint().getPosition();
-        if(this.textlabels.length===0&&label!=="") {
+        if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
           var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
@@ -1026,7 +1007,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
                 this.removeTextLabel(this.textlabels[j]["id"]);
               }
           }
-          if(select==false&&label!==""){
+          if(select==false){
             var geometry=new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
             var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
@@ -1041,7 +1022,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             this.addTextLabel(label,verts_xyz, id,id,"All points");
           }
         }
-
       }
 
       if(this.scenechildren[0].name === "All vertices"){
@@ -1060,22 +1040,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         for(var i=0;i<attributevertix.length;i++){
           if(id===attributevertix[i].pointid){
             var str=attributevertix[i].vertixlabel;
-            label=label+"<br/>"+str;
-          }
-        }
-        var getpoints:Array<any>;
-        var getpoints=this.dataService.getpoints;
-        var pointname=this.dataService.pointname;
-        if(getpoints!==undefined&&getpoints.length!==0){
-          for(var i=0;i<getpoints.length;i++){
-            if(id===getpoints[i].pointid){
-              if(this.dataService.checkid===true) label=label.concat('<br/>',"Pointid:",getpoints[i].pointid);
-              for(var n=0;n<pointname.length;n++){
-                if(this.dataService.checkname[n]===true){
-                  label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
-                }
-              }
-            }
+            if(label==="") label=str;
+            else{label=label+"<br/>"+str;}
           }
         }
         const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[index].getPosition();//vertices.getPoint().getPosition();
@@ -1121,7 +1087,6 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             this.addTextLabel(label,verts_xyz, id,id,"All points");
           }
         }
-
       }
       
     } else {

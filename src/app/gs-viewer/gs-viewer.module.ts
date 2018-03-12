@@ -8,11 +8,12 @@ import { SettingComponent } from './setting/setting.component';
 import { ToolwindowComponent } from './toolwindow/toolwindow.component';
 import { DataService } from './data/data.service';
 import { GroupsComponent } from './toolwindow/groups.component';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { NgxPaginationModule} from 'ngx-pagination';
+import { MatExpansionModule} from '@angular/material/expansion';
 import { BrowserAnimationsModule ,NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
-
+import { BrowserModule } from '@angular/platform-browser';
+// import 'hammerjs';
 
 @NgModule({
     imports: [ 	CommonModule,
@@ -22,7 +23,8 @@ import {MatTabsModule} from '@angular/material/tabs';
                 MatExpansionModule,
                 BrowserAnimationsModule,
                 NoopAnimationsModule,
-                MatTabsModule
+                MatTabsModule,
+                BrowserModule
 			 ],
     exports: [ GSViewerComponent ],
     declarations: [GSViewerComponent,
