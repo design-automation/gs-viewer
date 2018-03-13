@@ -487,10 +487,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       if(children[i].name==="All objs"||children[i].name==="All faces") children[i]["material"].opacity=0.1;
       if(children[i].name==="All wires") children[i]["material"].opacity=0.1;
       if(children[i].name==="All edges"||children[i].name==="Other lines") {children[i]["material"].opacity=0.1;children[i]["material"].color=this.basicMat;}
-      if(children[i].name==="All vertices"){
+      /*if(children[i].name==="All vertices"){
         scenechildren.push(children[i]);
-      }
+      }*/
       if(children[i].name==="All points"){
+        scenechildren.push(children[i]);
         children[i]["material"].opacity=1;
       }
     }
@@ -955,26 +956,48 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         var getpoints:Array<any>;
         var getpoints=this.dataService.getpoints;
         var pointname=this.dataService.pointname;
-        if(getpoints!==undefined&&getpoints.length!==0){
-          for(var i=0;i<getpoints.length;i++){
-            if(id===getpoints[i].id){
-              if(this.dataService.checkpointid===true) {
-                label=id;
-                for(var j=1;j<intersects.length;j++){
-                  if(intersects[0].distance===intersects[j].distance){
-                    var index:number=intersects[ j ].index;
-                    var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
-                    if(label!==id) label=label+"<br/>"+id;
+        if(this.SelectVisible==="Points"){
+          if(getpoints!==undefined&&getpoints.length!==0){
+            for(var i=0;i<getpoints.length;i++){
+              if(id===getpoints[i].id){
+                if(this.dataService.checkpointid===true) {
+                  label=id;
+                  for(var j=1;j<intersects.length;j++){
+                    if(intersects[0].distance===intersects[j].distance){
+                      var index:number=intersects[ j ].index;
+                      var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
+                      if(label!==id) label=label+"<br/>"+id;
+                    }
+                  }
+                }
+                if(this.dataService.checkX===true) label=label.concat('<br/>',"X:",getpoints[i].x);
+                if(this.dataService.checkY===true) label=label.concat('<br/>',"Y:",getpoints[i].y);
+                if(this.dataService.checkZ===true) label=label.concat('<br/>',"Z:",getpoints[i].z);
+                for(var n=0;n<pointname.length;n++){
+                  if(this.dataService.checkname[n]===true){
+                    label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
                   }
                 }
               }
-              if(this.dataService.checkX===true) label=label.concat('<br/>',"X:",getpoints[i].x);
-              if(this.dataService.checkY===true) label=label.concat('<br/>',"Y:",getpoints[i].y);
-              if(this.dataService.checkZ===true) label=label.concat('<br/>',"Z:",getpoints[i].z);
-              for(var n=0;n<pointname.length;n++){
-                if(this.dataService.checkname[n]===true){
-                  label=label.concat('<br/>',pointname[n],":",getpoints[i][n]);
+            }
+          }
+        }
+        if(this.SelectVisible==="Vertices"){
+          var pointid:string="";
+          if(getpoints!==undefined&&getpoints.length!==0){
+            for(var i=0;i<attributevertix.length;i++){
+              if(id===attributevertix[i].pointid){
+                pointid=id;
+                if(this.dataService.checkvertixid===true) {
+                  if(label==="") label=attributevertix[i].vertixlabel;
+                  else {label=label+"<br/>"+attributevertix[i].vertixlabel;}
                 }
+              }
+            }
+            if(this.dataService.pointid===true) {
+              if(pointid!==""){
+                if(label==="") label=id;
+                else {label=label+"<br/>"+id}
               }
             }
           }
@@ -1024,7 +1047,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         }
       }
 
-      if(this.scenechildren[0].name === "All vertices"){
+      /*if(this.scenechildren[0].name === "All vertices"){
         var distance:number=intersects[ 0 ].distanceToRay;
         var index:number=intersects[ 0 ].index;
         for(var i=1;i<intersects.length;i++){
@@ -1033,19 +1056,42 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             index=intersects[ i ].index;
           }
         }
-        var attributevertix=this.dataService.getattrvertix();
         var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
         var label:string="";
+        var getpoints:Array<any>;
+        var getpoints=this.dataService.getpoints;
+        var pointname=this.dataService.pointname;
+
+        /*var path: gs.ITopoPathData = this.scene_and_maps.vertices_map.get(index);
+        var vertices: gs.IVertex = this._model.getGeom().getTopo(path) as gs.IVertex;
+        var id: string = "";
+        var attributevertix=this.dataService.getattrvertix();*/
+        //var vertices: gs.IVertex= this._model.getGeom().getTopo(path) as gs.IVertex;
+        //var id:string=this._model.getGeom().getAllPoints()[index].getLabel();
+        //console.log(vertices.getPoint().getPosition());
+
+        /*var label:string="";
         var attributevertix=this.dataService.getattrvertix();
+        console.log(attributevertix);
         for(var i=0;i<attributevertix.length;i++){
-          if(id===attributevertix[i].pointid){
-            var str=attributevertix[i].vertixlabel;
-            if(label==="") label=str;
-            else{label=label+"<br/>"+str;}
+          if(vertices.getLabel()===attributevertix[i].vertixlabel){
+            id=attributevertix[i].pointid;
+            label=vertices.getLabel();
+            break;
           }
         }
-        const verts_xyz: gs.XYZ = this._model.getGeom().getAllPoints()[index].getPosition();//vertices.getPoint().getPosition();
-        if(this.textlabels.length===0&&label!=="") {
+        console.log(id);
+        if(id!==""){
+          for(var i=0;i<attributevertix.length;i++){
+            if(id===attributevertix[i].pointid){
+              var str=attributevertix[i].vertixlabel;
+              if(label!==str) label=label+"<br/>"+str;
+            }
+          }
+        }*/
+        /*const verts_xyz: gs.XYZ = vertices.getPoint().getPosition();//this._model.getGeom().getAllPoints()[index].getPosition();//vertices.getPoint().getPosition();
+        console.log(verts_xyz);
+        if(this.textlabels.length===0) {
           var geometry=new THREE.Geometry();
           geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
           var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
@@ -1072,7 +1118,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
                 this.removeTextLabel(this.textlabels[j]["id"]);
               }
           }
-          if(select==false&&label!==""){
+          if(select==false){
             var geometry=new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
             var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
@@ -1087,7 +1133,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
             this.addTextLabel(label,verts_xyz, id,id,"All points");
           }
         }
-      }
+      }*/
       
     } else {
       /*for(var i=0;i<this.dataService.sprite.length;i++){

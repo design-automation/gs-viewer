@@ -42,8 +42,8 @@
     <div *ngIf="Visible === 'Vertices'">
       <table border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" >
         <tr>
-          <td  align=center width="180px"><div style="width:180px;word-wrap:break-word;" >Vertices Label<!-- <input type="checkbox" style="float:right" (click)="changeselected()"> --></div></td>
-          <td  align=center width="180px"><div style="width:180px;word-wrap:break-word;" >Points ID<input type="checkbox" style="float:right" id="id" (click)="checkbox()"></div></td>
+          <td  align=center width="180px"><div style="width:180px;word-wrap:break-word;" >Vertices Label<input type="checkbox" id="vertixid" style="float:right" [checked]="vertixid" (click)="checkbox()"></div></td>
+          <td  align=center width="180px"><div style="width:180px;word-wrap:break-word;" >Points ID<input type="checkbox" id="pointid" style="float:right"  [checked]="pointid" (click)="checkbox()"></div></td>
           <td  align=center width="180px" *ngFor="let name of vertex_name"><div style="width:180px;word-wrap:break-word;" >{{name}}<input type="checkbox" id={{name}} style="float:right" (click)="checkbox()"></div></td>
         </tr>
       </table>

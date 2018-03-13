@@ -42,6 +42,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
   checkX:boolean;
   checkY:boolean;
   checkZ:boolean;
+  pointid:boolean;
+  vertixid:boolean;
   checkobj:boolean;
   checkname:Array<any>;
 
@@ -447,6 +449,16 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     if(this.selectedVisible==true){
       this.verticecheck();
     }
+    if(this.dataService.checkvertixid == undefined) {
+        this.dataService.checkvertixid = false;
+    } else {
+      this.vertixid=this.dataService.checkvertixid;
+    }
+    if(this.dataService.pointid == undefined) {
+        this.dataService.pointid = false;
+    } else {
+      this.pointid=this.dataService.pointid;
+    }
     this.dataService.visible=this.Visible;
     //this.clearsprite();
   }
@@ -763,7 +775,8 @@ export class ToolwindowComponent extends DataSubscriber implements OnInit {
     }
     if(this.Visible==="Vertices"){
       this.dataService.addgetpoints(this.getvertices());
-      this.dataService.checkid=document.getElementById("id")["checked"];
+      this.dataService.checkvertixid=document.getElementById("vertixid")["checked"];
+      this.dataService.pointid=document.getElementById("pointid")["checked"];
       for(var n=0;n<this.vertex_name.length;n++){
         this.dataService.checkname[n]=document.getElementById(this.vertex_name[n])["checked"];
       }

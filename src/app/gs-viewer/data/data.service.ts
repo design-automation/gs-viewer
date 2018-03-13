@@ -68,7 +68,8 @@ export class DataService {
   checkX:boolean;
   checkY:boolean;
   checkZ:boolean;
-  checkid:boolean;
+  checkvertixid:boolean;
+  pointid:boolean;
   checkface:boolean;
   checkpoint:boolean;
   checkobj:boolean;
