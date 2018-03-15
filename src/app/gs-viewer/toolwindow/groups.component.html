@@ -8,12 +8,12 @@
 	    <div class="mat-header" ><label id="groupname">{{group.name}}</label></div>
 	  </mat-expansion-panel-header>
 	    <div class="mat-list-text-parent"><span id="parent">parent : {{group.parent}} </span></div>
-	    <div class="mat-list-text"><hr/><span (click)="selectpoint(group)">point : {{group.point}} </span></div>
-	    <div class="mat-list-text"><span >vertice : {{group.vertice}} </span></div>
-	    <div class="mat-list-text"><span >edge : {{group.edge}} </span></div>
-	    <div class="mat-list-text"><span >wire : {{group.wire}} </span></div>
-	    <div class="mat-list-text"><span >face : {{group.face}} </span></div>
-	    <div class="mat-list-text"><span >object : {{group.object}} </span><hr/></div>
+	    <div class="mat-list-text"><hr/><span (click)="selectpoint(group)">point : {{group.num_point}} </span></div>
+	    <div class="mat-list-text"><span (click)="selectvertice(group)">vertice : {{group.num_vertice}} </span></div>
+	    <div class="mat-list-text"><span (click)="selectedge(group)">edge : {{group.num_edge}} </span></div>
+	    <div class="mat-list-text"><span (click)="selectwire(group)">wire : {{group.num_wire}} </span></div>
+	    <div class="mat-list-text"><span (click)="selectface(group)">face : {{group.num_face}} </span></div>
+	    <div class="mat-list-text"><span (click)="selectobject(group)">object : {{group.num_object}} </span><hr/></div>
 	    <div class="mat-list-text" *ngFor="let prop of group.props"><span >{{prop[0]}} : {{prop[1]}} </span></div> 
  		</mat-expansion-panel>
 	</mat-accordion>

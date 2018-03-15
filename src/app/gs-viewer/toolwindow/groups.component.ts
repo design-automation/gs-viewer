@@ -23,7 +23,8 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
           edges_map: Map<number, gs.ITopoPathData>,
           vertices_map: Map<number, gs.ITopoPathData>,
           points_map: Map<number, gs.ITopoPathData>} ;
-  groups:Array<any>;
+  //groups:Array<any>;
+  groups: gs.IGroup[]；
   gridVisible:boolean;
   axisVisible:boolean;
   shadowVisible:boolean;
@@ -148,9 +149,9 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
   changegrid(){
     this.gridVisible = !this.gridVisible;
     if(this.gridVisible){
-      var gridhelper=new THREE.GridHelper( this._centersize, this._centersize);
+      let gridhelper:THREE.GridHelper =new THREE.GridHelper( this._centersize, this._centersize);
       gridhelper.name="GridHelper";
-      var vector=new THREE.Vector3(0,1,0);
+      let vector:THREE.Vector3=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
       gridhelper.position.set(this._centerx,this._centery,this._centerz);
       this.scene.add( gridhelper);
@@ -163,7 +164,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
 
   changepoint(){
     this.pointVisible = !this.pointVisible;
-    var children:any=[];
+    let children:Array<any>=[];
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type==="Scene"){
         for(var j=0;j<this.scene.children[i].children.length;j++){
@@ -191,7 +192,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
   changeaxis(){
     this.axisVisible = !this.axisVisible;
     if(this.axisVisible){
-      var axishelper = new THREE.AxisHelper( 10 );
+      let axishelper:THREE.AxesHelper = new THREE.AxesHelper( 10 );
       axishelper.name="AxisHelper";
       this.scene.add( axishelper);
     }else{
@@ -243,7 +244,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
 
   changecenter(centerx,centery,centerz){
     if(this.gridVisible){
-      var gridhelper=this.scene.getObjectByName("GridHelper");
+      let gridhelper:THREE.Object3D=this.scene.getObjectByName("GridHelper");
       gridhelper.position.set(centerx,centery,centerz);
       this._centerx=centerx;
       this._centery=centery;
@@ -259,9 +260,9 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     if(this.gridVisible){
       this._centersize=centersize;
       this.scene.remove(this.scene.getObjectByName("GridHelper"));
-      var gridhelper=new THREE.GridHelper(centersize,centersize);
+      let gridhelper:THREE.GridHelper=new THREE.GridHelper(centersize,centersize);
       gridhelper.name="GridHelper";
-      var vector=new THREE.Vector3(0,1,0);
+      let vector:THREE.Vector3=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
       gridhelper.position.set(this._centerx,this._centery,this._centerz);
       this.scene.add(gridhelper);
@@ -274,9 +275,9 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       if(this.scene.children[i].type==="Scene"){
         for(var j=0;j<this.scene.children[i].children.length;j++){
           if(this.scene.children[i].children[j].name==="All points"){
-            var center:THREE.Vector3=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
-            var radius:number=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
-            var max:number=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
+            let center:THREE.Vector3=this.scene.children[i].children[j]["geometry"].boundingSphere.center;
+            let radius:number=this.scene.children[i].children[j]["geometry"].boundingSphere.radius;
+            let max:number=Math.ceil(radius+Math.max(Math.abs(center.x),Math.abs(center.y),Math.abs(center.z)))*2;
             this._centerx=center.x;
             this._centery=center.y;
             this._centerz=center.z;
@@ -286,9 +287,9 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       }
     }
     this.scene.remove(this.scene.getObjectByName("GridHelper"));
-    var gridhelper=new THREE.GridHelper(this._centersize,this._centersize);
+    let gridhelper:THREE.GridHelper=new THREE.GridHelper(this._centersize,this._centersize);
     gridhelper.name="GridHelper";
-    var vector=new THREE.Vector3(0,1,0);
+    let vector:THREE.Vector3=new THREE.Vector3(0,1,0);
     gridhelper.lookAt(vector);
     gridhelper.position.set(this._centerx,this._centery,this._centerz);
     this.scene.add(gridhelper);
@@ -307,7 +308,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     if(this.dataService.SelectVisible === 'Edges'||this.dataService.SelectVisible === 'Wires'){
       for(var i=0;i<this.scene.children.length;i++){
         if(this.scene.children[i].name==="sphereInter"){
-          var geometry = new THREE.SphereGeometry( lineprecision*2);
+          let geometry:THREE.SphereGeometry = new THREE.SphereGeometry( lineprecision*2);
           this.scene.children[i]["geometry"]=geometry;
         }
       }
@@ -340,7 +341,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     if(this.dataService.SelectVisible !== 'Edges'&&this.dataService.SelectVisible !== 'Wires'){
       for(var i=0;i<this.scene.children.length;i++){
         if(this.scene.children[i].name==="sphereInter"){
-          var geometry = new THREE.SphereGeometry( point/4);
+          let geometry:THREE.SphereGeometry = new THREE.SphereGeometry( point/4);
           this.scene.children[i]["geometry"]=geometry;
         }
       }
@@ -353,7 +354,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
     this.hue=_hue;
     this.saturation=_saturation;
     this.lightness=_lightness;
-    var alight=this.alight;
+    let alight:THREE.HemisphereLight=this.alight;
     this.dataService.gethue(_hue);
     this.dataService.getsaturation(_saturation);
     this.dataService.getlightness(_lightness);
@@ -363,52 +364,223 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
 
   getgroupname(){
     this.groups=[];
-    var allgroup=this.model.getAllGroups();
+    const allgroup: gs.IGroup[] = this.model.getAllGroups();
     for(var i=0;i<allgroup.length;i++){
-      var group:any=[];
+      let group:any={};
       group.parent=allgroup[i].getParentGroup().getName();
       group.props=allgroup[i].getProps();
       group.name=allgroup[i].getName();
-      group.point=allgroup[i].getPoints().length;
+      group.num_point=allgroup[i].getPoints().length;
       group.points=allgroup[i].getPoints();
-      group.vertice=allgroup[i].getTopos(gs.EGeomType.vertices).length;
-      group.edge=allgroup[i].getTopos(gs.EGeomType.edges).length;
-      group.wire=allgroup[i].getTopos(gs.EGeomType.wires).length;
-      group.face=allgroup[i].getTopos(gs.EGeomType.faces).length;
-      group.object=allgroup[i].getTopos(gs.EGeomType.objs).length;
+      group.num_vertice=allgroup[i].getTopos(gs.EGeomType.vertices).length;
+      group.vertices=allgroup[i].getTopos(gs.EGeomType.vertices);
+      group.num_edge=allgroup[i].getTopos(gs.EGeomType.edges).length;
+      group.edges=allgroup[i].getTopos(gs.EGeomType.edges);
+      group.num_wire=allgroup[i].getTopos(gs.EGeomType.wires).length;
+      group.wires=allgroup[i].getTopos(gs.EGeomType.wires);
+      group.num_face=allgroup[i].getTopos(gs.EGeomType.faces).length;
+      group.faces=allgroup[i].getTopos(gs.EGeomType.faces);
+      group.num_object = allgroup[i].getObjs().length;
+      group.objects = allgroup[i].getObjs();
       this.groups.push(group);
     }
     //this.renderer.render(this.scene, this.camera);
   }
 
   selectpoint(group){
-    var grouppoints:Array<any>=group.points;
-    for(var i=0;i<grouppoints.length;i++){
-      var point:any=[];
-      var label: string = grouppoints[i].getLabel();
-      var id:string=grouppoints[i]._id;
-      var verts_xyz: gs.XYZ = grouppoints[i].getLabelCentroid();
-      var geometry=new THREE.Geometry();
-      geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
-      var pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:1} );
-      if(this.dataService.pointsize!==undefined){
-          pointsmaterial.size=this.dataService.pointsize;
+    if(group.point!==0){
+      let pointinitial:boolean=false;
+      let grouppoints:gs.IPoint[]=group.points;
+      for(var j=0;j<this.scene.children.length;j++){
+        for(var i=0;i<grouppoints.length;i++){
+          if(grouppoints[i].getLabel()===this.scene.children[j].userData.id){
+            pointinitial=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
       }
-      var points = new THREE.Points( geometry, pointsmaterial);
-      points.userData.id=label;
-      points["material"].needsUpdate=true;
-      points.name="selects";
-      this.scene.add(points);
-      point.label=label;
-      point.id=id;
-      point.label_xyz=verts_xyz;
-      point.path=id;
-      point.type="All points";
-      //this.dataService.addclickshow(point);
-      //this.addTextLabel(label,verts_xyz,label,null,null,"All points");
-      //this.addTextLabel(label,verts_xyz, label,id,label,"All points");
+      if(pointinitial===false){
+        for(var i=0;i<grouppoints.length;i++){
+          let point:any={};
+          let label: string = grouppoints[i].getLabel();
+          //let id:string=grouppoints[i]._id;
+          let id:number=grouppoints[i].getID();
+          let verts_xyz: gs.XYZ = grouppoints[i].getLabelCentroid();
+          let geometry:THREE.Geometry=new THREE.Geometry();
+          geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
+          let pointsmaterial:THREE.PointsMaterial =new THREE.PointsMaterial( { color:0x00ff00,size:2} );
+          if(this.dataService.pointsize!==undefined){
+              pointsmaterial.size=this.dataService.pointsize;
+          }
+          let points:THREE.Points = new THREE.Points( geometry, pointsmaterial);
+          points.userData.id=label;
+          points["material"].needsUpdate=true;
+          points.name="selects";
+          this.scene.add(points);
+          point.label=label;
+          point.id=id;
+          point.label_xyz=verts_xyz;
+          point.path=id;
+          point.type="All points";
+        }
+      }
     }
   }
 
+  selectvertice(group){
+    if(group.vertice!==0){
+      let vertixinitial:boolean=false;
+      let groupvertices:gs.IVertex[]=group.vertices;
+      for(var j=0;j<this.scene.children.length;j++){
+        for(var i=0;i<groupvertices.length;i++){
+          if(groupvertices[i].getLabel()===this.scene.children[j].userData.id){
+            vertixinitial=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
+      }
+      if(vertixinitial===false){
+        for(var i=0;i<groupvertices.length;i++){
+          let point:any=[];
+          let label: string = groupvertices[i].getLabel();
+          let id:number=groupvertices[i].getPoint().getID();
+          let verts_xyz: gs.XYZ = groupvertices[i].getLabelCentroid();
+          let geometry=new THREE.Geometry();
+          geometry.vertices.push(new THREE.Vector3(verts_xyz[0],verts_xyz[1],verts_xyz[2]));
+          let pointsmaterial=new THREE.PointsMaterial( { color:0x00ff00,size:2} );
+          if(this.dataService.pointsize!==undefined){
+              pointsmaterial.size=this.dataService.pointsize;
+          }
+          let points = new THREE.Points( geometry, pointsmaterial);
+          points.userData.id=label;
+          points["material"].needsUpdate=true;
+          points.name="selects";
+          this.scene.add(points);
+          point.label=label;
+          point.id=id;
+          point.label_xyz=verts_xyz;
+          point.path=id;
+          point.type="All points";
+        }
+      }
+    }
+  }
+
+  selectedge(group){
+    if(group.edge!==0){
+      let edgeinitial:boolean=false;
+      let groupedges:gs.IEdge[]=group.edges;
+      for(var j=0;j<this.scene.children.length;j++){
+        for(var i=0;i<groupedges.length;i++){
+          if(groupedges[i].getLabel()===this.scene.children[j].userData.id){
+            edgeinitial=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
+      }
+      if(edgeinitial===false){
+        for(var i=0;i<groupedges.length;i++){
+          let edge:any=[];
+          let label: string = groupedges[i].getLabel();
+          let id:string=groupedges[i].getLabel();
+          let label_xyz: gs.XYZ = groupedges[i].getLabelCentroid();
+          let verts: gs.IVertex[] = groupedges[i].getVertices();
+          let verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+          let geometry:THREE.Geometry =new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          let material:THREE.LineBasicMaterial=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+          let line:THREE.Line = new THREE.Line( geometry, material);
+          line.userData.id=edge.getLabel();
+          line["material"].needsUpdate=true;
+          line.name="selects";
+          this.scene.add(line);
+        }
+      }
+    }
+  }
+
+  selectwire(group){
+    if(group.wire!==0){
+      let groupwires:gs.IWire[]=group.wires;
+      let wireinitial:boolean=false;
+      for(var j=0;j<this.scene.children.length;j++){
+        for(var i=0;i<groupwires.length;i++){
+          if(groupwires[i].getLabel()===this.scene.children[j].userData.id){
+            wireinitial=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
+      }
+      if(wireinitial===false){
+        for(var i=0;i<groupwires.length;i++){
+          let wire:any=[];
+          let label: string = groupwires[i].getLabel();
+          let label_xyz: gs.XYZ = groupwires[i].getLabelCentroid();
+          let verts: gs.IVertex[] = groupwires[i].getVertices();
+          let verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+          if (groupwires[i].isClosed()) {verts_xyz.push(verts_xyz[0]);}
+          let geometry:THREE.Geometry=new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          let material:THREE.LineBasicMaterial=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+          let line:THREE.Line = new THREE.Line( geometry, material);
+          line.userData.id=label;
+          line["material"].needsUpdate=true;
+          line.name="selects";
+          this.scene.add(line);
+        }
+      }
+    }
+  }
+
+  selectface(group){
+    if(group.face!==0){
+      let groupfaces:gs.IFace[]=group.faces;
+      let faceinitial:boolean=false;
+      for(var j=0;j<this.scene.children.length;j++){
+        for(var i=0;i<groupfaces.length;i++){
+          if(groupfaces[i].getLabel()===this.scene.children[j].userData.id){
+            faceinitial=true;
+            this.scene.remove(this.scene.children[j]);
+          }
+        }
+      }
+      if(faceinitial===false){
+        for(var i=0;i<groupfaces.length;i++){
+          let face:any=[];
+          let label: string = groupfaces[i].getLabel();
+          let label_xyz: gs.XYZ = face.getLabelCentroid();
+          let verts: gs.IVertex[] = face.getVertices();
+          let verts_xyz: gs.XYZ[] = verts.map((v) => v.getPoint().getPosition());
+          let geometry:THREE.Geometry=new THREE.Geometry();
+          for(var i=0;i<verts_xyz.length;i++){
+            geometry.vertices.push(new THREE.Vector3(verts_xyz[i][0],verts_xyz[i][1],verts_xyz[i][2]));
+          }
+          let material:THREE.LineBasicMaterial=new THREE.LineBasicMaterial( { color:0x00ff00,side:THREE.DoubleSide} );
+          let line:THREE.Line = new THREE.Line( geometry, material);
+          line.userData.id=face.getLabel();
+          line["material"].needsUpdate=true;
+          line.name="selects";
+          this.scene.add(line);
+        }
+      }
+    }
+  }
+
+  
+  selectobject(group){
+    if(group.face!==0){
+      this.selectface(group);
+    }else if(group.wire!==0){
+      this.selectwire(group);
+    }else if(group.edge!==0){
+      this.selectedge(group);
+    }else if(group.point!==0){
+      this.selectpoint(group);
+    }
+  }
 
 }

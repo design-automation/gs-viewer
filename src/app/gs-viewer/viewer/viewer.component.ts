@@ -5,6 +5,7 @@ import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
 import {NgxPaginationModule} from 'ngx-pagination';
+//import * as L from 'leaflet';
 
 @Component({
   selector: 'app-viewer',
@@ -42,6 +43,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   sphere:THREE.Mesh;
   center:THREE.Vector3;
   seVisible:boolean=false;
+  imVisible:boolean=false;
   SelectVisible:string='Objs';
   settingVisible:boolean=false;
   LineNo:number=0;
@@ -219,6 +221,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
       // loading data
       let objectData = loader.parse( scene_data );
       this.seVisible=false;
+      this.imVisible=false;
       this.LineNo=0;
       // preprocessing
       if( objectData.children!==undefined){
@@ -1317,6 +1320,31 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     event.stopPropagation();
     this.settingVisible=!this.settingVisible;
    }
+
+  leaflet(){
+    event.stopPropagation();
+    this.imVisible=!this.imVisible;
+    this.dataService.imVisible=this.imVisible;
+    
+    //console.log(this.dataService.imVisible);
+    /*for(var i=0;i<this.scene.children.length;i++){
+      if(this.scene.children[i].type!=="DirectionalLight"&&this.scene.children[i].type!=="HemisphereLight"){
+        this.scene.remove(this.scene.children[i]);
+      }
+    }*/
+    /*var mymap = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);*/
+    /*let map = L.map("map").setView([38, -77], 13);
+    console.log(map);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);*/
+  }
 
   /*getSceneChildren() {
     var scenechildren=[];

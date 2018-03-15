@@ -81,6 +81,7 @@ export class DataService {
   checkname:Array<any>;
   getpoints:Array<any>;
   pointname:Array<any>;
+  imVisible:boolean=false;
 
   // ---- 
   // Subscription Handling

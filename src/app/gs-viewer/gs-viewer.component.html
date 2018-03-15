@@ -1,4 +1,4 @@
-<div id="appdiv">
+<div id="appdiv" (mousedown)="leaflet()">
 	<split direction="vertical">
 		<split-area [size]="94" id="splitcontainer">
 		  <div style="height: 100%">
@@ -7,6 +7,8 @@
 		        <app-groups></app-groups>
 		      </split-area>
 		      <split-area [size]="99.5" id="splitviewer">
+		        <!-- <app-viewer *ngIf="imVisible===false"></app-viewer>
+		        <app-map *ngIf="imVisible===true"></app-map> -->
 		        <app-viewer></app-viewer>
 		      </split-area>
 		    </split>
