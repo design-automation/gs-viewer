@@ -23,8 +23,8 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
           edges_map: Map<number, gs.ITopoPathData>,
           vertices_map: Map<number, gs.ITopoPathData>,
           points_map: Map<number, gs.ITopoPathData>} ;
-  //groups:Array<any>;
-  groups: gs.IGroup[]；
+  groups:Array<any>;
+  //groups: gs.IGroup[]；
   gridVisible:boolean;
   axisVisible:boolean;
   shadowVisible:boolean;
