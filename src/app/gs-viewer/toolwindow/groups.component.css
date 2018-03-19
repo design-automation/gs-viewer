@@ -53,8 +53,9 @@
   margin-left:9px;
 }
 .name{
-  width: 10px;
+  width: 100%;
   margin-left: 10px;
+  margin-top: 8px;
 }
 #slider-conainer{
   align-items: center !important;
@@ -156,6 +157,16 @@
   line-height: 14px;
   border-top: 2px !important;
   /*margin-top: 2px;*/
+}
+.mat-list-descr{
+  cursor :default;
+  color:#f3a32a;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 700px;
+  line-height: 14px;
+  border-top: 2px !important;
+  margin-top: 8px;
 }
 
 .mat-list-text-parent{

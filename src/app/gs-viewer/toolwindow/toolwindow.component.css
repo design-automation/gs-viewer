@@ -5,7 +5,7 @@
   width: 100%;
 }
 #toolbar{
-  background-color: #E6E6E6 !important;
+  background-color: #f1f1f1 !important;
   float: left;
   width: 50%;
   height: 30px;
@@ -14,7 +14,7 @@
   overflow: hidden !important;
   font-family:sans-serif;
   position: fixed;
-  display: flex;
+  /*display: flex;*/
   align-items: center;
 }
 #pagination{
@@ -25,6 +25,7 @@
   position: fixed !important;
   top:unset !important;
   margin-top: 0px;
+  background-color: #f1f1f1 !important;
 }
 
 .table_ojbs{
@@ -47,46 +48,34 @@
   font-size: 12px;
   vertical-align: middle;
 }
-#point{
+#gsv-point{
   margin-left:25px;
-  font-size:15px;
-  background:transparent;
-  border:0;
-  font-family:sans-serif;
 }
-
-#vertice{
-  font-size:15px;
-  background-color:transparent;
-  border:0;
-  font-family:sans-serif;
-}
-#edge{
-  font-size:15px;
-  background-color:transparent;
-  border:0;
-  font-family:sans-serif;
-}
-#wire{
-  font-size:15px;
-  background-color:transparent;
-  border:0;
-  font-family:sans-serif;
-}
-#face{
-  font-size:15px;
-  background-color:transparent;
-  border:0;
-  font-family:sans-serif;
-}
-#object{
-  font-size:15px;
-  background-color:transparent;
-  border:0;
-  font-family:sans-serif;
-}
-#selected{
+#gsv-selected{
   margin-left:30px;
+}
+.gsv-toolbar{
+  font-size:15px;
+  background-color:transparent;
+  border:0;
+  font-family:sans-serif;
+  padding-top:1px;
+  padding-right: 6px;
+  padding-bottom: 1px;
+  padding-left: 6px;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: unset;
+  margin-right: 6px;
+  margin-left: 6px;
+  margin-bottom: 1px;
+  margin-top: 1px;
+  box-sizing: border-box;
+  border-width: unset;
+  border-style: unset;
+  border-color: unset;
+  border-image: unset;
 }
 .visible{
   background-color: white !important;

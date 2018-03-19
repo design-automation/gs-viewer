@@ -44,6 +44,7 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
   alight:THREE.HemisphereLight;
   renderer: THREE.WebGLRenderer; 
   camera: THREE.PerspectiveCamera;
+  parent:Array<any>;
 
   constructor(injector: Injector, myElement: ElementRef){
   	super(injector);
@@ -382,20 +383,48 @@ export class GroupsComponent extends DataSubscriber implements OnInit {
       group.faces=allgroup[i].getTopos(gs.EGeomType.faces);
       group.num_object = allgroup[i].getObjs().length;
       group.objects = allgroup[i].getObjs();
+      group.child=null;
       this.groups.push(group);
     }
+    this.addchildren();
     //this.renderer.render(this.scene, this.camera);
   }
 
+  addchildren(){
+    for(var i=0;i<this.groups.length;i++){
+      if(this.groups[i].parent!==null){
+        for(var j=0;j<this.groups.length;j++){
+          if(this.groups[i].parent===this.groups[j].name){
+            this.groups[j].child=this.groups[i];
+          }
+        }
+      }
+    }
+  }
+
   selectpoint(group){
-    if(group.point!==0){
+    if(group.point!==0||group.child.num_point!==0){
       let pointinitial:boolean=false;
-      let grouppoints:gs.IPoint[]=group.points;
-      for(var j=0;j<this.scene.children.length;j++){
-        for(var i=0;i<grouppoints.length;i++){
-          if(grouppoints[i].getLabel()===this.scene.children[j].userData.id){
-            pointinitial=true;
-            this.scene.remove(this.scene.children[j]);
+      let grouppoints:gs.IPoint[];;
+      if(group.point!==0){
+        grouppoints=group.points;
+        for(var j=0;j<this.scene.children.length;j++){
+          for(var i=0;i<grouppoints.length;i++){
+            if(grouppoints[i].getLabel()===this.scene.children[j].userData.id){
+              pointinitial=true;
+              this.scene.remove(this.scene.children[j]);
+            }
+          }
+        }
+      }
+      if(group.child.num_point!==0){
+        grouppoints=group.child.points;
+        for(var j=0;j<this.scene.children.length;j++){
+          for(var i=0;i<grouppoints.length;i++){
+            if(grouppoints[i].getLabel()===this.scene.children[j].userData.id){
+              pointinitial=true;
+              this.scene.remove(this.scene.children[j]);
+            }
           }
         }
       }
