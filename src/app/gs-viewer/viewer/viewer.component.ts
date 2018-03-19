@@ -5,7 +5,6 @@ import { SettingComponent } from '../setting/setting.component';
 import * as gs from "gs-json";
 import {DataSubscriber} from "../data/DataSubscriber";
 import {NgxPaginationModule} from 'ngx-pagination';
-//import * as L from 'leaflet';
 
 @Component({
   selector: 'app-viewer',
@@ -13,7 +12,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
   styleUrls: ['./viewer.component.css']
 })
 export class ViewerComponent extends DataSubscriber implements OnInit {
-
+  
   _model: gs.IModel;
   scene: THREE.Scene;
   renderer: THREE.WebGLRenderer;
@@ -1325,7 +1324,8 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     event.stopPropagation();
     this.imVisible=!this.imVisible;
     this.dataService.imVisible=this.imVisible;
-    
+
+
     //console.log(this.dataService.imVisible);
     /*for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].type!=="DirectionalLight"&&this.scene.children[i].type!=="HemisphereLight"){
