@@ -332,11 +332,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     event.stopPropagation();
     this.SelectVisible="Objs";
     this.dataService.visible="Objs";
-    document.getElementById("object").style.color=null;
-    document.getElementById("face").style.color=null;
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color=null;
+    document.getElementById("gsv-face").style.color=null;
+    document.getElementById("gsv-wire").style.color=null;
+    document.getElementById("gsv-edge").style.color=null;
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     var objsvisibel:boolean=true;
@@ -369,11 +369,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     event.stopPropagation();
     this.SelectVisible="Faces";
     this.dataService.visible="Faces";
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color=null;
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color="grey";
+    document.getElementById("gsv-face").style.color=null;
+    document.getElementById("gsv-wire").style.color=null;
+    document.getElementById("gsv-edge").style.color=null;
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
@@ -401,11 +401,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.renderer.render(this.scene, this.camera);
       }
     }
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color=null;
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color="grey";
+    document.getElementById("gsv-face").style.color="grey";
+    document.getElementById("gsv-wire").style.color=null;
+    document.getElementById("gsv-edge").style.color=null;
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
@@ -432,11 +432,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.renderer.render(this.scene, this.camera);
       }
     }
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color="grey";
-    document.getElementById("edge").style.color=null;
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color="grey";
+    document.getElementById("gsv-face").style.color="grey";
+    document.getElementById("gsv-wire").style.color="grey";
+    document.getElementById("gsv-edge").style.color=null;
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     var edgevisible:boolean=true;
@@ -478,11 +478,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.renderer.render(this.scene, this.camera);
       }
     }
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color="grey";
-    document.getElementById("edge").style.color="grey";
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color="grey";
+    document.getElementById("gsv-face").style.color="grey";
+    document.getElementById("gsv-wire").style.color="grey";
+    document.getElementById("gsv-edge").style.color="grey";
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
@@ -516,11 +516,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
         this.renderer.render(this.scene, this.camera);
       }
     }
-    document.getElementById("object").style.color="grey";
-    document.getElementById("face").style.color="grey";
-    document.getElementById("wire").style.color="grey";
-    document.getElementById("edge").style.color="grey";
-    document.getElementById("vertice").style.color=null;
+    document.getElementById("gsv-object").style.color="grey";
+    document.getElementById("gsv-face").style.color="grey";
+    document.getElementById("gsv-wire").style.color="grey";
+    document.getElementById("gsv-edge").style.color="grey";
+    document.getElementById("gsv-vertice").style.color=null;
     var scenechildren=[];
     var children=this.getchildren();
     for(var i=0;i<children.length;i++){
