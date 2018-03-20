@@ -12,7 +12,11 @@ import { NgxPaginationModule} from 'ngx-pagination';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { BrowserAnimationsModule ,NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import {MatTooltipModule} from '@angular/material/tooltip';
+//import { GestureConfig, MaterialModule } from '@angular/material';
+//import { BrowserAnimationsModule, MaterialModule, BrowserModule, HttpModule} from '@angular/platform-browser/animations';
 // import 'hammerjs';
 
 @NgModule({
@@ -24,7 +28,8 @@ import { BrowserModule } from '@angular/platform-browser';
                 BrowserAnimationsModule,
                 NoopAnimationsModule,
                 MatTabsModule,
-                BrowserModule
+                BrowserModule,
+                MatTooltipModule
 			 ],
     exports: [ GSViewerComponent ],
     declarations: [GSViewerComponent,
