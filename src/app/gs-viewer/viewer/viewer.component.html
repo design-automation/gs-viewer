@@ -62,12 +62,12 @@
       	
  		<!-- <app-setting *ngIf="settingVisible == true"></app-setting> -->
     <div *ngIf="seVisible == true">
-        <button id="points" [class.selectvisible]="SelectVisible === 'Points'" (click)="pointselect(SelectVisible)">P</button>
-        <button id="vertices" [class.selectvisible]="SelectVisible === 'Vertices'" (click)="verticeselect(SelectVisible)">V</button>
-        <button id="edges" [class.selectvisible]="SelectVisible === 'Edges'" (click)="edgeselect(SelectVisible)">E</button>
-        <button id="wires" [class.selectvisible]="SelectVisible === 'Wires'" (click)="wireselect(SelectVisible)">W</button>
-        <button id="faces" [class.selectvisible]="SelectVisible === 'Faces'" (click)="faceselect(SelectVisible)">F</button>
-        <button id="objects" [class.selectvisible]="SelectVisible === 'Objs'" (click)="objectselect(SelectVisible)">O</button>
+        <button id="points" [class.selectvisible]="SelectVisible === 'Points'" title="Select Points" (click)="pointselect(SelectVisible)">P</button>
+        <button id="vertices" [class.selectvisible]="SelectVisible === 'Vertices'" title="Select Vertices" (click)="verticeselect(SelectVisible)">V</button>
+        <button id="edges" [class.selectvisible]="SelectVisible === 'Edges'" title="Select Edges" (click)="edgeselect(SelectVisible)">E</button>
+        <button id="wires" [class.selectvisible]="SelectVisible === 'Wires'" title="Select Wires" (click)="wireselect(SelectVisible)">W</button>
+        <button id="faces" [class.selectvisible]="SelectVisible === 'Faces'" title="Select Faces" (click)="faceselect(SelectVisible)">F</button>
+        <button id="objects" [class.selectvisible]="SelectVisible === 'Objs'" title="Select Objects" (click)="objectselect(SelectVisible)">O</button>
       </div>
 </div>
 
