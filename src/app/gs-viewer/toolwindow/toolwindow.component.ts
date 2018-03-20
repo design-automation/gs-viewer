@@ -12,6 +12,7 @@ import {ViewerComponent} from "../viewer/viewer.component";
   templateUrl: './toolwindow.component.html',
   styleUrls: ['./toolwindow.component.css']
 })
+
 export class ToolwindowComponent extends DataSubscriber implements OnInit {
   Visible:string="Objs";
   model:gs.IModel;
