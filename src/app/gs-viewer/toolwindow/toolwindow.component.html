@@ -1,12 +1,12 @@
 <div id="toolwindow">
   <div style="position:relative;">
   <div id="toolbar">
-    <button id="gsv-point" class="gsv-toolbar"  [class.visible]="Visible === 'Points'" (click)="point(Visible)">P</button>
-    <button id="gsv-vertice" class="gsv-toolbar" [class.visible]="Visible === 'Vertices'" (click)="vertice(Visible)">V</button>
-    <button id="gsv-edge" class="gsv-toolbar" [class.visible]="Visible === 'Edges'" (click)="edge(Visible)">E</button>
-    <button id="gsv-wire" class="gsv-toolbar" [class.visible]="Visible === 'Wires'" (click)="wire(Visible)">W</button>
-    <button id="gsv-face" class="gsv-toolbar" [class.visible]="Visible === 'Faces'" (click)="face(Visible)">F</button>
-    <button id="gsv-object" class="gsv-toolbar" [class.visible]="Visible === 'Objs'" (click)="object(Visible)">O</button>
+    <button id="gsv-point" class="gsv-toolbar" title="View Point Attributes" [class.visible]="Visible === 'Points'" (click)="point(Visible)">P</button>
+    <button id="gsv-vertice" class="gsv-toolbar" title="View Vertice Attributes" [class.visible]="Visible === 'Vertices'" (click)="vertice(Visible)">V</button>
+    <button id="gsv-edge" class="gsv-toolbar" title="View Edge Attributes" [class.visible]="Visible === 'Edges'" (click)="edge(Visible)">E</button>
+    <button id="gsv-wire" class="gsv-toolbar" title="View Wire Attributes" [class.visible]="Visible === 'Wires'" (click)="wire(Visible)">W</button>
+    <button id="gsv-face" class="gsv-toolbar" title="View Face Attributes" [class.visible]="Visible === 'Faces'" (click)="face(Visible)">F</button>
+    <button id="gsv-object" class="gsv-toolbar" title="View Object Attributes" [class.visible]="Visible === 'Objs'" (click)="object(Visible)">O</button>
     <input id="gsv-selected" class="gsv-toolbar" type="checkbox" (click)="changeselected()">
     <label id="selectedname" value="selected">Show selected only</label>
   </div>
