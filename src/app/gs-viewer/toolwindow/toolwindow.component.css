@@ -4,6 +4,10 @@
   font-family:sans-serif;
   width: 100%;
 }
+#gsattri-bar{
+  width: 100%;
+  position:relative;
+}
 #toolbar{
   background-color: #f1f1f1 !important;
   float: left;
