@@ -576,7 +576,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
     // todo: change grid -> grid_value
     if(this.dataService.grid){
-      var gridhelper=new THREE.GridHelper( 100, 100);
+      var gridhelper=new THREE.GridHelper( 100, 10);
       gridhelper.name="GridHelper";
       var vector=new THREE.Vector3(0,1,0);
       gridhelper.lookAt(vector);
