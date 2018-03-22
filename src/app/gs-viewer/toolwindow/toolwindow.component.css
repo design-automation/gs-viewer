@@ -18,16 +18,16 @@
   margin-top:0px;
   overflow: hidden !important;
   font-family:sans-serif;
-  position: fixed;
+  position: relative !important;
   /*display: flex;*/
   align-items: center;
 }
 #pagination{
-  float: left !important;
+  float: left;
   width: 20%;
   height: 30px;
   left: 30%;
-  position: fixed !important;
+  position: relative !important;
   top:unset !important;
   margin-top: 0px;
   background-color: #f1f1f1 !important;
