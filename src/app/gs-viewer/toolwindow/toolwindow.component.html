@@ -1,5 +1,5 @@
 <div id="toolwindow">
-  <!-- <div id="gsattri-bar" > -->
+  <div id="gsattri-bar" >
   <div id="toolbar">
     <button id="gsv-point" class="gsv-toolbar" [class.visible]="Visible === 'Points'" (click)="point(Visible)"><span matTooltip="View Point Attributes">P</span></button>
     <button id="gsv-vertice" class="gsv-toolbar" [class.visible]="Visible === 'Vertices'" (click)="vertice(Visible)"><span matTooltip="View Vertice Attributes">V</span></button>
@@ -18,7 +18,7 @@
     <pagination-controls *ngIf="Visible === 'Faces'" class="my-pagination" (pageChange)="p5 = $event"></pagination-controls>
     <pagination-controls *ngIf="Visible === 'Objs'" class="my-pagination" (pageChange)="p6 = $event"></pagination-controls>  
   </div>
-<!-- </div> -->
+</div>
   <div id="toolview">
     <div *ngIf="Visible === 'Points'">
       <table matSort border="1" cellspacing="0" cellpadding="0" bordercolor="#d0d0d0" (matSortChange)="sortData($event)">
