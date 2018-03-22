@@ -236,6 +236,9 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
               chd["geometry"].computeVertexNormals();
               chd["geometry"].computeBoundingBox();
               chd["geometry"].computeBoundingSphere();
+              if(chd.name==="All points"){
+                this.center=chd["geometry"].boundingSphere.center;
+              }
               if(chd.name==="All edges"){
                 this.basicMat=chd["material"].color;
               }else if(chd.name==="Other lines"){
