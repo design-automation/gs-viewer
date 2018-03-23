@@ -453,7 +453,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var lineprecision=this.raycaster.linePrecision;
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].name==="sphereInter"){
-        var geometry = new THREE.SphereGeometry( lineprecision*2);
+        var geometry = new THREE.SphereGeometry( lineprecision*15);
         this.scene.children[i]["geometry"]=geometry;
         this.renderer.render(this.scene, this.camera);
       }
