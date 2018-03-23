@@ -66,7 +66,7 @@ var AppComponent = /** @class */ (function () {
         // dummy gs_data
         // to pass to the viewer
         // gs.genModelTwoBoxesOpen();//gs.genModelTwoBoxesOpen();//gs.genModelPlanes();//
-        this.gs_dummy_data = undefined; //gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelBoxWithAttribs();//gs.genModelTwoBoxesOpen();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
+        this.gs_dummy_data = undefined; //gs.genModelTwoBoxesOpen();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelBoxWithAttribs();//gs.genModelTwoBoxesOpen();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelObjWithAttribs();//gs.genModelObjWithAttribs();//gs.genModelBoxWithAttribs();//gs.genModelGroups();//gs.genModelClosedPolyline();//gs.genModelOpenPolyline();//gs.genModelClosedPolyline();
         this.test_data1 = {
             "metadata": {
                 "filetype": "gs-json",
@@ -7728,6 +7728,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         _this.LineNo = 0;
         _this._updatemodel = true;
         _this._modelshow = true;
+        _this.lastChanged = undefined;
         _this.myElement = myElement;
         return _this;
     }
@@ -7844,6 +7845,29 @@ var ViewerComponent = /** @class */ (function (_super) {
             i = i - 1;
         }
     };
+    ViewerComponent.prototype.ngDoCheck = function () {
+        var container = this.myElement.nativeElement.children.namedItem("container");
+        var width = container.offsetWidth;
+        var height = container.offsetHeight;
+        // this is when dimensions change
+        if (width !== this.width || height !== this.height) {
+            // compute time difference from last changed
+            var nowTime = Date.now();
+            var difference = this.lastChanged - nowTime;
+            if (Math.abs(difference) < 400) {
+                // do nothing
+                // dimensions still changing
+                //console.log("Threshold too low: " + Math.abs(difference) + "ms");
+            }
+            else {
+                //console.log("Threshold matched: " + Math.abs(difference) + "ms");
+                this.onResize();
+            }
+            // add dimension change script
+            this.lastChanged = Date.now();
+        }
+    };
+    // TODO Refactor
     ViewerComponent.prototype.onResize = function () {
         var container = this.myElement.nativeElement.children.namedItem("container");
         /// check for container
@@ -7854,14 +7878,11 @@ var ViewerComponent = /** @class */ (function (_super) {
         ///
         var width = container.offsetWidth;
         var height = container.offsetHeight;
-        if (width !== this.width || height !== this.height) {
-            this.width = width;
-            this.height = height;
-            this.renderer.setSize(this.width, this.height);
-            this.camera.aspect = this.width / this.height;
-            this.camera.updateProjectionMatrix();
-        }
-        // }
+        this.width = width;
+        this.height = height;
+        this.renderer.setSize(this.width, this.height);
+        this.camera.aspect = this.width / this.height;
+        this.camera.updateProjectionMatrix();
     };
     //
     // update mode
@@ -8246,7 +8267,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         this.mUpTime = (new Date()).getTime();
     };
     ViewerComponent.prototype.onDocumentMouseMove = function (event) {
-        this.onResize();
+        //this.onResize();
         if (this.seVisible === true) {
             this.animate(this);
             this.mouse.x = (event.offsetX / this.width) * 2 - 1;
