@@ -6172,7 +6172,6 @@ var GroupsComponent = /** @class */ (function (_super) {
         }
         if (this._materialpoint === undefined || this._materialpoint === 0.1) {
             this._materialpoint = 0.1;
-            //console.log(this._materialpoint);
         }
         else {
             this._materialpoint = this.dataService.pointradius;
@@ -6373,7 +6372,7 @@ var GroupsComponent = /** @class */ (function (_super) {
         if (this.dataService.SelectVisible === 'Edges' || this.dataService.SelectVisible === 'Wires') {
             for (var i = 0; i < this.scene.children.length; i++) {
                 if (this.scene.children[i].name === "sphereInter") {
-                    var geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["SphereGeometry"](lineprecision * 2);
+                    var geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["SphereGeometry"](lineprecision * 15);
                     this.scene.children[i]["geometry"] = geometry;
                 }
             }
@@ -8132,7 +8131,7 @@ var ViewerComponent = /** @class */ (function (_super) {
         var lineprecision = this.raycaster.linePrecision;
         for (var i = 0; i < this.scene.children.length; i++) {
             if (this.scene.children[i].name === "sphereInter") {
-                var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](lineprecision * 2);
+                var geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["SphereGeometry"](lineprecision * 15);
                 this.scene.children[i]["geometry"] = geometry;
                 this.renderer.render(this.scene, this.camera);
             }
