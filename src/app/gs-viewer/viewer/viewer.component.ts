@@ -180,6 +180,32 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     }
   }
 
+  private lastChanged = undefined;
+  ngDoCheck(){
+    let container = this.myElement.nativeElement.children.namedItem("container");
+    let width: number = container.offsetWidth;
+    let height: number = container.offsetHeight;
+    // this is when dimensions change
+    if(width!==this.width||height!==this.height){    
+      // compute time difference from last changed
+      let nowTime = Date.now();
+      let difference = this.lastChanged - nowTime;
+      if( Math.abs(difference) < 400 ){
+        // do nothing
+        // dimensions still changing
+        //console.log("Threshold too low: " + Math.abs(difference) + "ms");
+      }
+      else{
+        //console.log("Threshold matched: " + Math.abs(difference) + "ms");
+        this.onResize();
+      }
+      // add dimension change script
+      this.lastChanged = Date.now();
+    }
+    
+  }
+
+  // TODO Refactor
   onResize() :void{
     let container = this.myElement.nativeElement.children.namedItem("container");
     /// check for container
@@ -555,7 +581,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
   }
 
   onDocumentMouseMove(event) {
-    this.onResize();
+    //this.onResize();
     if(this.seVisible===true){
       this.animate(this);
       this.mouse.x = ( event.offsetX / this.width) * 2 - 1;
