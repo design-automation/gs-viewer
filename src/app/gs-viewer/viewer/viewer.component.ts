@@ -91,12 +91,12 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     this.scenechildren=this.dataService.getscenechild();
     this.dataService.SelectVisible=this.SelectVisible;
 
-    var geometry = new THREE.SphereGeometry( 0.1 );
-    //var geometry = new THREE.CircleGeometry( 5 );
+    var geometry = new THREE.SphereGeometry( 1 );
     var material = new THREE.MeshBasicMaterial( { color: 0x00ff00,transparent:true,opacity:0.5 } );
     this.sphere = new THREE.Mesh( geometry, material );
     this.sphere.visible = false;
     this.sphere.name="sphereInter";
+    this.sphere.scale.set(0.1,0.1,0.1);
     this.scene.add( this.sphere );
 
     let self = this;
@@ -499,7 +499,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var pointradius=this.dataService.pointradius;;
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].name==="sphereInter"){
-        var geometry = new THREE.SphereGeometry( pointradius/4);
+        var geometry = new THREE.SphereGeometry( pointradius*10);
         this.scene.children[i]["geometry"]=geometry;
         this.renderer.render(this.scene, this.camera);
       }
@@ -537,7 +537,7 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     var pointradius=this.dataService.pointradius;;
     for(var i=0;i<this.scene.children.length;i++){
       if(this.scene.children[i].name==="sphereInter"){
-        var geometry = new THREE.SphereGeometry( pointradius/4);
+        var geometry = new THREE.SphereGeometry( pointradius*10);
         this.scene.children[i]["geometry"]=geometry;
         this.renderer.render(this.scene, this.camera);
       }
