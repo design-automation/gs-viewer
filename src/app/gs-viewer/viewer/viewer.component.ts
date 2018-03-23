@@ -216,14 +216,11 @@ export class ViewerComponent extends DataSubscriber implements OnInit {
     ///
     let width: number = container.offsetWidth;
     let height: number = container.offsetHeight;
-    if(width!==this.width||height!==this.height){
-      this.width = width;
-      this.height = height;
-      this.renderer.setSize(this.width,this.height);
-      this.camera.aspect=this.width/this.height;
-      this.camera.updateProjectionMatrix();
-    }
-   // }
+    this.width = width;
+    this.height = height;
+    this.renderer.setSize(this.width,this.height);
+    this.camera.aspect=this.width/this.height;
+    this.camera.updateProjectionMatrix();
   }
   //
   // update mode
